@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SupplMap — Affiliate UI Design</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f2ec;
+  --bg2: #edeae2;
+  --surface: #ffffff;
+  --card: #faf8f4;
+  --border: #e0dbd0;
+  --border2: #ccc7b8;
+  --accent: #1a6b3c;
+  --accent-light: #e8f5ee;
+  --accent-mid: #a8d4b8;
+  --gold: #b8830a;
+  --gold-light: #fdf3dc;
+  --gold-mid: #e8c96a;
+  --rose: #c2344a;
+  --rose-light: #fdeef1;
+  --rose-mid: #f0a0ae;
+  --slate: #3d4a42;
+  --text: #1c2620;
+  --text2: #4a5c50;
+  --text3: #7a8a7e;
+  --text4: #a0afa4;
+  --shadow-sm: 0 1px 3px #00000010, 0 1px 2px #00000008;
+  --shadow: 0 4px 16px #00000010, 0 2px 6px #00000008;
+  --shadow-lg: 0 12px 40px #00000014, 0 4px 12px #00000008;
+  --sponsored-bg: linear-gradient(135deg, #fffbf0, #fff8e8);
+  --pick-bg: linear-gradient(135deg, #f0faf4, #e8f5ee);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Syne', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ─── PAGE HEADER ─── */
+.page-header {
+  background: var(--text);
+  color: #f5f2ec;
+  padding: 3rem 2.5rem 2.5rem;
+}
+.page-header-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
+}
+.page-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--accent-mid); margin-bottom: 0.6rem;
+}
+.page-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  line-height: 1.1; font-weight: 600;
+}
+.page-header h1 em { color: var(--gold-mid); font-style: italic; }
+.page-header p {
+  color: #a0b0a8; font-size: 0.88rem; line-height: 1.6;
+  max-width: 440px; margin-top: 0.7rem;
+}
+.design-note {
+  background: #ffffff15;
+  border: 1px solid #ffffff20;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  font-size: 0.78rem; line-height: 1.6;
+  color: #c0d0c8;
+  max-width: 260px;
+}
+.design-note strong { display: block; color: #f5f2ec; margin-bottom: 0.3rem; font-size: 0.8rem; }
+
+/* ─── SECTION LABELS ─── */
+.section-wrap {
+  max-width: 1100px; margin: 0 auto;
+  padding: 2.5rem 2.5rem 0;
+}
+.section-label {
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+.section-label-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text3);
+}
+.section-label::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+.section-num {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--text); color: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem; font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* ─── SUPPLEMENT ZONE HEADER ─── */
+.zone-header {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px 16px 0 0;
+  padding: 1.4rem 1.6rem;
+  border-bottom: none;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.zone-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 0.3rem;
+}
+.zone-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem; line-height: 1.1;
+}
+.zone-sub { font-size: 0.78rem; color: var(--text3); margin-top: 0.2rem; }
+.zone-count-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 0.06em; text-transform: uppercase;
+  background: var(--accent-light); color: var(--accent);
+  border: 1px solid var(--accent-mid);
+  padding: 0.3rem 0.8rem; border-radius: 100px;
+  white-space: nowrap;
+}
+
+/* ─── SUPPLEMENT ITEM WRAPPER ─── */
+.supp-container {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0 0 16px 16px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+/* ═══════════════════════════════════════
+   PATTERN 1: EDITOR'S PICK
+═══════════════════════════════════════ */
+.supp-item {
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  transition: background 0.15s;
+}
+.supp-item:last-child { border-bottom: none; }
+.supp-item:hover { background: var(--card); }
+
+.supp-item-inner {
+  padding: 1.2rem 1.6rem;
+}
+
+/* EDITOR'S PICK styling */
+.supp-item.editors-pick {
+  background: var(--pick-bg);
+  border-left: 3px solid var(--accent);
+}
+.supp-item.editors-pick:hover { background: #e4f2ea; }
+
+/* SPONSORED styling */
+.supp-item.sponsored {
+  background: var(--sponsored-bg);
+  border-left: 3px solid var(--gold);
+}
+.supp-item.sponsored:hover { background: #fdf5e0; }
+
+/* Rank number */
+.supp-rank {
+  position: absolute; left: 1.6rem; top: 1.4rem;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--bg2); border: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem; color: var(--text3); font-weight: 600;
+}
+.supp-item.editors-pick .supp-rank {
+  background: var(--accent); color: #fff; border-color: var(--accent);
+}
+.supp-item.sponsored .supp-rank {
+  background: var(--gold); color: #fff; border-color: var(--gold);
+}
+
+.supp-item-inner.has-rank { padding-left: 3.6rem; }
+
+/* Header row */
+.supp-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 1rem; margin-bottom: 0.5rem;
+}
+.supp-left {}
+.supp-name-row {
+  display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
+  margin-bottom: 0.2rem;
+}
+.supp-name {
+  font-size: 0.95rem; font-weight: 700; line-height: 1.2;
+}
+
+/* BADGES */
+.badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem; letter-spacing: 0.05em; text-transform: uppercase;
+  padding: 0.18rem 0.55rem; border-radius: 100px; font-weight: 500;
+}
+.badge-pick { background: var(--accent); color: #fff; }
+.badge-sponsored { background: var(--gold); color: #fff; }
+.badge-essential { background: var(--accent-light); color: var(--accent); border: 1px solid var(--accent-mid); }
+.badge-new { background: #e8f0fe; color: #1a56c2; border: 1px solid #a8c0f0; }
+.badge-popular { background: var(--rose-light); color: var(--rose); border: 1px solid var(--rose-mid); }
+
+.supp-brand-by {
+  font-size: 0.72rem; color: var(--text3);
+}
+.supp-brand-by strong { color: var(--text2); }
+
+.supp-desc-short {
+  font-size: 0.82rem; color: var(--text2); line-height: 1.55;
+  margin-bottom: 0.8rem; max-width: 560px;
+}
+
+/* ─── AFFILIATE BRAND CARDS ─── */
+.brand-cards {
+  display: flex; gap: 0.6rem; flex-wrap: wrap;
+}
+
+/* Standard brand link */
+.brand-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.6rem 0.9rem;
+  text-decoration: none;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 0.6rem;
+  cursor: pointer;
+  min-width: 140px;
+}
+.brand-card:hover {
+  border-color: var(--border2);
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+}
+
+/* Featured brand card (editor's pick or sponsored) */
+.brand-card.featured {
+  background: var(--surface);
+  border: 1.5px solid var(--accent-mid);
+  flex: 1; min-width: 200px;
+}
+.brand-card.featured:hover {
+  border-color: var(--accent);
+  box-shadow: 0 4px 16px #1a6b3c15;
+}
+
+.brand-card.sponsored-card {
+  border-color: var(--gold-mid);
+  background: #fffdf5;
+}
+.brand-card.sponsored-card:hover {
+  border-color: var(--gold);
+  box-shadow: 0 4px 16px #b8830a15;
+}
+
+/* Brand logo placeholder */
+.brand-logo {
+  width: 32px; height: 32px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem; font-weight: 800;
+  letter-spacing: -0.5px; flex-shrink: 0;
+  font-family: 'Syne', sans-serif;
+}
+.logo-nordic { background: #002d5c; color: #fff; font-size: 0.55rem; }
+.logo-thorne { background: #000; color: #fff; font-size: 0.6rem; }
+.logo-amazon { background: #ff9900; color: #fff; font-size: 0.55rem; }
+.logo-hb { background: #005e2e; color: #fff; font-size: 0.55rem; }
+.logo-boots { background: #003087; color: #fff; font-size: 0.6rem; }
+.logo-myprotein { background: #1e1e1e; color: #fff; font-size: 0.5rem; }
+.logo-bulk { background: #e30613; color: #fff; font-size: 0.6rem; }
+.logo-proceive { background: #6b3fa0; color: #fff; font-size: 0.5rem; }
+
+.brand-info { flex: 1; min-width: 0; }
+.brand-name {
+  font-size: 0.78rem; font-weight: 700; line-height: 1.1;
+  color: var(--text);
+}
+.brand-price {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem; color: var(--text3);
+  margin-top: 0.1rem;
+}
+.brand-price .price-val { color: var(--text2); font-weight: 600; }
+.brand-price .price-note { color: var(--text4); font-size: 0.62rem; }
+
+.brand-cta {
+  font-size: 0.7rem; font-weight: 700;
+  color: var(--text3);
+  flex-shrink: 0;
+  display: flex; align-items: center; gap: 0.2rem;
+}
+.brand-card.featured .brand-cta { color: var(--accent); }
+.brand-card.sponsored-card .brand-cta { color: var(--gold); }
+
+/* Affiliate disclosure micro-text */
+.aff-disclosure {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem; color: var(--text4); letter-spacing: 0.04em;
+  margin-top: 0.6rem;
+  display: flex; align-items: center; gap: 0.3rem;
+}
+.aff-dot {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--text4); flex-shrink: 0;
+}
+
+/* Sponsored label on item */
+.sponsored-ribbon {
+  position: absolute; top: 0; right: 0;
+  background: var(--gold);
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.2rem 0.7rem;
+  border-radius: 0 0 0 8px;
+}
+
+/* ═══════════════════════════════════════
+   PATTERN 2: PRICE COMPARISON VIEW
+═══════════════════════════════════════ */
+.compare-table {
+  width: 100%; border-collapse: collapse;
+}
+.compare-table th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text3); font-weight: 500;
+  padding: 0.7rem 1rem; text-align: left;
+  background: var(--card); border-bottom: 1px solid var(--border);
+}
+.compare-table td {
+  padding: 0.9rem 1rem; border-bottom: 1px solid var(--border);
+  font-size: 0.82rem; vertical-align: middle;
+}
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table tr:hover td { background: var(--card); }
+.compare-table tr.best-value td { background: var(--pick-bg); }
+.compare-table tr.best-value td:first-child {
+  border-left: 3px solid var(--accent);
+}
+
+.ct-brand { display: flex; align-items: center; gap: 0.7rem; }
+.ct-logo {
+  width: 28px; height: 28px; border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.5rem; font-weight: 800; flex-shrink: 0;
+  font-family: 'Syne', sans-serif;
+}
+.ct-brand-name { font-weight: 700; font-size: 0.82rem; }
+.ct-product-name { font-size: 0.72rem; color: var(--text3); }
+
+.ct-price {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem; font-weight: 600; color: var(--text);
+}
+.ct-price-per {
+  font-size: 0.68rem; color: var(--text3); display: block; margin-top: 0.1rem;
+}
+.best-value .ct-price { color: var(--accent); }
+
+.ct-dose { font-size: 0.78rem; color: var(--text2); }
+.ct-serving { font-size: 0.7rem; color: var(--text3); display: block; }
+
+.ct-stars { color: var(--gold); font-size: 0.8rem; letter-spacing: -1px; }
+.ct-reviews { font-size: 0.68rem; color: var(--text3); display: block; }
+
+.ct-badge-wrap { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+
+.ct-buy {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: var(--text); color: var(--bg);
+  border: none; border-radius: 8px;
+  padding: 0.45rem 0.9rem;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.75rem; font-weight: 700;
+  cursor: pointer; text-decoration: none;
+  transition: all 0.2s; white-space: nowrap;
+}
+.ct-buy:hover { background: var(--accent); transform: translateY(-1px); }
+.ct-buy.sponsored-btn { background: var(--gold); color: #fff; }
+.ct-buy.sponsored-btn:hover { background: #9a6e08; }
+
+.best-value-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem; letter-spacing: 0.08em; text-transform: uppercase;
+  background: var(--accent); color: #fff;
+  padding: 0.15rem 0.5rem; border-radius: 4px;
+}
+
+/* ═══════════════════════════════════════
+   PATTERN 3: FEATURED BRAND SPOTLIGHT
+═══════════════════════════════════════ */
+.brand-spotlight {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.spotlight-header {
+  padding: 1rem 1.4rem;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.spotlight-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--gold);
+  display: flex; align-items: center; gap: 0.4rem;
+}
+.spotlight-label::before { content: '★'; font-size: 0.7rem; }
+
+.spotlight-body {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+}
+.spotlight-product {
+  padding: 1.4rem;
+  border-right: 1px solid var(--border);
+  transition: background 0.15s;
+  cursor: pointer; text-decoration: none; color: inherit;
+  display: block;
+}
+.spotlight-product:last-child { border-right: none; }
+.spotlight-product:hover { background: var(--card); }
+
+.sp-brand-header {
+  display: flex; align-items: center; gap: 0.7rem; margin-bottom: 1rem;
+}
+.sp-brand-logo {
+  width: 36px; height: 36px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.6rem; font-weight: 800; flex-shrink: 0;
+  font-family: 'Syne', sans-serif;
+  box-shadow: var(--shadow-sm);
+}
+.sp-brand-name { font-size: 0.8rem; font-weight: 700; }
+.sp-brand-tagline { font-size: 0.68rem; color: var(--text3); }
+
+.sp-product-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; line-height: 1.2;
+}
+.sp-product-desc { font-size: 0.75rem; color: var(--text2); line-height: 1.5; margin-bottom: 0.8rem; }
+
+.sp-price-row {
+  display: flex; align-items: baseline; gap: 0.4rem; margin-bottom: 0.6rem;
+}
+.sp-price {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1rem; font-weight: 600; color: var(--text);
+}
+.sp-price-per { font-size: 0.7rem; color: var(--text3); }
+.sp-price-was {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem; color: var(--text4); text-decoration: line-through;
+}
+.sp-saving {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem; background: var(--rose-light);
+  color: var(--rose); padding: 0.1rem 0.4rem; border-radius: 4px;
+  border: 1px solid var(--rose-mid);
+}
+
+.sp-stars { color: var(--gold); font-size: 0.75rem; letter-spacing: -1px; margin-bottom: 0.8rem; }
+.sp-stars span { font-size: 0.68rem; color: var(--text3); }
+
+.sp-cta {
+  display: block; text-align: center;
+  background: var(--text); color: var(--bg);
+  border-radius: 8px; padding: 0.55rem;
+  font-size: 0.78rem; font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+}
+.sp-cta:hover { background: var(--accent); }
+.sp-cta.gold-cta { background: var(--gold); color: #fff; }
+.sp-cta.gold-cta:hover { background: #9a6e08; }
+
+.sp-disclosure {
+  padding: 0.6rem 1.4rem;
+  background: var(--gold-light);
+  border-top: 1px solid #e8d090;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem; color: var(--gold);
+  letter-spacing: 0.04em;
+}
+
+/* ═══════════════════════════════════════
+   PATTERN 4: PREGNANCY PRIORITY STACK
+═══════════════════════════════════════ */
+.preg-stack {
+  background: var(--surface);
+  border: 1px solid var(--rose-mid);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+.preg-stack-header {
+  background: linear-gradient(135deg, #fdeef1, #fdf0f4);
+  padding: 1.2rem 1.6rem;
+  border-bottom: 1px solid var(--rose-mid);
+  display: flex; align-items: center; gap: 0.8rem;
+}
+.preg-icon { font-size: 1.4rem; }
+.preg-header-text {}
+.preg-header-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem; font-weight: 600; color: var(--rose);
+}
+.preg-header-sub { font-size: 0.76rem; color: #a04060; }
+
+.preg-item {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1rem 1.6rem;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+.preg-item:last-child { border-bottom: none; }
+.preg-item:hover { background: var(--rose-light); }
+
+.preg-priority {
+  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem; font-weight: 700;
+}
+.p1 { background: var(--rose); color: #fff; }
+.p2 { background: var(--rose-mid); color: #fff; }
+.p3 { background: var(--rose-light); color: var(--rose); border: 1px solid var(--rose-mid); }
+
+.preg-item-info { flex: 1; }
+.preg-item-name { font-size: 0.88rem; font-weight: 700; margin-bottom: 0.15rem; }
+.preg-item-why { font-size: 0.75rem; color: var(--text2); line-height: 1.4; }
+
+.preg-item-brands { display: flex; gap: 0.4rem; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
+.preg-brand-chip {
+  display: flex; align-items: center; gap: 0.3rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.25rem 0.55rem;
+  text-decoration: none; transition: all 0.15s;
+  cursor: pointer;
+}
+.preg-brand-chip:hover { border-color: var(--rose-mid); background: var(--rose-light); }
+.pbc-logo {
+  width: 16px; height: 16px; border-radius: 3px;
+  font-size: 0.42rem; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif;
+}
+.pbc-name { font-size: 0.68rem; font-weight: 600; color: var(--text2); }
+.pbc-price { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--text3); }
+
+/* ═══════════════════════════════════════
+   PATTERN 5: REVENUE BREAKDOWN UI
+═══════════════════════════════════════ */
+.revenue-panel {
+  background: var(--text);
+  border-radius: 16px;
+  padding: 2rem;
+  color: #f5f2ec;
+  margin-bottom: 2rem;
+}
+.revenue-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem; margin-bottom: 0.3rem;
+}
+.revenue-sub { font-size: 0.78rem; color: #a0b0a8; margin-bottom: 1.5rem; }
+
+.revenue-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+.rev-card {
+  background: #ffffff0d;
+  border: 1px solid #ffffff14;
+  border-radius: 10px;
+  padding: 1rem;
+}
+.rev-card-icon { font-size: 1.2rem; margin-bottom: 0.4rem; }
+.rev-card-name { font-size: 0.78rem; font-weight: 700; margin-bottom: 0.2rem; }
+.rev-card-rate {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1rem; color: var(--accent-mid); font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+.rev-card-note { font-size: 0.68rem; color: #a0b0a8; line-height: 1.4; }
+
+.rev-monthly {
+  background: #ffffff0a;
+  border: 1px solid #ffffff14;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.rev-monthly-label { font-size: 0.78rem; color: #a0b0a8; margin-bottom: 0.2rem; }
+.rev-monthly-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem; color: var(--gold-mid);
+}
+.rev-monthly-note { font-size: 0.7rem; color: #a0b0a8; }
+.rev-bar-wrap { flex: 1; margin: 0 1.5rem; }
+.rev-bar-label { font-size: 0.68rem; color: #a0b0a8; margin-bottom: 0.3rem; display: flex; justify-content: space-between; }
+.rev-bar-track { height: 6px; background: #ffffff14; border-radius: 100px; overflow: hidden; }
+.rev-bar-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--accent-mid), var(--gold-mid)); }
+
+/* ─── SPACING ─── */
+.section-gap { max-width: 1100px; margin: 0 auto; padding: 2.5rem 2.5rem 0; }
+.bottom-pad { padding-bottom: 4rem; }
+
+/* ─── FOOTNOTE ─── */
+.footnote {
+  max-width: 1100px; margin: 0 auto;
+  padding: 1.5rem 2.5rem 3rem;
+  border-top: 1px solid var(--border);
+}
+.footnote p {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem; color: var(--text4); line-height: 1.7;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .spotlight-body { grid-template-columns: 1fr; }
+  .spotlight-product { border-right: none; border-bottom: 1px solid var(--border); }
+  .revenue-grid { grid-template-columns: 1fr 1fr; }
+  .compare-table { display: none; }
+  .preg-item-brands { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div>
+      <div class="page-eyebrow">SupplMap — Design System</div>
+      <h1>Affiliate &amp; brand<br><em>integration patterns</em></h1>
+      <p>Five distinct UI patterns for integrating brand links, sponsored placements, and affiliate revenue into your supplement site.</p>
+    </div>
+    <div class="design-note">
+      <strong>How to use this</strong>
+      Each pattern below is a working UI component you can drop into your SupplMap site. They range from minimal (inline brand chips) to high-converting (price comparison table and sponsored spotlights).
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════
+  PATTERN 1
+═══════════════════ -->
+<div class="section-wrap">
+  <div class="section-label">
+    <div class="section-num">1</div>
+    <span class="section-label-text">Inline brand cards — Editor's Pick + Sponsored slot</span>
+  </div>
+
+  <div class="zone-header">
+    <div>
+      <div class="zone-tag">Region → Brain &amp; Cognitive</div>
+      <div class="zone-title">Omega-3 (EPA/DHA)</div>
+      <div class="zone-sub">Neuronal membrane support, mood, neuroprotection</div>
+    </div>
+    <div class="zone-count-pill">3 stockists</div>
+  </div>
+
+  <div class="supp-container">
+
+    <!-- Editor's Pick -->
+    <div class="supp-item editors-pick">
+      <div class="supp-rank">★</div>
+      <div class="supp-item-inner has-rank">
+        <div class="supp-head">
+          <div class="supp-left">
+            <div class="supp-name-row">
+              <span class="supp-name">Nordic Naturals Ultimate Omega 2X</span>
+              <span class="badge badge-pick">Editor's Pick</span>
+              <span class="badge badge-essential">Essential</span>
+            </div>
+            <div class="supp-brand-by">by <strong>Nordic Naturals</strong> · Triglyceride form · 2150mg EPA+DHA per serving</div>
+          </div>
+        </div>
+        <div class="supp-desc-short">The highest concentration triglyceride-form omega-3 available without prescription. Superior absorption over ethyl ester forms. Third-party tested for mercury and PCBs. Consistently rated best-in-class across independent supplement reviews.</div>
+        <div class="brand-cards">
+          <a class="brand-card featured" href="#" onclick="return false">
+            <div class="brand-logo logo-nordic">NN</div>
+            <div class="brand-info">
+              <div class="brand-name">Nordic Naturals</div>
+              <div class="brand-price"><span class="price-val">£42.95</span> · <span class="price-note">60 softgels · ~£0.72/day</span></div>
+            </div>
+            <div class="brand-cta">Shop ↗</div>
+          </a>
+          <a class="brand-card" href="#" onclick="return false">
+            <div class="brand-logo logo-amazon">AMZ</div>
+            <div class="brand-info">
+              <div class="brand-name">Amazon UK</div>
+              <div class="brand-price"><span class="price-val">£38.99</span> · <span class="price-note">Prime eligible</span></div>
+            </div>
+            <div class="brand-cta">↗</div>
+          </a>
+          <a class="brand-card" href="#" onclick="return false">
+            <div class="brand-logo logo-hb">H&B</div>
+            <div class="brand-info">
+              <div class="brand-name">Holland &amp; Barrett</div>
+              <div class="brand-price"><span class="price-val">£36.00</span> · <span class="price-note">loyalty points</span></div>
+            </div>
+            <div class="brand-cta">↗</div>
+          </a>
+        </div>
+        <div class="aff-disclosure">
+          <div class="aff-dot"></div>
+          Links marked ↗ are affiliate links. SupplMap earns a small commission at no extra cost to you.
+        </div>
+      </div>
+    </div>
+
+    <!-- Sponsored -->
+    <div class="supp-item sponsored">
+      <div class="sponsored-ribbon">Sponsored</div>
+      <div class="supp-rank">S</div>
+      <div class="supp-item-inner has-rank">
+        <div class="supp-head">
+          <div class="supp-left">
+            <div class="supp-name-row">
+              <span class="supp-name">Thorne Super EPA</span>
+              <span class="badge badge-sponsored">Sponsored</span>
+              <span class="badge badge-new">New formula</span>
+            </div>
+            <div class="supp-brand-by">by <strong>Thorne Research</strong> · NSF Certified for Sport · 1000mg EPA per serving</div>
+          </div>
+        </div>
+        <div class="supp-desc-short">NSF Certified for Sport — the gold standard third-party certification for athletes and professionals. Thorne's high-EPA formula supports mood and cognitive performance with pharmaceutical-grade quality control.</div>
+        <div class="brand-cards">
+          <a class="brand-card sponsored-card featured" href="#" onclick="return false">
+            <div class="brand-logo logo-thorne">TH</div>
+            <div class="brand-info">
+              <div class="brand-name">Thorne Research</div>
+              <div class="brand-price"><span class="price-val">£49.00</span> · <span class="price-note">90 caps · subscribe &amp; save 15%</span></div>
+            </div>
+            <div class="brand-cta" style="color:var(--gold)">Shop ↗</div>
+          </a>
+        </div>
+        <div class="aff-disclosure">
+          <div class="aff-dot"></div>
+          This placement is sponsored by Thorne Research. SupplMap only accepts sponsorships from brands whose products meet our quality criteria.
+        </div>
+      </div>
+    </div>
+
+    <!-- Standard -->
+    <div class="supp-item">
+      <div class="supp-rank" style="position:absolute;left:1.6rem;top:1.4rem">3</div>
+      <div class="supp-item-inner has-rank">
+        <div class="supp-name-row" style="margin-bottom:0.3rem">
+          <span class="supp-name">Myprotein Omega 3 1000mg</span>
+          <span class="badge badge-popular">Popular</span>
+        </div>
+        <div class="supp-brand-by">by <strong>Myprotein</strong> · Ethyl ester form · Budget pick</div>
+        <div class="supp-desc-short" style="margin-top:0.4rem">Good value entry-level option. Ethyl ester form is less bioavailable than triglyceride but significantly cheaper — a solid choice if cost is a primary consideration.</div>
+        <div class="brand-cards" style="margin-top:0.7rem">
+          <a class="brand-card" href="#" onclick="return false">
+            <div class="brand-logo logo-myprotein">MP</div>
+            <div class="brand-info">
+              <div class="brand-name">Myprotein</div>
+              <div class="brand-price"><span class="price-val">£12.99</span> · <span class="price-note">90 caps · best value</span></div>
+            </div>
+            <div class="brand-cta">↗</div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════
+  PATTERN 2: PRICE TABLE
+═══════════════════ -->
+<div class="section-gap">
+  <div class="section-label">
+    <div class="section-num">2</div>
+    <span class="section-label-text">Price comparison table — best for high-intent buyers</span>
+  </div>
+
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:2rem;">
+    <div style="padding:1.2rem 1.6rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:0.2rem">Compare prices</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.1rem">Creatine Monohydrate — 500g</div>
+      </div>
+      <div style="font-size:0.76rem;color:var(--text3)">Updated April 2026</div>
+    </div>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Brand</th>
+          <th>Price</th>
+          <th>Form / Dose</th>
+          <th>Rating</th>
+          <th>Quality</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="best-value">
+          <td>
+            <div class="ct-brand">
+              <div class="ct-logo logo-bulk" style="width:28px;height:28px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:0.5rem;font-weight:800;font-family:'Syne',sans-serif;">BK</div>
+              <div>
+                <div class="ct-brand-name">Bulk</div>
+                <div class="ct-product-name">Pure Creatine Monohydrate</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="ct-price">£14.99</div>
+            <span class="ct-price-per">£0.10/day · best value</span>
+          </td>
+          <td>
+            <div class="ct-dose">Monohydrate · 5g/serve</div>
+            <span class="ct-serving">100 servings</span>
+          </td>
+          <td>
+            <div class="ct-stars">★★★★☆</div>
+            <span class="ct-reviews">4.4 · 2,810 reviews</span>
+          </td>
+          <td>
+            <div class="ct-badge-wrap">
+              <span class="badge badge-essential">Informed Sport</span>
+              <span class="best-value-label">Best value</span>
+            </div>
+          </td>
+          <td><a class="ct-buy" href="#" onclick="return false">Buy ↗</a></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="ct-brand">
+              <div class="ct-logo logo-myprotein" style="width:28px;height:28px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:0.5rem;font-weight:800;font-family:'Syne',sans-serif;">MP</div>
+              <div>
+                <div class="ct-brand-name">Myprotein</div>
+                <div class="ct-product-name">Creatine Monohydrate Powder</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="ct-price">£19.99</div>
+            <span class="ct-price-per">£0.13/day</span>
+          </td>
+          <td>
+            <div class="ct-dose">Monohydrate · 5g/serve</div>
+            <span class="ct-serving">100 servings</span>
+          </td>
+          <td>
+            <div class="ct-stars">★★★★★</div>
+            <span class="ct-reviews">4.7 · 14,200 reviews</span>
+          </td>
+          <td>
+            <div class="ct-badge-wrap">
+              <span class="badge badge-popular">Most popular</span>
+            </div>
+          </td>
+          <td><a class="ct-buy" href="#" onclick="return false">Buy ↗</a></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="ct-brand">
+              <div class="ct-logo" style="background:#2d6a4f;color:#fff;width:28px;height:28px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:0.5rem;font-weight:800;font-family:'Syne',sans-serif;">CP</div>
+              <div>
+                <div class="ct-brand-name">Creapure (AlzChem)</div>
+                <div class="ct-product-name">Creapure® Monohydrate</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="ct-price">£29.95</div>
+            <span class="ct-price-per">£0.20/day · premium</span>
+          </td>
+          <td>
+            <div class="ct-dose">Creapure® certified · 5g</div>
+            <span class="ct-serving">100 servings</span>
+          </td>
+          <td>
+            <div class="ct-stars">★★★★★</div>
+            <span class="ct-reviews">4.9 · 890 reviews</span>
+          </td>
+          <td>
+            <div class="ct-badge-wrap">
+              <span class="badge" style="background:#f0f4ff;color:#1a3a8a;border:1px solid #a8b8e0;font-family:'JetBrains Mono',monospace;font-size:0.58rem;padding:0.18rem 0.55rem;border-radius:100px;">Creapure® cert.</span>
+            </div>
+          </td>
+          <td><a class="ct-buy sponsored-btn" href="#" onclick="return false">Sponsored ↗</a></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="ct-brand">
+              <div class="ct-logo logo-amazon" style="width:28px;height:28px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:0.5rem;font-weight:800;font-family:'Syne',sans-serif;">AMZ</div>
+              <div>
+                <div class="ct-brand-name">Amazon Basics</div>
+                <div class="ct-product-name">Creatine Monohydrate Unflavoured</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="ct-price">£11.99</div>
+            <span class="ct-price-per">£0.08/day</span>
+          </td>
+          <td>
+            <div class="ct-dose">Monohydrate · 5g/serve</div>
+            <span class="ct-serving">100 servings</span>
+          </td>
+          <td>
+            <div class="ct-stars">★★★★☆</div>
+            <span class="ct-reviews">4.3 · 5,100 reviews</span>
+          </td>
+          <td>
+            <div class="ct-badge-wrap">
+              <span class="badge badge-popular">Cheapest</span>
+            </div>
+          </td>
+          <td><a class="ct-buy" href="#" onclick="return false">Buy ↗</a></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="aff-disclosure" style="padding:0.7rem 1.6rem;border-top:1px solid var(--border)">
+      <div class="aff-dot"></div>
+      Prices checked April 2026. Sponsored row marked. All other links are standard affiliate links.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════
+  PATTERN 3: BRAND SPOTLIGHT
+═══════════════════ -->
+<div class="section-gap">
+  <div class="section-label">
+    <div class="section-num">3</div>
+    <span class="section-label-text">Brand spotlight — paid featured placement, three products</span>
+  </div>
+
+  <div class="brand-spotlight">
+    <div class="spotlight-header">
+      <div class="spotlight-label">Featured partner — Thorne Research</div>
+      <div style="font-size:0.72rem;color:var(--text3)">Sponsored · meets SupplMap quality criteria</div>
+    </div>
+    <div class="spotlight-body">
+      <a class="spotlight-product" href="#" onclick="return false">
+        <div class="sp-brand-header">
+          <div class="sp-brand-logo logo-thorne">TH</div>
+          <div>
+            <div class="sp-brand-name">Thorne Research</div>
+            <div class="sp-brand-tagline">NSF Certified for Sport</div>
+          </div>
+        </div>
+        <div class="sp-product-name">Basic Prenatal</div>
+        <div class="sp-product-desc">Methylated B vitamins, 5-MTHF folate, chelated minerals, and algal DHA. The prenatal SupplMap recommends most.</div>
+        <div class="sp-price-row">
+          <div class="sp-price">£42.00</div>
+          <div class="sp-price-per">· 90 caps</div>
+        </div>
+        <div class="sp-stars">★★★★★ <span>4.9 (340)</span></div>
+        <div class="sp-cta gold-cta">Shop Prenatal ↗</div>
+      </a>
+      <a class="spotlight-product" href="#" onclick="return false">
+        <div class="sp-brand-header">
+          <div class="sp-brand-logo logo-thorne">TH</div>
+          <div>
+            <div class="sp-brand-name">Thorne Research</div>
+            <div class="sp-brand-tagline">NSF Certified for Sport</div>
+          </div>
+        </div>
+        <div class="sp-product-name">Magnesium Bisglycinate</div>
+        <div class="sp-product-desc">200mg elemental magnesium as bisglycinate chelate. Best-tolerated form for sleep, muscle, and cardiovascular support.</div>
+        <div class="sp-price-row">
+          <div class="sp-price">£28.00</div>
+          <div class="sp-price-per">· 120 caps</div>
+          <div class="sp-price-was">£34.00</div>
+          <div class="sp-saving">−18%</div>
+        </div>
+        <div class="sp-stars">★★★★★ <span>4.8 (1,240)</span></div>
+        <div class="sp-cta gold-cta">Shop Magnesium ↗</div>
+      </a>
+      <a class="spotlight-product" href="#" onclick="return false">
+        <div class="sp-brand-header">
+          <div class="sp-brand-logo logo-thorne">TH</div>
+          <div>
+            <div class="sp-brand-name">Thorne Research</div>
+            <div class="sp-brand-tagline">NSF Certified for Sport</div>
+          </div>
+        </div>
+        <div class="sp-product-name">Vitamin D / K2</div>
+        <div class="sp-product-desc">1000 IU D3 + 200mcg K2 as MK-7. Synergistic formula supporting bone density, immune function, and arterial health.</div>
+        <div class="sp-price-row">
+          <div class="sp-price">£22.00</div>
+          <div class="sp-price-per">· 60 caps</div>
+        </div>
+        <div class="sp-stars">★★★★★ <span>4.9 (870)</span></div>
+        <div class="sp-cta gold-cta">Shop D3/K2 ↗</div>
+      </a>
+    </div>
+    <div class="sp-disclosure">★ Sponsored placement. Thorne Research pays SupplMap for this feature. Products are independently reviewed and meet our quality standards before any sponsorship is accepted.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════
+  PATTERN 4: PREGNANCY STACK
+═══════════════════ -->
+<div class="section-gap">
+  <div class="section-label">
+    <div class="section-num">4</div>
+    <span class="section-label-text">Pregnancy priority stack — ordered by clinical importance</span>
+  </div>
+
+  <div class="preg-stack">
+    <div class="preg-stack-header">
+      <div class="preg-icon">🤰</div>
+      <div class="preg-header-text">
+        <div class="preg-header-title">The Pregnancy Essential Stack</div>
+        <div class="preg-header-sub">Ordered by clinical priority · Always consult your midwife</div>
+      </div>
+    </div>
+
+    <div class="preg-item">
+      <div class="preg-priority p1">1</div>
+      <div class="preg-item-info">
+        <div class="preg-item-name">Folate (5-MTHF) — 400–800mcg</div>
+        <div class="preg-item-why">Prevents neural tube defects. Start before conception. Choose 5-MTHF, not folic acid.</div>
+      </div>
+      <div class="preg-item-brands">
+        <a class="preg-brand-chip" href="#" onclick="return false">
+          <div class="pbc-logo logo-thorne" style="width:16px;height:16px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:0.4rem;font-weight:800;font-family:'Syne',sans-serif;">TH</div>
+          <span class="pbc-name">Thorne</span>
+          <span class="pbc-price">£42</span>
+        </a>
+        <a class="preg-brand-chip" href="#" onclick="return false">
+          <div class="pbc-logo" style="background:#6b3fa0;color:#fff;width:16px;height:16px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:0.4rem;font-weight:800;font-family:'Syne',sans-serif;">PR</div>
+          <span class="pbc-name">Proceive</span>
+          <span class="pbc-price">£35</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="preg-item">
+      <div class="preg-priority p1">2</div>
+      <div class="preg-item-info">
+        <div class="preg-item-name">DHA (Algal Oil) — 300–600mg</div>
+        <div class="preg-item-why">Foetal brain and retinal development. Algal form only — no fish oil.</div>
+      </div>
+      <div class="preg-item-brands">
+        <a class="preg-brand-chip" href="#" onclick="return false">
+          <div class="pbc-logo logo-nordic" style="width:16px;height:16px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:0.4rem;font-weight:800;font-family:'Syne',sans-serif;">NN</div>
+          <span class="pbc-name">Nordic</span>
+          <span class="pbc-price">£28</span>
+        </a>
+        <a class="preg-brand-chip" href="#" onclick="return false">
+          <div class="pbc-logo logo-amazon" style="width:16px;height:16px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:0.4rem;font-weight:800;font-family:'Syne',sans-serif;">AZ</div>
+          <span class="pbc-name">Amazon</span>
+          <span class="pbc-price">£18</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="preg-item">
+      <div class="preg-priority p1">3</div>
+      <div class="preg-item-info">
+        <div class="preg-item-name">Vitamin D3 — 1000–2000 IU</div>
+        <div class="preg-item-why">NHS-recommended for all pregnant women. Bone, immune, and metabolic health.</div>
+      </div>
+      <div class="preg-item-brands">
+        <a class="preg-brand-chip" href="#" onclick="return false">
+          <div class="pbc-logo logo-boots" style="width:16px;height:16px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:0.4rem;font-weight:800;font-family:'Syne',sans-serif;">BT</div>
+          <span class="pbc-name">Boots</span>
+          <span class="pbc-price">£8</span>
+        </a>
+        <a class="preg-brand-chip" href="#" onclick="return false">
+          <div class="pbc-logo" style="background:#6b3fa0;color:#fff;width:16px;height:16px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:0.4rem;font-weight:800;font-family:'Syne',sans-serif;">PR</div>
+          <span class="pbc-name">Pregnacare</span>
+          <span class="pbc-price">£12</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="preg-item">
+      <div class="preg-priority p2">4</div>
+      <div class="preg-item-info">
+        <div class="preg-item-name">Iron Bisglycinate — 25–30mg elemental</div>
+        <div class="preg-item-why">Iron requirements nearly double in pregnancy. Test ferritin first.</div>
+      </div>
+      <div class="preg-item-brands">
+        <a class="preg-brand-chip" href="#" onclick="return false">
+          <div class="pbc-logo logo-hb" style="width:16px;height:16px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:0.4rem;font-weight:800;font-family:'Syne',sans-serif;">HB</div>
+          <span class="pbc-name">H&amp;B</span>
+          <span class="pbc-price">£14</span>
+        </a>
+        <a class="preg-brand-chip" href="#" onclick="return false">
+          <div class="pbc-logo logo-boots" style="width:16px;height:16px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:0.4rem;font-weight:800;font-family:'Syne',sans-serif;">BT</div>
+          <span class="pbc-name">Boots</span>
+          <span class="pbc-price">£9</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="preg-item">
+      <div class="preg-priority p2">5</div>
+      <div class="preg-item-info">
+        <div class="preg-item-name">Magnesium Glycinate — 300–400mg</div>
+        <div class="preg-item-why">Leg cramps, sleep, blood pressure support. Pre-eclampsia prevention.</div>
+      </div>
+      <div class="preg-item-brands">
+        <a class="preg-brand-chip" href="#" onclick="return false">
+          <div class="pbc-logo logo-amazon" style="width:16px;height:16px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:0.4rem;font-weight:800;font-family:'Syne',sans-serif;">AZ</div>
+          <span class="pbc-name">Amazon</span>
+          <span class="pbc-price">£16</span>
+        </a>
+        <a class="preg-brand-chip" href="#" onclick="return false">
+          <div class="pbc-logo logo-hb" style="width:16px;height:16px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:0.4rem;font-weight:800;font-family:'Syne',sans-serif;">HB</div>
+          <span class="pbc-name">H&amp;B</span>
+          <span class="pbc-price">£12</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="preg-item">
+      <div class="preg-priority p3">6</div>
+      <div class="preg-item-info">
+        <div class="preg-item-name">Iodine — 220–250mcg</div>
+        <div class="preg-item-why">Foetal thyroid entirely dependent on maternal iodine. #1 global preventable cause of brain damage.</div>
+      </div>
+      <div class="preg-item-brands">
+        <a class="preg-brand-chip" href="#" onclick="return false">
+          <div class="pbc-logo" style="background:#6b3fa0;color:#fff;width:16px;height:16px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:0.4rem;font-weight:800;font-family:'Syne',sans-serif;">PR</div>
+          <span class="pbc-name">Pregnacare</span>
+          <span class="pbc-price">£12</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════
+  PATTERN 5: REVENUE PROJECTION
+═══════════════════ -->
+<div class="section-gap bottom-pad">
+  <div class="section-label">
+    <div class="section-num">5</div>
+    <span class="section-label-text">Revenue model overview — what each placement earns</span>
+  </div>
+
+  <div class="revenue-panel">
+    <div class="revenue-title">SupplMap Revenue Architecture</div>
+    <div class="revenue-sub">Projected at 5,000 monthly visitors · 3% affiliate conversion rate</div>
+    <div class="revenue-grid">
+      <div class="rev-card">
+        <div class="rev-card-icon">🔗</div>
+        <div class="rev-card-name">Amazon Associates</div>
+        <div class="rev-card-rate">3–6%</div>
+        <div class="rev-card-note">Commission on every supplement purchase within 24hrs of click</div>
+      </div>
+      <div class="rev-card">
+        <div class="rev-card-icon">🌿</div>
+        <div class="rev-card-name">AWIN Brands (H&B, Boots, Myprotein)</div>
+        <div class="rev-card-rate">5–10%</div>
+        <div class="rev-card-note">Higher rates than Amazon, 30-day cookie window</div>
+      </div>
+      <div class="rev-card">
+        <div class="rev-card-icon">⭐</div>
+        <div class="rev-card-name">Direct Brands (Thorne, Nordic)</div>
+        <div class="rev-card-rate">12–20%</div>
+        <div class="rev-card-note">Best rates — brands prefer direct over Amazon</div>
+      </div>
+      <div class="rev-card">
+        <div class="rev-card-icon">✦</div>
+        <div class="rev-card-name">Sponsored Zone Placement</div>
+        <div class="rev-card-rate">£200–£800/mo</div>
+        <div class="rev-card-note">Per zone, per brand. Fixed monthly fee</div>
+      </div>
+      <div class="rev-card">
+        <div class="rev-card-icon">🤝</div>
+        <div class="rev-card-name">Brand Spotlight Feature</div>
+        <div class="rev-card-rate">£500–£2000/mo</div>
+        <div class="rev-card-note">Featured 3-product panel like Pattern 3 above</div>
+      </div>
+      <div class="rev-card">
+        <div class="rev-card-icon">💌</div>
+        <div class="rev-card-name">Email Newsletter</div>
+        <div class="rev-card-rate">£5–£8/mo</div>
+        <div class="rev-card-note">Per subscriber. Substack or Ghost platform</div>
+      </div>
+    </div>
+    <div class="rev-monthly">
+      <div>
+        <div class="rev-monthly-label">Conservative monthly estimate at 5k visitors</div>
+        <div class="rev-monthly-val">£800 – £2,400</div>
+        <div class="rev-monthly-note">affiliate commissions + 1 sponsored zone + 200 email subs</div>
+      </div>
+      <div class="rev-bar-wrap">
+        <div class="rev-bar-label"><span>Traffic growth</span><span>→ revenue</span></div>
+        <div class="rev-bar-track"><div class="rev-bar-fill" style="width:42%"></div></div>
+        <div style="font-size:0.65rem;color:#a0b0a8;margin-top:0.4rem">At 20k/mo visitors, add direct brand deals: £4,000–£12,000/mo realistic</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footnote">
+  <p>⚠ All supplement recommendations are for educational purposes only. Sponsored and affiliate placements are clearly disclosed to users. SupplMap editorial independence policy: no supplement brand can influence non-sponsored content, and sponsorship is declined where products do not meet quality criteria.</p>
+</div>
+
+</body>
+</html>

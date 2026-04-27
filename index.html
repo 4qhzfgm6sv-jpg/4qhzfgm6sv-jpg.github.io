@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SupplMap — Your Body, Your Supplements</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080c0a;
+  --surface: #0f1512;
+  --card: #151e19;
+  --card2: #1a2620;
+  --border: #1f2f28;
+  --border2: #2a3f35;
+  --accent: #7effa0;
+  --accent-dim: #7effa018;
+  --accent-mid: #7effa040;
+  --gold: #ffd97d;
+  --gold-dim: #ffd97d18;
+  --rose: #ff9eb5;
+  --rose-dim: #ff9eb518;
+  --blue: #7ec8ff;
+  --blue-dim: #7ec8ff18;
+  --text: #ddeedd;
+  --text2: #8fa897;
+  --text3: #556b5a;
+  --body-fill: #1a2e22;
+  --body-muscle: #213828;
+  --body-stroke: #3a5a45;
+  --body-light: #2d4a38;
+  --shadow: #7effa008;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Syne', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Subtle grain overlay */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; opacity: 0.5;
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 2.5rem;
+  background: #080c0aee;
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem; color: var(--accent);
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.logo-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  animation: glow-pulse 2s infinite;
+}
+.nav-right { display: flex; align-items: center; gap: 1.5rem; }
+.nav-links { display: flex; gap: 1.8rem; }
+.nav-links a {
+  color: var(--text3); text-decoration: none;
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--accent); }
+
+/* MODE TOGGLE */
+.mode-toggle {
+  display: flex; border: 1px solid var(--border2); border-radius: 100px;
+  overflow: hidden; background: var(--surface);
+}
+.mode-btn {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 0.4rem 1rem; border: none; cursor: pointer;
+  background: transparent; color: var(--text3);
+  transition: all 0.25s;
+}
+.mode-btn.active {
+  background: var(--rose); color: #1a0a10;
+}
+.mode-btn.active.normal { background: var(--accent); color: #071208; }
+
+/* ─── HERO ─── */
+.hero {
+  padding: 100px 2.5rem 40px;
+  max-width: 1300px; margin: 0 auto;
+  position: relative;
+}
+.hero-inner {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 2rem; flex-wrap: wrap;
+}
+.hero-text {}
+.hero-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem; color: var(--accent);
+  letter-spacing: 0.15em; text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.4rem, 4.5vw, 4rem);
+  line-height: 1.08; letter-spacing: -0.5px;
+  max-width: 600px;
+}
+.hero h1 em { color: var(--accent); font-style: italic; }
+.hero-sub {
+  color: var(--text2); font-size: 0.95rem; line-height: 1.7;
+  max-width: 480px; margin-top: 1rem;
+  font-weight: 400;
+}
+.hero-stats {
+  display: flex; gap: 2rem;
+}
+.stat { text-align: right; }
+.stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem; color: var(--accent); line-height: 1;
+}
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  margin-top: 0.2rem;
+}
+
+/* ─── PREGNANCY BANNER ─── */
+.pregnancy-banner {
+  max-width: 1300px; margin: 0 auto 0;
+  padding: 0 2.5rem;
+  display: none;
+}
+.pregnancy-banner.visible { display: block; }
+.preg-inner {
+  background: linear-gradient(135deg, #2a1520, #1a1025);
+  border: 1px solid #ff9eb550;
+  border-radius: 14px;
+  padding: 1rem 1.5rem;
+  display: flex; align-items: center; gap: 1rem;
+}
+.preg-icon { font-size: 1.5rem; }
+.preg-text { font-size: 0.82rem; color: var(--rose); line-height: 1.5; }
+.preg-text strong { display: block; font-size: 0.88rem; margin-bottom: 0.2rem; }
+
+/* ─── MAIN LAYOUT ─── */
+.main-layout {
+  display: grid;
+  grid-template-columns: 1fr 460px;
+  gap: 1.5rem;
+  max-width: 1300px; margin: 0 auto;
+  padding: 1.5rem 2.5rem 4rem;
+  position: relative; z-index: 1;
+}
+
+/* ─── BODY MAP SECTION ─── */
+.body-map-section {}
+
+.view-controls {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.2rem;
+}
+.view-tabs { display: flex; gap: 0.4rem; }
+.vtab {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.45rem 1.1rem;
+  background: var(--surface); border: 1px solid var(--border2);
+  color: var(--text3); cursor: pointer; border-radius: 8px;
+  transition: all 0.2s; font-weight: 500;
+}
+.vtab.active { background: var(--accent-dim); border-color: var(--accent-mid); color: var(--accent); }
+.vtab:hover:not(.active) { color: var(--text2); border-color: var(--border2); }
+
+.zone-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem; color: var(--text3);
+  letter-spacing: 0.08em;
+}
+
+/* CANVAS */
+.body-canvas {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem 1.5rem;
+  display: flex; justify-content: center;
+  min-height: 620px;
+  overflow: hidden;
+}
+.body-canvas::before {
+  content: '';
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 300px; height: 200px;
+  background: radial-gradient(ellipse, var(--accent-dim) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Anatomy SVG wrapper */
+.anatomy-wrap {
+  position: relative;
+  width: 260px;
+  flex-shrink: 0;
+}
+.anatomy-wrap svg {
+  width: 100%; height: auto;
+  filter: drop-shadow(0 20px 40px #00000060);
+}
+
+/* ─── HOTSPOTS ─── */
+.hs {
+  position: absolute;
+  cursor: pointer; z-index: 20;
+  transform: translate(-50%, -50%);
+}
+.hs-ring {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent-mid);
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  animation: ring-expand 2.5s infinite;
+}
+.hs-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 6px var(--accent);
+}
+.hs:hover .hs-dot, .hs.active .hs-dot {
+  transform: translate(-50%,-50%) scale(1.5);
+  box-shadow: 0 0 14px var(--accent);
+}
+.hs.active .hs-ring { border-color: var(--accent); }
+
+/* Pregnancy hotspots */
+.pregnancy-mode .hs .hs-dot { background: var(--rose); box-shadow: 0 0 6px var(--rose); }
+.pregnancy-mode .hs .hs-ring { border-color: #ff9eb540; }
+.pregnancy-mode .hs:hover .hs-dot, .pregnancy-mode .hs.active .hs-dot {
+  box-shadow: 0 0 14px var(--rose);
+}
+.pregnancy-mode .hs.active .hs-ring { border-color: var(--rose); }
+
+/* Tooltip labels */
+.hs-tip {
+  position: absolute;
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 0.3rem 0.7rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.63rem; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text2); white-space: nowrap;
+  pointer-events: none;
+  top: 50%; transform: translateY(-50%);
+  left: calc(100% + 10px);
+  opacity: 0; transition: opacity 0.15s;
+}
+.hs-tip.tip-left { left: auto; right: calc(100% + 10px); }
+.hs:hover .hs-tip, .hs.active .hs-tip { opacity: 1; }
+
+@keyframes ring-expand {
+  0% { transform: translate(-50%,-50%) scale(1); opacity: 0.6; }
+  100% { transform: translate(-50%,-50%) scale(2.2); opacity: 0; }
+}
+@keyframes glow-pulse {
+  0%,100% { box-shadow: 0 0 4px var(--accent); }
+  50% { box-shadow: 0 0 14px var(--accent), 0 0 28px var(--accent-mid); }
+}
+
+/* ─── INFO PANEL ─── */
+.info-panel {
+  position: sticky; top: 80px;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: var(--border2) transparent;
+}
+.info-panel::-webkit-scrollbar { width: 3px; }
+.info-panel::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+.panel-empty {
+  background: var(--surface);
+  border: 1px dashed var(--border2);
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+.panel-empty-icon {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-mid);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1.2rem;
+  font-size: 1.3rem;
+}
+.panel-empty h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem; margin-bottom: 0.5rem;
+}
+.panel-empty p { font-size: 0.82rem; color: var(--text3); line-height: 1.6; }
+
+/* SUPPLEMENT CARD */
+.supp-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  display: none;
+}
+.supp-panel.visible { display: block; animation: slideUp 0.3s ease both; }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.sp-header {
+  padding: 1.4rem 1.6rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(160deg, var(--card2), var(--surface));
+}
+.sp-zone {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 0.35rem;
+  display: flex; align-items: center; gap: 0.4rem;
+}
+.sp-zone.preg { color: var(--rose); }
+.sp-zone::before { content: '●'; font-size: 0.5rem; }
+.sp-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem; line-height: 1.1; margin-bottom: 0.3rem;
+}
+.sp-sub { font-size: 0.8rem; color: var(--text2); line-height: 1.5; }
+
+/* SUPPLEMENT ITEMS */
+.sp-body { padding: 1rem 1.2rem; }
+.sp-list { display: flex; flex-direction: column; gap: 0.7rem; }
+
+.si {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.si:hover { border-color: var(--border2); background: var(--card2); }
+.si.expanded { border-color: var(--accent-mid); background: var(--card2); }
+.preg-panel .si.expanded { border-color: #ff9eb550; }
+
+.si-top {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+.si-name { font-size: 0.9rem; font-weight: 700; line-height: 1.2; }
+.si-badges { display: flex; gap: 0.3rem; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
+.badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem; letter-spacing: 0.05em; text-transform: uppercase;
+  padding: 0.18rem 0.5rem; border-radius: 100px;
+}
+.badge.green { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-mid); }
+.badge.gold { background: var(--gold-dim); color: var(--gold); border: 1px solid #ffd97d40; }
+.badge.rose { background: var(--rose-dim); color: var(--rose); border: 1px solid #ff9eb540; }
+.badge.blue { background: var(--blue-dim); color: var(--blue); border: 1px solid #7ec8ff40; }
+
+.si-desc { font-size: 0.78rem; color: var(--text2); line-height: 1.5; margin-bottom: 0; }
+
+.si-details {
+  display: none; margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--border);
+}
+.si.expanded .si-details { display: block; }
+
+.si-meta {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 1rem; margin-bottom: 0.8rem;
+}
+.si-meta-item { font-size: 0.73rem; }
+.si-meta-item .mkey {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text3); display: block; margin-bottom: 0.15rem;
+}
+.si-meta-item .mval { color: var(--text); font-weight: 500; }
+
+.si-warn {
+  background: #2a1a0a;
+  border: 1px solid #ff9e4430;
+  border-radius: 8px;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.72rem; color: #ff9e44cc;
+  line-height: 1.4; margin-bottom: 0.8rem;
+  display: flex; gap: 0.4rem;
+}
+.si-warn::before { content: '⚠'; flex-shrink: 0; }
+
+.si-stockists {}
+.si-stockists .sk-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text3); display: block; margin-bottom: 0.4rem;
+}
+.sk-links { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.sk-link {
+  font-size: 0.72rem; font-weight: 600;
+  padding: 0.3rem 0.7rem; border-radius: 6px;
+  border: 1px solid var(--border2);
+  background: var(--surface); color: var(--text2);
+  text-decoration: none; transition: all 0.18s;
+  font-family: 'Syne', sans-serif;
+}
+.sk-link:hover { color: var(--accent); border-color: var(--accent-mid); background: var(--accent-dim); }
+
+/* Expand arrow */
+.si-arrow {
+  float: right;
+  font-size: 0.75rem; color: var(--text3);
+  transition: transform 0.2s;
+  margin-left: 0.3rem;
+}
+.si.expanded .si-arrow { transform: rotate(180deg); color: var(--accent); }
+
+/* SECTION HEADERS within panel */
+.sp-section-head {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text3); padding: 0.8rem 0 0.4rem;
+}
+
+/* ─── INFO TILES ─── */
+.info-tiles {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 0.8rem; margin-top: 1.2rem;
+}
+.itile {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 1rem;
+}
+.itile-icon { font-size: 1.1rem; margin-bottom: 0.4rem; }
+.itile-title { font-size: 0.78rem; font-weight: 700; margin-bottom: 0.2rem; }
+.itile-text { font-size: 0.72rem; color: var(--text3); line-height: 1.5; }
+
+/* ─── DISCLAIMER ─── */
+.disclaimer {
+  max-width: 1300px; margin: 0 auto;
+  padding: 1.5rem 2.5rem 3rem;
+  border-top: 1px solid var(--border);
+}
+.disclaimer p {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.67rem; color: var(--text3); line-height: 1.8;
+}
+
+/* RESPONSIVE */
+@media (max-width: 920px) {
+  .main-layout { grid-template-columns: 1fr; }
+  .info-panel { position: static; max-height: none; }
+  .hero-stats { display: none; }
+  .info-tiles { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    SupplMap
+  </div>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="#">Body Map</a>
+      <a href="#">All Supps</a>
+      <a href="#">Stacks</a>
+    </div>
+    <div class="mode-toggle">
+      <button class="mode-btn normal active" onclick="setMode('normal',this)">Standard</button>
+      <button class="mode-btn" onclick="setMode('pregnancy',this)">Pregnancy</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-eyebrow">Evidence-based supplement mapping</div>
+      <h1>Your body.<br><em>Optimised.</em></h1>
+      <p class="hero-sub">Tap any zone on the anatomical map to explore targeted supplement protocols — with clinical dosing, timing, and trusted stockists.</p>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">14</div><div class="stat-label">Body Zones</div></div>
+      <div class="stat"><div class="stat-num">60+</div><div class="stat-label">Supplements</div></div>
+      <div class="stat"><div class="stat-num">2</div><div class="stat-label">Body Modes</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PREGNANCY BANNER -->
+<div class="pregnancy-banner" id="preg-banner">
+  <div class="preg-inner">
+    <div class="preg-icon">🤰</div>
+    <div class="preg-text">
+      <strong>Pregnancy Mode Active</strong>
+      Supplement recommendations are tailored for pregnancy. Always consult your midwife or OB-GYN before starting any supplement. Some supplements safe outside pregnancy may be harmful during it.
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-layout">
+
+  <!-- LEFT: BODY + MAP -->
+  <div class="body-map-section">
+    <div class="view-controls">
+      <div class="view-tabs">
+        <button class="vtab active" onclick="switchView('front',this)">Front view</button>
+        <button class="vtab" onclick="switchView('back',this)">Back view</button>
+      </div>
+      <div class="zone-count" id="zone-count">Click a zone to explore →</div>
+    </div>
+
+    <div class="body-canvas" id="body-canvas">
+
+      <!-- ═══ FRONT VIEW ═══ -->
+      <div class="anatomy-wrap" id="front-view">
+        <svg viewBox="0 0 240 720" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#2a4535"/>
+              <stop offset="100%" stop-color="#1a2e22"/>
+            </linearGradient>
+            <linearGradient id="limbGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#1e3528"/>
+              <stop offset="50%" stop-color="#2d4a38"/>
+              <stop offset="100%" stop-color="#1e3528"/>
+            </linearGradient>
+            <linearGradient id="faceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#2d4a38"/>
+              <stop offset="100%" stop-color="#213828"/>
+            </linearGradient>
+            <filter id="softShadow">
+              <feGaussianBlur stdDeviation="2" result="blur"/>
+              <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+            </filter>
+          </defs>
+
+          <!-- ── HEAD ── -->
+          <!-- Skull/cranium -->
+          <ellipse cx="120" cy="52" rx="38" ry="44" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <!-- Temples subtle indents -->
+          <ellipse cx="84" cy="50" rx="6" ry="10" fill="#1a2e22" opacity="0.4"/>
+          <ellipse cx="156" cy="50" rx="6" ry="10" fill="#1a2e22" opacity="0.4"/>
+          <!-- Brow ridge -->
+          <path d="M90 34 Q120 28 150 34" stroke="var(--body-stroke)" stroke-width="1.5" fill="none"/>
+          <!-- Eye sockets (subtle) -->
+          <ellipse cx="107" cy="46" rx="11" ry="8" fill="#1a2e22" opacity="0.5" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <ellipse cx="133" cy="46" rx="11" ry="8" fill="#1a2e22" opacity="0.5" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <!-- Eyes -->
+          <ellipse cx="107" cy="46" rx="6" ry="4" fill="#3a5a45" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <ellipse cx="133" cy="46" rx="6" ry="4" fill="#3a5a45" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <!-- Pupils -->
+          <circle cx="107" cy="46" r="2.5" fill="#0d1810"/>
+          <circle cx="133" cy="46" r="2.5" fill="#0d1810"/>
+          <!-- Nose -->
+          <path d="M117 50 Q115 60 112 65 Q117 68 123 68 Q128 65 128 65 Q125 60 123 50" fill="#1e3528" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <!-- Nostrils -->
+          <ellipse cx="114" cy="65" rx="3.5" ry="2" fill="#132018" opacity="0.8"/>
+          <ellipse cx="126" cy="65" rx="3.5" ry="2" fill="#132018" opacity="0.8"/>
+          <!-- Mouth -->
+          <path d="M108 75 Q120 82 132 75" stroke="var(--body-stroke)" stroke-width="1.2" fill="none"/>
+          <path d="M112 75 Q120 79 128 75" fill="#1a2e22" stroke="none" opacity="0.6"/>
+          <!-- Chin -->
+          <path d="M96 84 Q120 96 144 84" stroke="var(--body-stroke)" stroke-width="1" fill="none" opacity="0.5"/>
+          <!-- Ears -->
+          <path d="M82 46 Q76 46 74 52 Q74 60 78 64 Q82 66 84 62 Q86 56 84 50Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
+          <path d="M158 46 Q164 46 166 52 Q166 60 162 64 Q158 66 156 62 Q154 56 156 50Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
+          <!-- Ear canal -->
+          <circle cx="80" cy="55" r="2" fill="#132018" opacity="0.7"/>
+          <circle cx="160" cy="55" r="2" fill="#132018" opacity="0.7"/>
+          <!-- Hair (subtle top) -->
+          <path d="M85 16 Q120 6 155 16 Q158 22 156 28 Q140 18 120 16 Q100 18 84 28 Q82 22 85 16Z" fill="#152218" stroke="var(--body-stroke)" stroke-width="0.8"/>
+
+          <!-- ── NECK ── -->
+          <path d="M105 92 Q100 96 100 110 L100 118 Q110 122 120 122 Q130 122 140 118 L140 110 Q140 96 135 92Z" fill="url(#limbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <!-- SCM muscles -->
+          <path d="M108 94 Q106 105 108 118" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.6"/>
+          <path d="M132 94 Q134 105 132 118" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.6"/>
+
+          <!-- ── SHOULDERS ── -->
+          <!-- Left shoulder -->
+          <path d="M100 118 Q80 118 68 126 Q58 134 56 148 Q60 152 66 150 Q72 148 76 140 Q84 130 100 126Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <!-- Right shoulder -->
+          <path d="M140 118 Q160 118 172 126 Q182 134 184 148 Q180 152 174 150 Q168 148 164 140 Q156 130 140 126Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <!-- Clavicles -->
+          <path d="M106 122 Q120 118 134 122" stroke="#4a6a55" stroke-width="1.5" fill="none"/>
+          <!-- Deltoid definition -->
+          <path d="M68 130 Q64 140 66 150" stroke="var(--body-stroke)" stroke-width="1" fill="none" opacity="0.7"/>
+          <path d="M172 130 Q176 140 174 150" stroke="var(--body-stroke)" stroke-width="1" fill="none" opacity="0.7"/>
+
+          <!-- ── TORSO ── -->
+          <!-- Main chest/torso -->
+          <path d="M76 126 Q62 130 58 158 L56 200 Q56 220 58 240 Q60 260 64 272 L74 280 Q96 288 120 288 Q144 288 166 280 L176 272 Q180 260 184 240 Q186 220 184 200 L182 158 Q178 130 164 126 Q142 120 120 120 Q98 120 76 126Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <!-- Chest pec definition -->
+          <path d="M76 140 Q96 148 118 145 Q116 168 108 175 Q86 175 72 162 Q70 155 76 140Z" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.9" opacity="0.8"/>
+          <path d="M164 140 Q144 148 122 145 Q124 168 132 175 Q154 175 168 162 Q170 155 164 140Z" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.9" opacity="0.8"/>
+          <!-- Sternum -->
+          <line x1="120" y1="126" x2="120" y2="200" stroke="#4a6a55" stroke-width="0.8" opacity="0.5"/>
+          <!-- Ribcage subtle arcs -->
+          <path d="M80 155 Q120 162 160 155" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <path d="M78 170 Q120 178 162 170" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <path d="M78 185 Q120 192 162 185" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.35"/>
+          <path d="M80 200 Q120 206 160 200" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.3"/>
+          <!-- Solar plexus -->
+          <ellipse cx="120" cy="195" rx="10" ry="7" fill="#1a2e22" opacity="0.5"/>
+          <!-- Navel -->
+          <ellipse cx="120" cy="240" rx="4" ry="5" fill="#132018" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <!-- Abs definition -->
+          <path d="M108 210 L108 265" stroke="var(--body-stroke)" stroke-width="1" fill="none" opacity="0.5"/>
+          <path d="M132 210 L132 265" stroke="var(--body-stroke)" stroke-width="1" fill="none" opacity="0.5"/>
+          <line x1="106" y1="218" x2="134" y2="218" stroke="var(--body-stroke)" stroke-width="0.8" opacity="0.5"/>
+          <line x1="106" y1="230" x2="134" y2="230" stroke="var(--body-stroke)" stroke-width="0.8" opacity="0.5"/>
+          <line x1="106" y1="242" x2="134" y2="242" stroke="var(--body-stroke)" stroke-width="0.8" opacity="0.5"/>
+          <line x1="106" y1="254" x2="134" y2="254" stroke="var(--body-stroke)" stroke-width="0.8" opacity="0.5"/>
+          <!-- Obliques -->
+          <path d="M74 210 Q80 235 78 270" stroke="var(--body-stroke)" stroke-width="0.9" fill="none" opacity="0.4"/>
+          <path d="M166 210 Q160 235 162 270" stroke="var(--body-stroke)" stroke-width="0.9" fill="none" opacity="0.4"/>
+
+          <!-- ── ARMS ── -->
+          <!-- LEFT UPPER ARM (bicep/tricep) -->
+          <path d="M66 150 Q52 154 44 170 Q38 188 40 208 Q44 218 52 218 Q62 218 66 208 Q72 190 72 172 Q72 162 68 152Z" fill="url(#limbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <!-- Bicep peak left -->
+          <path d="M48 172 Q44 185 46 200" stroke="var(--body-light)" stroke-width="1" fill="none" opacity="0.6"/>
+          <!-- LEFT FOREARM -->
+          <path d="M52 218 Q44 224 38 240 Q34 256 36 272 Q40 280 48 278 Q58 276 62 266 Q68 248 66 228 Q64 222 56 218Z" fill="url(#limbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <!-- Forearm muscles left -->
+          <path d="M42 238 Q40 252 42 266" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.5"/>
+          <!-- LEFT HAND -->
+          <path d="M36 272 Q30 272 28 278 Q26 286 30 292 Q32 296 38 296 Q44 296 48 290 Q52 282 50 274Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
+          <!-- Knuckles L -->
+          <path d="M28 284 Q38 280 50 282" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.5"/>
+
+          <!-- RIGHT UPPER ARM -->
+          <path d="M174 150 Q188 154 196 170 Q202 188 200 208 Q196 218 188 218 Q178 218 174 208 Q168 190 168 172 Q168 162 172 152Z" fill="url(#limbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <path d="M192 172 Q196 185 194 200" stroke="var(--body-light)" stroke-width="1" fill="none" opacity="0.6"/>
+          <!-- RIGHT FOREARM -->
+          <path d="M188 218 Q196 224 202 240 Q206 256 204 272 Q200 280 192 278 Q182 276 178 266 Q172 248 174 228 Q176 222 184 218Z" fill="url(#limbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <path d="M198 238 Q200 252 198 266" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.5"/>
+          <!-- RIGHT HAND -->
+          <path d="M204 272 Q210 272 212 278 Q214 286 210 292 Q208 296 202 296 Q196 296 192 290 Q188 282 190 274Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
+          <path d="M212 284 Q202 280 190 282" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.5"/>
+
+          <!-- ── HIPS / PELVIS ── -->
+          <path d="M64 272 Q58 280 60 298 Q66 316 80 320 Q96 324 120 324 Q144 324 160 320 Q174 316 180 298 Q182 280 176 272 Q152 285 120 288 Q88 285 64 272Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <!-- Hip crease lines -->
+          <path d="M80 300 Q100 308 120 308 Q140 308 160 300" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <!-- Iliac crest hints -->
+          <path d="M68 285 Q72 298 76 310" stroke="var(--body-light)" stroke-width="1" fill="none" opacity="0.5"/>
+          <path d="M172 285 Q168 298 164 310" stroke="var(--body-light)" stroke-width="1" fill="none" opacity="0.5"/>
+
+          <!-- ── LEGS ── -->
+          <!-- LEFT THIGH (quad + VMO) -->
+          <path d="M80 318 Q68 322 60 340 Q54 358 54 380 Q54 400 58 418 Q64 432 74 436 Q86 440 94 432 Q102 422 102 400 Q104 378 100 354 Q96 334 88 320Z" fill="url(#limbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <!-- Quad definition left -->
+          <path d="M64 340 Q62 365 64 390" stroke="var(--body-light)" stroke-width="1" fill="none" opacity="0.5"/>
+          <path d="M80 325 Q78 360 78 395" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <!-- VMO -->
+          <path d="M86 420 Q90 428 92 432" stroke="var(--body-light)" stroke-width="1.2" fill="none" opacity="0.6"/>
+
+          <!-- RIGHT THIGH -->
+          <path d="M160 318 Q172 322 180 340 Q186 358 186 380 Q186 400 182 418 Q176 432 166 436 Q154 440 146 432 Q138 422 138 400 Q136 378 140 354 Q144 334 152 320Z" fill="url(#limbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <path d="M176 340 Q178 365 176 390" stroke="var(--body-light)" stroke-width="1" fill="none" opacity="0.5"/>
+          <path d="M160 325 Q162 360 162 395" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <path d="M154 420 Q150 428 148 432" stroke="var(--body-light)" stroke-width="1.2" fill="none" opacity="0.6"/>
+
+          <!-- LEFT KNEE -->
+          <ellipse cx="78" cy="440" rx="22" ry="16" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <!-- Patella -->
+          <ellipse cx="78" cy="438" rx="12" ry="10" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1"/>
+          <!-- RIGHT KNEE -->
+          <ellipse cx="162" cy="440" rx="22" ry="16" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <ellipse cx="162" cy="438" rx="12" ry="10" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1"/>
+
+          <!-- LEFT SHIN/CALF (front tibia) -->
+          <path d="M58 452 Q52 468 50 490 Q48 512 50 534 Q54 546 64 550 Q74 554 82 548 Q90 540 92 520 Q96 498 92 474 Q90 460 84 452Z" fill="url(#limbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <!-- Shin bone line -->
+          <path d="M70 455 Q68 490 68 525" stroke="var(--body-light)" stroke-width="1.5" fill="none" opacity="0.5"/>
+          <!-- RIGHT SHIN -->
+          <path d="M182 452 Q188 468 190 490 Q192 512 190 534 Q186 546 176 550 Q166 554 158 548 Q150 540 148 520 Q144 498 148 474 Q150 460 156 452Z" fill="url(#limbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <path d="M170 455 Q172 490 172 525" stroke="var(--body-light)" stroke-width="1.5" fill="none" opacity="0.5"/>
+
+          <!-- LEFT ANKLE -->
+          <path d="M52 540 Q50 548 52 556 Q58 560 68 560 Q78 560 84 556 Q88 548 88 540Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
+          <!-- Malleolus bumps -->
+          <circle cx="54" cy="548" r="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <circle cx="86" cy="548" r="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <!-- RIGHT ANKLE -->
+          <path d="M188 540 Q190 548 188 556 Q182 560 172 560 Q162 560 156 556 Q152 548 152 540Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
+          <circle cx="154" cy="548" r="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <circle cx="186" cy="548" r="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
+
+          <!-- LEFT FOOT -->
+          <path d="M52 556 Q44 558 36 562 Q28 568 28 574 Q30 582 42 584 Q54 586 66 582 Q76 578 82 570 Q86 564 86 556Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <!-- Toes left -->
+          <ellipse cx="34" cy="582" rx="5" ry="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <ellipse cx="44" cy="585" rx="5" ry="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <ellipse cx="54" cy="585" rx="5" ry="3.5" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <ellipse cx="63" cy="583" rx="4.5" ry="3.5" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <ellipse cx="71" cy="580" rx="4" ry="3" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
+
+          <!-- RIGHT FOOT -->
+          <path d="M188 556 Q196 558 204 562 Q212 568 212 574 Q210 582 198 584 Q186 586 174 582 Q164 578 158 570 Q154 564 154 556Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <ellipse cx="206" cy="582" rx="5" ry="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <ellipse cx="196" cy="585" rx="5" ry="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <ellipse cx="186" cy="585" rx="5" ry="3.5" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <ellipse cx="177" cy="583" rx="4.5" ry="3.5" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <ellipse cx="169" cy="580" rx="4" ry="3" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
+        </svg>
+
+        <!-- ═══ FRONT HOTSPOTS ═══ -->
+        <!-- Brain (top of head) -->
+        <div class="hs" style="left:120px;top:25px" onclick="showZone('brain')" id="hs-brain">
+          <div class="hs-ring"></div><div class="hs-dot"></div>
+          <div class="hs-tip">Brain & Focus</div>
+        </div>
+        <!-- Eyes/vision -->
+        <div class="hs" style="left:80px;top:48px" onclick="showZone('eyes')" id="hs-eyes">
+          <div class="hs-ring"></div><div class="hs-dot"></div>
+          <div class="hs-tip tip-left">Eyes & Vision</div>
+        </div>
+        <!-- Heart (left chest) -->
+        <div class="hs" style="left:88px;top:155px" onclick="showZone('heart')" id="hs-heart">
+          <div class="hs-ring"></div><div class="hs-dot"></div>
+          <div class="hs-tip tip-left">Heart & Cardio</div>
+        </div>
+        <!-- Lungs (right chest) -->
+        <div class="hs" style="left:158px;top:155px" onclick="showZone('lungs')" id="hs-lungs">
+          <div class="hs-ring"></div><div class="hs-dot"></div>
+          <div class="hs-tip">Lungs & Immune</div>
+        </div>
+        <!-- Gut/liver area -->
+        <div class="hs" style="left:120px;top:220px" onclick="showZone('gut')" id="hs-gut">
+          <div class="hs-ring"></div><div class="hs-dot"></div>
+          <div class="hs-tip">Gut & Liver</div>
+        </div>
+        <!-- Hormones/thyroid -->
+        <div class="hs" style="left:120px;top:110px" onclick="showZone('thyroid')" id="hs-thyroid">
+          <div class="hs-ring"></div><div class="hs-dot"></div>
+          <div class="hs-tip">Thyroid & Hormones</div>
+        </div>
+        <!-- Muscles/bicep left -->
+        <div class="hs" style="left:50px;top:185px" onclick="showZone('muscles')" id="hs-muscles">
+          <div class="hs-ring"></div><div class="hs-dot"></div>
+          <div class="hs-tip tip-left">Muscle & Performance</div>
+        </div>
+        <!-- Joints / knee -->
+        <div class="hs" style="left:162px;top:440px" onclick="showZone('joints')" id="hs-joints">
+          <div class="hs-ring"></div><div class="hs-dot"></div>
+          <div class="hs-tip">Joints & Bones</div>
+        </div>
+        <!-- Skin/hair (shoulder area) -->
+        <div class="hs" style="left:170px;top:130px" onclick="showZone('skin')" id="hs-skin">
+          <div class="hs-ring"></div><div class="hs-dot"></div>
+          <div class="hs-tip">Skin & Hair</div>
+        </div>
+        <!-- Reproductive/pelvic -->
+        <div class="hs" style="left:120px;top:308px" onclick="showZone('repro')" id="hs-repro">
+          <div class="hs-ring"></div><div class="hs-dot"></div>
+          <div class="hs-tip">Reproductive Health</div>
+        </div>
+        <!-- Energy/adrenal -->
+        <div class="hs" style="left:155px;top:228px" onclick="showZone('energy')" id="hs-energy">
+          <div class="hs-ring"></div><div class="hs-dot"></div>
+          <div class="hs-tip">Energy & Adrenals</div>
+        </div>
+      </div>
+
+      <!-- ═══ BACK VIEW ═══ -->
+      <div class="anatomy-wrap" id="back-view" style="display:none">
+        <svg viewBox="0 0 240 720" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="bBodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#253d2e"/>
+              <stop offset="100%" stop-color="#1a2e22"/>
+            </linearGradient>
+            <linearGradient id="bLimbGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#1e3528"/>
+              <stop offset="50%" stop-color="#2a4235"/>
+              <stop offset="100%" stop-color="#1e3528"/>
+            </linearGradient>
+          </defs>
+
+          <!-- HEAD BACK -->
+          <ellipse cx="120" cy="52" rx="38" ry="44" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <!-- Occipital -->
+          <path d="M90 88 Q120 96 150 88 Q148 78 120 82 Q92 78 90 88Z" fill="#1e3528" opacity="0.5"/>
+          <!-- Hair back -->
+          <path d="M85 12 Q120 4 155 12 Q160 20 155 30 Q140 20 120 18 Q100 20 85 30 Q80 20 85 12Z" fill="#152218" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <!-- Ears back -->
+          <path d="M82 46 Q76 46 74 52 Q74 60 78 64 Q82 66 84 62 Q86 56 84 50Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
+          <path d="M158 46 Q164 46 166 52 Q166 60 162 64 Q158 66 156 62 Q154 56 156 50Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
+
+          <!-- NECK BACK -->
+          <path d="M106 92 Q100 96 100 116 L100 118 Q110 122 120 122 Q130 122 140 118 L140 116 Q140 96 134 92Z" fill="url(#bLimbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <!-- Trapezius top -->
+          <path d="M100 114 Q120 120 140 114 Q152 118 160 126 Q140 124 120 124 Q100 124 80 126 Q88 118 100 114Z" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="1" opacity="0.8"/>
+
+          <!-- BACK TORSO (trapezius, lats, etc.) -->
+          <path d="M76 126 Q60 130 56 158 L54 200 Q54 230 58 256 Q62 272 68 280 L76 288 Q96 296 120 296 Q144 296 164 288 L172 280 Q178 272 182 256 Q186 230 186 200 L184 158 Q180 130 164 126 Q142 120 120 120 Q98 120 76 126Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <!-- Spine -->
+          <path d="M120 126 L120 290" stroke="#4a6a55" stroke-width="1.8" fill="none" opacity="0.7"/>
+          <!-- Vertebrae dots -->
+          <circle cx="120" cy="136" r="2.5" fill="#3a5a45"/>
+          <circle cx="120" cy="150" r="2.5" fill="#3a5a45"/>
+          <circle cx="120" cy="164" r="2.5" fill="#3a5a45"/>
+          <circle cx="120" cy="178" r="2.5" fill="#3a5a45"/>
+          <circle cx="120" cy="192" r="2.5" fill="#3a5a45"/>
+          <circle cx="120" cy="206" r="2.5" fill="#3a5a45"/>
+          <circle cx="120" cy="220" r="2.5" fill="#3a5a45"/>
+          <circle cx="120" cy="234" r="2.5" fill="#3a5a45"/>
+          <circle cx="120" cy="248" r="2.5" fill="#3a5a45"/>
+          <circle cx="120" cy="262" r="2.5" fill="#3a5a45"/>
+          <circle cx="120" cy="276" r="2.5" fill="#3a5a45"/>
+          <!-- Left scapula -->
+          <path d="M80 136 Q70 148 70 168 Q74 178 82 178 Q94 178 100 168 Q106 156 102 140 Q94 132 80 136Z" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="1" opacity="0.7"/>
+          <!-- Right scapula -->
+          <path d="M160 136 Q170 148 170 168 Q166 178 158 178 Q146 178 140 168 Q134 156 138 140 Q146 132 160 136Z" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="1" opacity="0.7"/>
+          <!-- Lat (left) -->
+          <path d="M68 178 Q58 200 62 230 Q66 248 76 255 Q90 258 98 245 Q106 230 104 205 Q100 185 92 178Z" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="1" opacity="0.6"/>
+          <!-- Lat (right) -->
+          <path d="M172 178 Q182 200 178 230 Q174 248 164 255 Q150 258 142 245 Q134 230 136 205 Q140 185 148 178Z" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="1" opacity="0.6"/>
+          <!-- Erector spinae -->
+          <path d="M110 136 Q108 200 110 265" stroke="var(--body-light)" stroke-width="1.2" fill="none" opacity="0.5"/>
+          <path d="M130 136 Q132 200 130 265" stroke="var(--body-light)" stroke-width="1.2" fill="none" opacity="0.5"/>
+
+          <!-- SHOULDERS BACK -->
+          <path d="M100 118 Q80 118 68 126 Q56 134 54 148 Q58 152 64 150 Q70 148 74 140 Q82 130 100 126Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <path d="M140 118 Q160 118 172 126 Q184 134 186 148 Q182 152 176 150 Q170 148 166 140 Q158 130 140 126Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+
+          <!-- ARMS BACK (tricep visible) -->
+          <!-- Left upper arm back -->
+          <path d="M64 150 Q50 154 42 170 Q36 188 38 208 Q42 218 50 218 Q60 218 64 208 Q70 190 70 172 Q70 162 66 152Z" fill="url(#bLimbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <!-- Tricep left -->
+          <path d="M55 164 Q50 180 52 202" stroke="var(--body-light)" stroke-width="1.5" fill="none" opacity="0.6"/>
+          <!-- Left forearm back -->
+          <path d="M50 218 Q42 224 36 240 Q32 256 34 272 Q38 280 46 278 Q56 276 60 266 Q66 248 64 228 Q62 222 54 218Z" fill="url(#bLimbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <!-- Left hand back -->
+          <path d="M34 272 Q28 272 26 278 Q24 286 28 292 Q30 296 36 296 Q42 296 46 290 Q50 282 48 274Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
+
+          <!-- Right upper arm back -->
+          <path d="M176 150 Q190 154 198 170 Q204 188 202 208 Q198 218 190 218 Q180 218 176 208 Q170 190 170 172 Q170 162 174 152Z" fill="url(#bLimbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <path d="M185 164 Q190 180 188 202" stroke="var(--body-light)" stroke-width="1.5" fill="none" opacity="0.6"/>
+          <!-- Right forearm back -->
+          <path d="M190 218 Q198 224 204 240 Q208 256 206 272 Q202 280 194 278 Q184 276 180 266 Q174 248 176 228 Q178 222 186 218Z" fill="url(#bLimbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <!-- Right hand back -->
+          <path d="M206 272 Q212 272 214 278 Q216 286 212 292 Q210 296 204 296 Q198 296 194 290 Q190 282 192 274Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
+
+          <!-- GLUTES -->
+          <path d="M64 280 Q56 288 56 308 Q58 326 74 334 Q92 340 120 340 Q148 340 166 334 Q182 326 184 308 Q184 288 176 280 Q152 296 120 296 Q88 296 64 280Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <!-- Glute crease -->
+          <path d="M80 330 Q120 338 160 330" stroke="var(--body-stroke)" stroke-width="1" fill="none" opacity="0.5"/>
+          <!-- Glute division -->
+          <path d="M120 296 L120 338" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.4"/>
+
+          <!-- LEFT HAMSTRING -->
+          <path d="M80 334 Q68 342 60 362 Q54 382 56 404 Q60 420 70 428 Q82 436 92 428 Q102 418 104 396 Q108 372 104 350 Q100 336 88 330Z" fill="url(#bLimbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <path d="M68 352 Q66 378 68 404" stroke="var(--body-light)" stroke-width="1" fill="none" opacity="0.5"/>
+          <path d="M84 336 Q82 370 84 405" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.4"/>
+
+          <!-- RIGHT HAMSTRING -->
+          <path d="M160 334 Q172 342 180 362 Q186 382 184 404 Q180 420 170 428 Q158 436 148 428 Q138 418 136 396 Q132 372 136 350 Q140 336 152 330Z" fill="url(#bLimbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <path d="M172 352 Q174 378 172 404" stroke="var(--body-light)" stroke-width="1" fill="none" opacity="0.5"/>
+          <path d="M156 336 Q158 370 156 405" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.4"/>
+
+          <!-- KNEES BACK -->
+          <ellipse cx="80" cy="435" rx="22" ry="15" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <ellipse cx="160" cy="435" rx="22" ry="15" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+
+          <!-- CALVES -->
+          <path d="M60 448 Q52 466 50 490 Q48 514 52 536 Q56 548 66 552 Q78 556 86 548 Q94 538 94 514 Q96 490 90 468 Q86 454 78 448Z" fill="url(#bLimbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <!-- Calf belly -->
+          <path d="M62 460 Q56 480 58 505" stroke="var(--body-light)" stroke-width="2" fill="none" opacity="0.5"/>
+          <path d="M78 450 Q76 476 78 505" stroke="var(--body-stroke)" stroke-width="1" fill="none" opacity="0.4"/>
+
+          <path d="M180 448 Q188 466 190 490 Q192 514 188 536 Q184 548 174 552 Q162 556 154 548 Q146 538 146 514 Q144 490 150 468 Q154 454 162 448Z" fill="url(#bLimbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <path d="M178 460 Q184 480 182 505" stroke="var(--body-light)" stroke-width="2" fill="none" opacity="0.5"/>
+          <path d="M162 450 Q164 476 162 505" stroke="var(--body-stroke)" stroke-width="1" fill="none" opacity="0.4"/>
+
+          <!-- ANKLES BACK -->
+          <path d="M50 542 Q48 552 52 560 Q58 564 68 564 Q78 564 84 560 Q88 552 88 542Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
+          <circle cx="52" cy="552" r="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <circle cx="86" cy="552" r="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <path d="M190 542 Q192 552 188 560 Q182 564 172 564 Q162 564 156 560 Q152 552 152 542Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
+          <circle cx="154" cy="552" r="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <circle cx="188" cy="552" r="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
+
+          <!-- HEELS + FEET BACK -->
+          <path d="M52 560 Q44 560 36 564 Q28 570 30 578 Q32 586 46 588 Q60 590 72 584 Q82 578 86 568 Q86 562 84 560Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <path d="M188 560 Q196 560 204 564 Q212 570 210 578 Q208 586 194 588 Q180 590 168 584 Q158 578 154 568 Q154 562 156 560Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <!-- Heel bumps -->
+          <ellipse cx="45" cy="584" rx="14" ry="8" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8" opacity="0.7"/>
+          <ellipse cx="195" cy="584" rx="14" ry="8" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8" opacity="0.7"/>
+        </svg>
+
+        <!-- ═══ BACK HOTSPOTS ═══ -->
+        <div class="hs" style="left:120px;top:150px" onclick="showZone('spine')" id="hs-spine">
+          <div class="hs-ring"></div><div class="hs-dot"></div>
+          <div class="hs-tip">Spine & Back</div>
+        </div>
+        <div class="hs" style="left:84px;top:158px" onclick="showZone('shoulders')" id="hs-shoulders">
+          <div class="hs-ring"></div><div class="hs-dot"></div>
+          <div class="hs-tip tip-left">Shoulders & Traps</div>
+        </div>
+        <div class="hs" style="left:66px;top:195px" onclick="showZone('recovery')" id="hs-recovery">
+          <div class="hs-ring"></div><div class="hs-dot"></div>
+          <div class="hs-tip tip-left">Recovery & Sleep</div>
+        </div>
+        <div class="hs" style="left:120px;top:315px" onclick="showZone('glutes')" id="hs-glutes">
+          <div class="hs-ring"></div><div class="hs-dot"></div>
+          <div class="hs-tip">Glutes & Hip</div>
+        </div>
+        <div class="hs" style="left:72px;top:382px" onclick="showZone('hamstrings')" id="hs-hamstrings">
+          <div class="hs-ring"></div><div class="hs-dot"></div>
+          <div class="hs-tip tip-left">Hamstrings</div>
+        </div>
+        <div class="hs" style="left:66px;top:488px" onclick="showZone('calves')" id="hs-calves">
+          <div class="hs-ring"></div><div class="hs-dot"></div>
+          <div class="hs-tip tip-left">Calves & Circulation</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INFO TILES -->
+    <div class="info-tiles">
+      <div class="itile"><div class="itile-icon">🧬</div><div class="itile-title">Evidence-based</div><div class="itile-text">Backed by peer-reviewed clinical research.</div></div>
+      <div class="itile"><div class="itile-icon">⏱</div><div class="itile-title">Timing protocols</div><div class="itile-text">Optimal dosing windows for each compound.</div></div>
+      <div class="itile"><div class="itile-icon">⚠️</div><div class="itile-title">Interactions noted</div><div class="itile-text">Drug & supplement interactions flagged.</div></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: INFO PANEL -->
+  <div class="info-panel" id="info-panel">
+    <div class="panel-empty" id="panel-empty">
+      <div class="panel-empty-icon">◎</div>
+      <h3>Select a zone</h3>
+      <p>Tap any glowing point on the body map to see supplement recommendations for that zone — including dosing, timing, and stockists.</p>
+    </div>
+
+    <!-- All supplement panels are generated by JS below -->
+  </div>
+</div>
+
+<div class="disclaimer">
+  <p>⚠ DISCLAIMER — SupplMap is for educational purposes only and does not constitute medical advice. Always consult a qualified healthcare professional, midwife, or OB-GYN before starting supplements, especially during pregnancy. Supplement interactions with medications may occur. Links to stockists may include affiliate codes that support this site at no cost to you.</p>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════
+const DATA = {
+  normal: {
+    brain: {
+      title: "Brain & Focus",
+      subtitle: "Cognitive performance, memory, mood, neuroprotection",
+      supplements: [
+        { name: "Omega-3 (EPA/DHA)", badges: [["Essential","green"]], desc: "Critical for neuronal membrane integrity, synaptic plasticity, and mood. DHA makes up ~25% of brain fat content.", dose: "1–3g EPA+DHA/day", timing: "With meals", form: "Triglyceride form", warn: "Check for heavy metal testing (mercury). Avoid if on blood thinners at high doses.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=omega+3+fish+oil"],["H&B","https://www.hollandandbarrett.com/shop/vitamins-supplements/fish-oils-omegas/"],["Nordic Naturals","https://www.nordic.com"]] },
+        { name: "Lion's Mane Mushroom", badges: [["Nootropic","blue"]], desc: "Stimulates nerve growth factor (NGF) and brain-derived neurotrophic factor (BDNF). Supports neuroplasticity, memory formation and focus.", dose: "500–1000mg/day", timing: "Morning", form: "Dual extract (water + alcohol)", warn: "Onset 4–8 weeks. Source from reputable dual-extract suppliers only.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=lions+mane+extract"],["Real Mushrooms","https://www.realmushrooms.com"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "Bacopa Monnieri", badges: [["Memory","gold"]], desc: "Ayurvedic adaptogen with strong RCT evidence for memory consolidation and reduced anxiety. Increases dendritic branching.", dose: "300–600mg/day", timing: "With a fat-containing meal", form: "55% bacosides extract", warn: "Slow-onset: 8–12 weeks for full benefit. May cause fatigue initially.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=bacopa+monnieri"],["Nootropics Depot","https://www.nootropicsdepot.com"]] },
+        { name: "L-Theanine + Caffeine", badges: [["Stack","blue"]], desc: "The classic cognitive stack. L-theanine (100–200mg) smooths caffeine's stimulant effect, improving focus without jitters.", dose: "100–200mg L-theanine : 50–100mg caffeine", timing: "Morning / pre-focus session", form: "Capsules or combined supplement", warn: "Avoid in afternoon to protect sleep.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=l-theanine+caffeine"],["Bulk","https://www.bulk.com"]] },
+        { name: "Phosphatidylserine", badges: [["Cognition","gold"]], desc: "FDA-qualified claim for cognitive decline reduction. Supports cell membrane health in neurons, improves cortisol response.", dose: "100–300mg/day", timing: "With meals", form: "Sunflower-derived (soy-free)", warn: "Well-tolerated. Genuine FDA-level evidence. Costly — check quality.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=phosphatidylserine"],["Thorne","https://www.thorne.com"]] },
+        { name: "Magnesium L-Threonate", badges: [["Brain-specific","blue"]], desc: "Uniquely crosses the blood-brain barrier to increase brain magnesium levels — unlike other forms. Supports synaptic density.", dose: "1.5–2g/day (144mg elemental Mg)", timing: "Split: morning + evening", form: "L-threonate (Magtein brand)", warn: "Expensive but the only form with direct brain penetration evidence.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=magnesium+l-threonate"],["Thorne","https://www.thorne.com"]] },
+      ]
+    },
+    eyes: {
+      title: "Eyes & Vision",
+      subtitle: "Retinal health, blue light protection, macular support",
+      supplements: [
+        { name: "Lutein & Zeaxanthin", badges: [["Essential","green"]], desc: "Macular pigment carotenoids that filter blue light and reduce oxidative damage to the retina. Strong evidence for AMD prevention.", dose: "10–20mg lutein / 2–4mg zeaxanthin", timing: "With meals containing fat", form: "FloraGLO standardised extract", warn: "Well-studied. Most people get <1mg/day from diet — supplementation is often warranted.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=lutein+zeaxanthin"],["H&B","https://www.hollandandbarrett.com"],["Boots","https://www.boots.com"]] },
+        { name: "Astaxanthin", badges: [["Antioxidant","gold"]], desc: "Most powerful known natural antioxidant. Penetrates both retinal and brain tissue. Reduces eye fatigue and improves blood flow to retina.", dose: "4–12mg/day", timing: "With meals", form: "Natural (haematococcus algae)", warn: "Turns skin slightly orange at very high doses (uncommon at standard doses).", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=astaxanthin+natural"],["Cytoplan","https://www.cytoplan.co.uk"]] },
+        { name: "Omega-3 (DHA)", badges: [["Structural","blue"]], desc: "DHA makes up ~60% of photoreceptor (rod/cone) membrane fat content. Essential for retinal function and dry eye reduction.", dose: "500–1000mg DHA/day", timing: "With meals", form: "Triglyceride or phospholipid form", warn: "Critical for dry eye syndrome — often more effective than eye drops.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=omega+3+dha"],["Nordic Naturals","https://www.nordic.com"]] },
+        { name: "Vitamin A (Beta-Carotene)", badges: [["Retinal","gold"]], desc: "Precursor to retinal, essential for rhodopsin production (night vision). Deficiency causes night blindness.", dose: "Beta-carotene 6–15mg OR pre-formed A 700–900mcg RAE", timing: "With fat-containing meal", form: "Beta-carotene (safer) vs retinol", warn: "Pre-formed Vitamin A is toxic in excess. Prefer beta-carotene. Smokers should avoid beta-carotene supplements.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=beta+carotene+supplement"],["H&B","https://www.hollandandbarrett.com"]] },
+      ]
+    },
+    heart: {
+      title: "Heart & Cardiovascular",
+      subtitle: "Cardiac function, blood pressure, cholesterol, circulation",
+      supplements: [
+        { name: "CoQ10 (Ubiquinol)", badges: [["Essential","green"]], desc: "Powers mitochondrial ATP production in cardiac muscle. Depleted by statin medication. Reduces oxidative stress in heart tissue.", dose: "100–300mg/day", timing: "With a fatty meal", form: "Ubiquinol (active form) — superior to ubiquinone", warn: "Essential if on statins. Ubiquinol absorbs 2–8x better than ubiquinone.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=coq10+ubiquinol"],["H&B","https://www.hollandandbarrett.com"],["Thorne","https://www.thorne.com"]] },
+        { name: "Magnesium Glycinate", badges: [["Essential","green"]], desc: "Regulates cardiac rhythm, reduces blood pressure (8–10mmHg systolic in studies), and prevents arterial calcification.", dose: "200–400mg elemental Mg/day", timing: "Evening with dinner", form: "Glycinate or malate (NOT oxide)", warn: "Oxide form has ~4% bioavailability. Glycinate is best-tolerated form.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=magnesium+glycinate"],["H&B","https://www.hollandandbarrett.com"],["Boots","https://www.boots.com"]] },
+        { name: "Omega-3 EPA", badges: [["Cardio","blue"]], desc: "High-dose EPA (REDUCE-IT trial: 4g/day icosapentaenoic acid) reduced cardiovascular events by 25% in at-risk patients.", dose: "1–4g EPA+DHA/day for cardio protection", timing: "With meals", form: "Prescription (Vascepa) or high-EPA fish oil", warn: "At 4g/day, consult your cardiologist. Blood-thinning effect at high doses.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=high+epa+fish+oil"],["Nordic Naturals","https://www.nordic.com"]] },
+        { name: "Berberine", badges: [["Cholesterol","gold"]], desc: "Activates AMPK — the 'metabolic master switch'. Comparable to metformin for blood sugar. Also lowers LDL and triglycerides.", dose: "500mg 2–3x/day with meals", timing: "With meals to reduce GI side effects", form: "Berberine HCl or dihydroberberine", warn: "Interacts with many medications. Consult doctor if diabetic or on statins/antibiotics.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=berberine+supplement"],["Thorne","https://www.thorne.com"]] },
+        { name: "Garlic Extract (Allicin)", badges: [["BP","gold"]], desc: "Aged garlic extract clinically reduces systolic BP by 10–12mmHg. Also reduces arterial plaque and LDL oxidation.", dose: "600–1200mg allicin-standardised extract", timing: "With meals", form: "Aged garlic (Kyolic) or standardised allicin", warn: "May enhance antiplatelet effects. Avoid high doses pre-surgery.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=aged+garlic+extract"],["H&B","https://www.hollandandbarrett.com"]] },
+      ]
+    },
+    lungs: {
+      title: "Lungs & Immune System",
+      subtitle: "Respiratory function, immune defence, inflammation",
+      supplements: [
+        { name: "Vitamin D3 (5000 IU)", badges: [["Essential","green"]], desc: "Deficiency linked to 14x higher risk of severe respiratory illness. Modulates both innate and adaptive immune response.", dose: "2000–5000 IU/day (test first)", timing: "Morning with fat-containing meal", form: "D3 (cholecalciferol) + K2 (MK-7)", warn: "Test 25-OH-D levels. Optimal: 40–60 ng/mL. Take with K2 to prevent arterial calcification.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=vitamin+d3+k2"],["Boots","https://www.boots.com"],["Thorne","https://www.thorne.com"]] },
+        { name: "Vitamin C (Buffered)", badges: [["Immune","blue"]], desc: "Concentrates in immune cells at 50–100x plasma levels. Reduces duration and severity of upper respiratory infections.", dose: "500–1000mg/day (acute: up to 4g/day)", timing: "Split doses with meals", form: "Ascorbate (buffered) or liposomal", warn: "High doses can cause GI upset. Kidney stone risk at very high doses in susceptible individuals.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=vitamin+c+buffered"],["H&B","https://www.hollandandbarrett.com"],["Boots","https://www.boots.com"]] },
+        { name: "Zinc Bisglycinate", badges: [["Essential","green"]], desc: "Zinc deficiency impairs T-cell function. Direct antiviral activity. Reduces respiratory illness duration by up to 30% when taken promptly.", dose: "15–25mg elemental zinc/day", timing: "With food (reduces nausea)", form: "Bisglycinate or picolinate (NOT oxide)", warn: "Long-term >40mg/day depletes copper. Balance with 1–2mg copper.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=zinc+bisglycinate"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "N-Acetyl Cysteine (NAC)", badges: [["Respiratory","gold"]], desc: "Precursor to glutathione. Thins mucus secretions, improves lung function in COPD. Protects against oxidative lung damage.", dose: "600–1800mg/day", timing: "Away from meals, split doses", form: "NAC (free-form)", warn: "Widely studied. May affect asthma differently — consult doctor if asthmatic.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=nac+n+acetyl+cysteine"],["Bulk","https://www.bulk.com"]] },
+        { name: "Elderberry (Sambucol)", badges: [["Antiviral","blue"]], desc: "Inhibits viral replication by binding to and preventing entry of influenza and other respiratory viruses. Reduces illness duration by ~2–4 days.", dose: "600–900mg standardised extract", timing: "Acute: 4x/day for 5 days. Maintenance: once daily", form: "Standardised anthocyanin extract", warn: "Do not use during active autoimmune flares — immune-stimulating.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=elderberry+supplement"],["H&B","https://www.hollandandbarrett.com"],["Boots","https://www.boots.com"]] },
+      ]
+    },
+    thyroid: {
+      title: "Thyroid & Hormones",
+      subtitle: "Thyroid function, testosterone, oestrogen balance, cortisol",
+      supplements: [
+        { name: "Iodine + Selenium", badges: [["Thyroid","green"]], desc: "Iodine is the literal raw material for thyroid hormones (T3/T4). Selenium converts T4→T3 and protects thyroid from oxidative damage.", dose: "150–300mcg iodine / 100–200mcg selenium", timing: "With meals", form: "Potassium iodide + selenomethionine", warn: "Don't supplement iodine if you have autoimmune thyroiditis (Hashimoto's) without medical guidance — can worsen it.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=iodine+selenium+supplement"],["Thorne","https://www.thorne.com"]] },
+        { name: "Ashwagandha (KSM-66)", badges: [["Adaptogen","gold"]], desc: "Clinically reduces cortisol by 28%, improves thyroid hormones (T3/T4 in subclinical hypothyroid), and increases testosterone in men.", dose: "300–600mg/day", timing: "Evening (calming)", form: "KSM-66 or Sensoril standardised extract", warn: "Cycle on/off (8 weeks on, 2 weeks off). Avoid in thyroid cancer. Can affect thyroid medication dosing.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=ashwagandha+ksm-66"],["H&B","https://www.hollandandbarrett.com"],["Bulk","https://www.bulk.com"]] },
+        { name: "Zinc + Magnesium (ZMA)", badges: [["Testosterone","blue"]], desc: "Zinc is essential for testosterone synthesis. Magnesium supports sleep quality where testosterone is produced. ZMA stack shows 33% testosterone increase in deficient individuals.", dose: "Zinc 25–30mg + Magnesium 400–450mg + B6", timing: "Before bed on empty stomach", form: "ZMA formula or separate", warn: "Only effective if zinc-deficient (common). Test zinc levels first if possible.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=zma+supplement"],["Myprotein","https://www.myprotein.com"],["Bulk","https://www.bulk.com"]] },
+        { name: "DIM (Diindolylmethane)", badges: [["Oestrogen","rose"]], desc: "Metabolite of cruciferous vegetables. Supports healthy oestrogen metabolism (promotes 2-OH oestrogen over 16-OH). Beneficial for both men and women.", dose: "100–300mg/day", timing: "With meals", form: "BioResponse DIM (enhanced absorption)", warn: "Strong interaction with hormonal medications. Consult doctor if on oestrogen therapy, birth control, or have hormone-sensitive cancer.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=dim+diindolylmethane"],["Thorne","https://www.thorne.com"]] },
+        { name: "Rhodiola Rosea", badges: [["Adaptogen","gold"]], desc: "Adaptogen that modulates cortisol response, reduces burnout, and improves stress resilience. Evidence for improving mental performance under stress.", dose: "200–600mg/day", timing: "Morning / early afternoon", form: "3% rosavins + 1% salidroside extract", warn: "Stimulating — avoid late in the day. Cycle periodically. May interact with antidepressants (MAOIs).", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=rhodiola+rosea+extract"],["Nootropics Depot","https://www.nootropicsdepot.com"]] },
+      ]
+    },
+    gut: {
+      title: "Gut & Liver",
+      subtitle: "Microbiome, digestion, intestinal integrity, liver detox",
+      supplements: [
+        { name: "Multi-Strain Probiotic", badges: [["Foundation","green"]], desc: "Lactobacillus and Bifidobacterium strains restore microbiome diversity, reduce bloating, improve IBS symptoms, and support gut-brain axis.", dose: "10–50 billion CFU/day", timing: "With or after food (protects bacteria)", form: "Enteric-coated; rotate strains every 90 days", warn: "Start low, increase gradually. Those immunocompromised should consult doctor before using probiotics.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=multi+strain+probiotic"],["Boots","https://www.boots.com"],["Symprove","https://www.symprove.com"]] },
+        { name: "L-Glutamine", badges: [["Gut Wall","blue"]], desc: "Primary fuel source for intestinal epithelial cells. Clinically proven to reduce intestinal permeability ('leaky gut') and support mucosal repair.", dose: "5–15g/day", timing: "Fasted — away from meals for best uptake", form: "Pharmaceutical-grade powder", warn: "Avoid with active cancer (provides fuel for proliferating cells). Not suitable for those with liver/kidney disease.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=l-glutamine+powder"],["Myprotein","https://www.myprotein.com"],["Bulk","https://www.bulk.com"]] },
+        { name: "Milk Thistle (Silymarin)", badges: [["Liver","gold"]], desc: "Silymarin is the most researched liver-protective compound. Reduces oxidative stress in hepatocytes and supports liver regeneration.", dose: "140–420mg silymarin/day", timing: "With meals", form: "80% silymarin standardised extract", warn: "Very safe. May affect cytochrome P450 — can alter levels of some medications. Check with pharmacist.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=milk+thistle+silymarin"],["H&B","https://www.hollandandbarrett.com"],["Boots","https://www.boots.com"]] },
+        { name: "Digestive Enzymes", badges: [["Digestion","blue"]], desc: "Blend of lipase, protease, amylase and betaine HCl. Improves nutrient absorption, reduces bloating after meals, and supports those with low stomach acid.", dose: "Per label — 1–2 capsules with meals", timing: "At the start of meals", form: "Full-spectrum with HCl if low acid suspected", warn: "Avoid HCl if you have ulcers or gastritis. Not needed long-term in healthy guts.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=digestive+enzymes"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "Prebiotic Fibre (Inulin/FOS)", badges: [["Microbiome","green"]], desc: "Feeds beneficial gut bacteria selectively. Increases butyrate production — the preferred fuel of colon cells and critical for gut lining integrity.", dose: "5–15g/day", timing: "With meals or in drinks", form: "Inulin, FOS, or arabinogalactan", warn: "Introduce very gradually to avoid gas/bloating. Build up over 2–4 weeks.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=inulin+prebiotic"],["H&B","https://www.hollandandbarrett.com"]] },
+      ]
+    },
+    skin: {
+      title: "Skin, Hair & Nails",
+      subtitle: "Collagen synthesis, hydration, keratin, anti-ageing",
+      supplements: [
+        { name: "Collagen Peptides (Type I/III)", badges: [["Foundation","green"]], desc: "Hydrolysed collagen peptides increase skin elasticity by 12% and reduce wrinkle depth by 8% in RCTs. Also supports nails and hair structure.", dose: "10–15g/day", timing: "Morning, on empty stomach or with small meal + Vitamin C", form: "Hydrolysed bovine or marine peptides", warn: "Marine collagen has superior bioavailability. Pair with 500mg Vitamin C — required for endogenous collagen synthesis.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=marine+collagen+peptides"],["H&B","https://www.hollandandbarrett.com"],["Revive Collagen","https://www.revivecollagen.com"]] },
+        { name: "Biotin (B7)", badges: [["Hair & Nails","gold"]], desc: "Essential cofactor for keratin biosynthesis. Evidence for improving brittle nail syndrome and supporting hair health in those deficient.", dose: "2.5–5mg/day", timing: "With meals", form: "Standard biotin (D-biotin)", warn: "High-dose biotin interferes with thyroid, cardiac, and vitamin D blood tests — inform your doctor.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=biotin+supplement"],["H&B","https://www.hollandandbarrett.com"],["Boots","https://www.boots.com"]] },
+        { name: "Hyaluronic Acid (oral)", badges: [["Hydration","blue"]], desc: "Oral HA accumulates in skin dermis and significantly increases skin moisture content. 120–240mg/day shown to reduce skin dryness.", dose: "120–240mg/day", timing: "With meals", form: "Low molecular weight (LMW) for better absorption", warn: "Well-tolerated. Avoid if history of HA-related allergic reactions.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=hyaluronic+acid+oral"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "Vitamin C (High-dose)", badges: [["Collagen","green"]], desc: "Vitamin C is a required cofactor for collagen synthesis and a powerful antioxidant in skin. Reduces UV-induced oxidative damage.", dose: "500–1000mg/day", timing: "Split doses with meals", form: "Ascorbate or liposomal", warn: "Doses >2g/day may cause GI distress. Liposomal form avoids this.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=liposomal+vitamin+c"],["H&B","https://www.hollandandbarrett.com"],["Boots","https://www.boots.com"]] },
+        { name: "Silica (Bamboo Extract)", badges: [["Structural","gold"]], desc: "Silicon is integral to collagen cross-linking and elastin formation. Improves hair tensile strength and nail hardness.", dose: "10–30mg elemental silicon/day", timing: "Morning", form: "Orthosilicic acid or bamboo extract", warn: "Avoid in kidney disease — excreted renally. BioSil is the most researched form.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=silica+bamboo+supplement"],["H&B","https://www.hollandandbarrett.com"]] },
+      ]
+    },
+    muscles: {
+      title: "Muscle & Performance",
+      subtitle: "Hypertrophy, strength, power output, endurance",
+      supplements: [
+        { name: "Creatine Monohydrate", badges: [["Gold Standard","green"]], desc: "Most researched supplement in sports science. Increases phosphocreatine stores enabling more ATP regeneration. 5–15% gains in strength and power across hundreds of RCTs.", dose: "3–5g/day (no loading needed)", timing: "Any time — consistency is key", form: "Creapure monohydrate (German standard)", warn: "Extremely safe. Minor water retention in first 1–2 weeks. Ensure adequate hydration.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=creatine+monohydrate+creapure"],["Myprotein","https://www.myprotein.com"],["Bulk","https://www.bulk.com"]] },
+        { name: "Whey Protein Isolate", badges: [["Foundation","blue"]], desc: "Complete amino acid profile with highest leucine content of protein sources. Leucine is the primary trigger for muscle protein synthesis (MPS).", dose: "25–40g per serving; aim for 1.6–2.2g protein/kg BW/day total", timing: "Post-workout window; any time of day to hit targets", form: "Isolate (lactose-free) or concentrate", warn: "Whey isolate for lactose intolerance. Plant protein (pea+rice blend) as equivalent vegan option.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=whey+protein+isolate"],["Myprotein","https://www.myprotein.com"],["Bulk","https://www.bulk.com"]] },
+        { name: "Beta-Alanine", badges: [["Endurance","gold"]], desc: "Increases muscle carnosine — the primary buffer against lactic acid accumulation. Extends performance in 2–4 minute high-intensity efforts by 2–3%.", dose: "3.2–6.4g/day (sustained-release to reduce tingling)", timing: "Pre-workout or split through day", form: "CarnoSyn sustained-release preferred", warn: "Harmless tingling/flushing (paresthesia) is normal. Sustained-release formulations minimise this.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=beta+alanine+sustained+release"],["Bulk","https://www.bulk.com"],["Myprotein","https://www.myprotein.com"]] },
+        { name: "HMB (β-Hydroxy β-Methylbutyrate)", badges: [["Anti-catabolic","blue"]], desc: "Metabolite of leucine that significantly reduces muscle protein breakdown. Best evidence for older adults and during caloric restriction.", dose: "1.5–3g/day", timing: "With meals, split into 3 doses", form: "Free acid (Ca-HMB) or calcium salt", warn: "Most effective when muscle breakdown is high (caloric deficit, heavy training, older adults).", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=hmb+supplement"],["Bulk","https://www.bulk.com"]] },
+        { name: "Citrulline Malate", badges: [["Pump & Endurance","rose"]], desc: "Increases arginine and nitric oxide production improving blood flow to muscles. Reduces fatigue and increases training volume.", dose: "6–8g L-citrulline or 8–12g citrulline malate", timing: "30–60 min pre-workout", form: "Citrulline malate 2:1 ratio", warn: "May lower blood pressure — caution if on antihypertensives or pre-workout with stimulants.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=citrulline+malate"],["Bulk","https://www.bulk.com"],["Myprotein","https://www.myprotein.com"]] },
+      ]
+    },
+    energy: {
+      title: "Energy & Metabolism",
+      subtitle: "Mitochondrial function, adrenal support, thyroid, fat metabolism",
+      supplements: [
+        { name: "B-Complex (Methylated)", badges: [["Foundation","green"]], desc: "B vitamins are essential cofactors in every step of ATP production. Methylcobalamin (B12) and 5-MTHF (folate) bypass the MTHFR genetic bottleneck.", dose: "Per label — look for 400mcg 5-MTHF + 500mcg methylcobalamin", timing: "Morning with food", form: "Methylated forms (NOT cyanocobalamin or folic acid)", warn: "May cause vivid dreams initially. If side effects occur, try evening dosing.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=methylated+b+complex"],["Thorne","https://www.thorne.com"],["Jarrow","https://www.jarrow.com"]] },
+        { name: "CoQ10 (Ubiquinol)", badges: [["Mitochondrial","blue"]], desc: "The terminal electron acceptor in mitochondrial ATP production. Ubiquinol is the active reduced form — directly usable by cells.", dose: "100–300mg/day", timing: "With fatty meal", form: "Ubiquinol (QH) — not ubiquinone (Q10)", warn: "Essential if taking statins (deplete CoQ10). Ubiquinol much better absorbed over 40. Store in fridge.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=coq10+ubiquinol+200mg"],["H&B","https://www.hollandandbarrett.com"],["Thorne","https://www.thorne.com"]] },
+        { name: "Iron (Bisglycinate)", badges: [["Fatigue","rose"]], desc: "Iron deficiency is the most common micronutrient deficiency worldwide and a leading cause of fatigue, brain fog, and impaired exercise capacity.", dose: "18–25mg elemental iron (test first!)", timing: "Fasted or with Vitamin C (increases absorption)", form: "Bisglycinate (gentlest on gut)", warn: "ONLY supplement if deficient (blood test). Iron overload is dangerous. Men and post-menopausal women should avoid unless tested.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=iron+bisglycinate"],["H&B","https://www.hollandandbarrett.com"],["Boots","https://www.boots.com"]] },
+        { name: "L-Carnitine", badges: [["Fat Burning","gold"]], desc: "Shuttles long-chain fatty acids into mitochondria for oxidation. Reduces exercise fatigue and improves insulin sensitivity. Also supports brain function.", dose: "1–3g/day ALCAR (acetyl form for brain too)", timing: "Pre-workout or morning", form: "Acetyl-L-Carnitine (ALCAR) for combined brain+energy benefit", warn: "TMAO production concern at very high doses — practical concern at clinical doses is debated.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=acetyl+l+carnitine"],["Bulk","https://www.bulk.com"],["Myprotein","https://www.myprotein.com"]] },
+      ]
+    },
+    repro: {
+      title: "Reproductive Health",
+      subtitle: "Fertility, menstrual health, libido, hormonal balance",
+      supplements: [
+        { name: "Inositol (Myo + D-Chiro)", badges: [["Fertility","rose"]], desc: "Clinical evidence for improving PCOS outcomes: restores ovulation, reduces androgens, and improves insulin sensitivity. 40:1 myo:D-chiro ratio is optimal.", dose: "4g myo-inositol + 100mg D-chiro inositol/day", timing: "Split doses morning and evening, away from meals", form: "Combined 40:1 ratio formula", warn: "Very safe. If you have PCOS, this may significantly reduce the need for medications — inform your gynaecologist.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=myo+inositol+d-chiro"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "Vitex (Agnus-Castus)", badges: [["Hormonal","rose"]], desc: "Regulates prolactin and LH via dopamine receptor activity. Clinically improves luteal phase defects and PMS symptoms including mood, breast tenderness.", dose: "175–400mg standardised extract/day", timing: "Morning (takes 3 months minimum)", form: "4% aucubin standardised extract", warn: "Do NOT use if on hormonal contraceptives or dopamine medications. Not in pregnancy. Slow-acting — assess at 3 months.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=vitex+agnus+castus"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "CoQ10 (Egg Quality)", badges: [["Fertility","gold"]], desc: "Mitochondrial health of oocytes depends heavily on CoQ10. Higher CoQ10 status is associated with better egg quality and pregnancy rates in IVF.", dose: "400–600mg/day for fertility; 200mg maintenance", timing: "With fat-containing meals", form: "Ubiquinol (active form)", warn: "Most important for women over 35 trying to conceive. Begin 3–6 months before trying/IVF cycle.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=coq10+ubiquinol+fertility"],["Proceive","https://www.proceive.com"],["Thorne","https://www.thorne.com"]] },
+        { name: "Omega-3 (EPA/DHA)", badges: [["Hormonal","blue"]], desc: "EPA/DHA modulate prostaglandin synthesis, reducing menstrual pain, cramping, and supporting healthy hormonal signalling.", dose: "2–3g EPA+DHA/day", timing: "With meals", form: "Triglyceride form for best absorption", warn: "Blood-thinning effect — notify doctor if on anticoagulants or planning surgery.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=omega+3+fish+oil+high+strength"],["Nordic Naturals","https://www.nordic.com"]] },
+        { name: "Ashwagandha", badges: [["Libido","gold"]], desc: "Reduces cortisol (which suppresses reproductive hormones). RCTs show improved libido, lubrication, orgasm quality in women, and testosterone in men.", dose: "300–600mg/day KSM-66", timing: "Evening with milk or fat-containing food", form: "KSM-66 standardised extract", warn: "Do not use in pregnancy (abortifacient effect). Cycle use.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=ashwagandha+ksm-66+capsules"],["H&B","https://www.hollandandbarrett.com"]] },
+      ]
+    },
+    joints: {
+      title: "Joints & Bone Health",
+      subtitle: "Cartilage, inflammation, bone density, ligament integrity",
+      supplements: [
+        { name: "Collagen (Type II) + Vitamin C", badges: [["Cartilage","green"]], desc: "Undenatured type II collagen (UC-II) works via oral tolerisation — a unique immune mechanism. Pair with Vitamin C timed 30–60min pre-activity.", dose: "40mg UC-II OR 10–15g hydrolysed peptides", timing: "Pre-exercise (30–60min before) + Vit C", form: "UC-II for joints; hydrolysed peptides for broader connective tissue", warn: "UC-II is very different from hydrolysed collagen — much smaller dose. Do not confuse the forms.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=undenatured+collagen+type+ii"],["H&B","https://www.hollandandbarrett.com"],["Boots","https://www.boots.com"]] },
+        { name: "Vitamin D3 + K2", badges: [["Bone","blue"]], desc: "D3 drives intestinal calcium absorption. K2 (MK-7) activates osteocalcin to direct calcium into bone matrix rather than arterial walls.", dose: "2000–5000 IU D3 / 100–200mcg K2 MK-7", timing: "Morning with fat-containing meal", form: "D3 cholecalciferol + K2 MK-7 (trans-form)", warn: "Test your 25-OH-D levels first. Aim for 40–60 ng/mL. Avoid K2 if on warfarin.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=vitamin+d3+k2+mk7"],["Thorne","https://www.thorne.com"],["Boots","https://www.boots.com"]] },
+        { name: "Glucosamine + Chondroitin", badges: [["Joint","gold"]], desc: "Provide structural building blocks for cartilage proteoglycans and glycosaminoglycans. GAIT trial: most effective for moderate-severe joint pain.", dose: "1500mg glucosamine sulfate + 1200mg chondroitin sulfate", timing: "Split across meals", form: "Sulfate forms (not HCl)", warn: "Shellfish allergy: use vegan glucosamine. 3-month trial needed to assess response. Avoid large doses in diabetes.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=glucosamine+chondroitin+sulfate"],["H&B","https://www.hollandandbarrett.com"],["Boots","https://www.boots.com"]] },
+        { name: "Curcumin (Phytosome)", badges: [["Anti-inflammatory","rose"]], desc: "Inhibits NF-κB, COX-2, and 5-LOX inflammatory pathways. Comparable to ibuprofen in OA studies without GI damage.", dose: "500mg curcumin + piperine 3x/day, or 500–1000mg phytosome", timing: "With meals", form: "Meriva/Phytosome or CurcuWin + piperine", warn: "Blood-thinning at high doses. Avoid if on anticoagulants. Standard curcumin has <3% bioavailability — always use enhanced form.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=curcumin+phytosome+meriva"],["H&B","https://www.hollandandbarrett.com"],["Thorne","https://www.thorne.com"]] },
+      ]
+    },
+    spine: {
+      title: "Spine & Back Health",
+      subtitle: "Disc integrity, nerve support, inflammation, spinal muscles",
+      supplements: [
+        { name: "Magnesium Glycinate", badges: [["Muscle Tension","green"]], desc: "Magnesium is nature's calcium channel blocker. Deficiency causes muscle hypercontractility — a key driver of back muscle tension and spasm.", dose: "300–400mg elemental Mg/day", timing: "Evening (muscle-relaxing effect aids sleep)", form: "Glycinate or malate (best tolerated)", warn: "Very safe. Common deficiency. Most people benefit. Loose stools at high doses — reduce dose.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=magnesium+glycinate"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "Vitamin D3", badges: [["Disc Health","blue"]], desc: "D3 receptors are present in spinal discs. Deficiency associated with accelerated disc degeneration and musculoskeletal pain.", dose: "2000–5000 IU/day (test levels)", timing: "Morning with fat", form: "D3 + K2", warn: "UK/Northern Europeans are chronically deficient. Test 25-OH-D — aim for 40–60 ng/mL.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=vitamin+d3+5000iu"],["Boots","https://www.boots.com"]] },
+        { name: "Curcumin (Enhanced)", badges: [["Anti-inflammatory","rose"]], desc: "Targets the NF-κB inflammatory cascade responsible for disc degeneration and nerve root inflammation (sciatica).", dose: "500–1000mg curcumin phytosome 2x/day", timing: "With fat-containing meals", form: "Phytosome or CurcuWin formulation", warn: "Enhanced bioavailability form essential — standard turmeric has negligible absorption. Blood-thinning at high doses.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=curcumin+phytosome"],["H&B","https://www.hollandandbarrett.com"],["Thorne","https://www.thorne.com"]] },
+        { name: "Alpha Lipoic Acid (ALA)", badges: [["Nerve","gold"]], desc: "Powerful antioxidant that regenerates vitamins C and E. Clinical evidence for reducing neuropathic pain, burning, and tingling from nerve compression.", dose: "600–1200mg/day", timing: "Fasted (food reduces absorption by 30%)", form: "R-ALA is the active form (more potent)", warn: "May lower blood sugar — monitor if diabetic. Can affect thyroid hormone levels.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=r+alpha+lipoic+acid"],["Thorne","https://www.thorne.com"]] },
+      ]
+    },
+    shoulders: {
+      title: "Shoulders & Traps",
+      subtitle: "Rotator cuff, tendon integrity, muscle recovery",
+      supplements: [
+        { name: "Collagen Peptides + Vit C", badges: [["Tendon","green"]], desc: "Shaw et al. 2017 (BJSM): 15g hydrolysed collagen + 48mg Vit C taken 1hr pre-exercise tripled collagen synthesis in tendons and ligaments.", dose: "15g hydrolysed collagen + 500mg Vit C", timing: "1 hour before shoulder training/rehab", form: "Hydrolysed marine or bovine collagen powder", warn: "Timing is critical — the 1hr pre-exercise window maximises collagen deposition during loading.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=collagen+powder+vitamin+c"],["H&B","https://www.hollandandbarrett.com"],["Revive Collagen","https://www.revivecollagen.com"]] },
+        { name: "Curcumin", badges: [["Anti-inflammatory","rose"]], desc: "Reduces chronic inflammatory tendinopathy and DOMS (delayed onset muscle soreness) after overhead training. Equal to NSAIDs without GI damage.", dose: "500–1000mg 2–3x/day (enhanced form)", timing: "With meals", form: "Phytosome or + black pepper extract", warn: "Avoid around surgery. Blood-thinning at very high doses.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=curcumin+bioperine"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "Magnesium", badges: [["Muscle","blue"]], desc: "Muscle recovery, reduced DOMS, and reduced cramp risk in overhead athletes and swimmers.", dose: "300–400mg/day", timing: "Evening", form: "Glycinate preferred", warn: "Very safe. Often deficient in active individuals.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=magnesium+glycinate+capsules"],["H&B","https://www.hollandandbarrett.com"]] },
+      ]
+    },
+    recovery: {
+      title: "Recovery & Sleep",
+      subtitle: "Sleep quality, muscle repair, cellular regeneration, DOMS",
+      supplements: [
+        { name: "Magnesium Glycinate", badges: [["Sleep","green"]], desc: "Activates GABA receptors, lowering neural excitability. Clinical studies show improved deep sleep quality, sleep onset time, and morning recovery markers.", dose: "300–400mg elemental Mg", timing: "30–60 minutes before bed", form: "Glycinate (gentlest, best absorbed, most calming)", warn: "Highly safe. Start with lower dose to test tolerance. Distinct from daytime magnesium dosing.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=magnesium+glycinate+sleep"],["H&B","https://www.hollandandbarrett.com"],["Boots","https://www.boots.com"]] },
+        { name: "Ashwagandha (KSM-66)", badges: [["Adaptogen","gold"]], desc: "Reduces cortisol by 28% (Chandrasekhar 2012). Improves sleep onset latency, quality and morning alertness. Also reduces exercise-induced muscle damage.", dose: "300–600mg/day", timing: "Evening with milk or fat", form: "KSM-66 extract (most studied for sleep)", warn: "Avoid in pregnancy. Cycle 8 on / 2 weeks off. May affect thyroid hormone balance.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=ashwagandha+ksm66+sleep"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "Glycine", badges: [["Sleep","blue"]], desc: "Amino acid that lowers core body temperature — the main trigger for deep sleep onset. 3g before bed improves subjective and objective sleep quality.", dose: "3g/day", timing: "30 min before bed", form: "Powder (sweet taste — pleasant in water)", warn: "Extremely safe. One of the gentlest sleep aids. Can be combined with magnesium.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=glycine+powder+sleep"],["Bulk","https://www.bulk.com"],["Nootropics Depot","https://www.nootropicsdepot.com"]] },
+        { name: "Tart Cherry Extract", badges: [["DOMS","rose"]], desc: "Rich in anthocyanins and natural melatonin. Reduces DOMS by up to 28% in endurance athletes and accelerates strength recovery. Also improves sleep quality.", dose: "480mg concentrate OR 30mL tart cherry juice concentrate 2x/day", timing: "Morning + evening (or pre/post exercise)", form: "Montmorency cherry concentrate", warn: "High natural sugar in juice form. Extract capsules avoid this. Safe for most people.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=tart+cherry+montmorency+extract"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "L-Theanine", badges: [["Relaxation","blue"]], desc: "Promotes alpha brain wave activity — the alert-yet-relaxed state. Improves sleep quality without sedation or morning grogginess.", dose: "100–400mg", timing: "30–60 min before bed", form: "Suntheanine (most studied brand)", warn: "Very safe. Pairs excellently with glycine + magnesium stack. Safe to take daily long-term.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=l-theanine+sleep"],["H&B","https://www.hollandandbarrett.com"],["Boots","https://www.boots.com"]] },
+      ]
+    },
+    glutes: {
+      title: "Glutes & Hip Health",
+      subtitle: "Hip power, connective tissue, piriformis, SI joint",
+      supplements: [
+        { name: "Collagen + Vitamin C", badges: [["Connective Tissue","green"]], desc: "Directly supports tendon and ligament repair around the hip capsule, glute tendons, and IT band. Timing around loading is critical.", dose: "15g hydrolysed collagen + 500mg Vit C", timing: "1hr before hip/glute training", form: "Hydrolysed marine or bovine collagen", warn: "Dose and timing are specific — 1hr pre-exercise to maximise collagen synthesis during mechanical loading.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=collagen+hydrolysed+powder"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "Magnesium", badges: [["Piriformis","blue"]], desc: "Piriformis and hip flexor tension are worsened by magnesium deficiency. Supplementation reduces chronic pelvic muscle tightness and sciatic irritation.", dose: "300–400mg/day", timing: "Evening", form: "Glycinate or malate", warn: "Consider alongside hip stretching and mobility work for best results.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=magnesium+glycinate"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "Creatine Monohydrate", badges: [["Power","gold"]], desc: "Hip-dominant power (sprinting, jumping) directly benefits from creatine — the most evidence-backed compound for anaerobic power and hypertrophy.", dose: "3–5g/day", timing: "Any time consistently", form: "Creapure monohydrate", warn: "Well-tolerated universally. Minor water retention in first 2 weeks.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=creatine+monohydrate"],["Bulk","https://www.bulk.com"],["Myprotein","https://www.myprotein.com"]] },
+      ]
+    },
+    hamstrings: {
+      title: "Hamstrings & Posterior Chain",
+      subtitle: "Injury prevention, flexibility, tendon health, strength",
+      supplements: [
+        { name: "Collagen Peptides + Vit C", badges: [["Tendon","green"]], desc: "The proximal hamstring tendon is one of the most injury-prone structures. Collagen timed pre-exercise directly supports tendinopathy rehab.", dose: "15g collagen + 500mg Vit C", timing: "1hr before training", form: "Hydrolysed marine or bovine", warn: "Combine with eccentric loading protocol (Nordic curls) for best tendinopathy outcomes.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=collagen+peptides+powder"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "Magnesium Malate", badges: [["Flexibility","blue"]], desc: "Malate form supports ATP production in fast-twitch fibres (hamstrings) and reduces post-exercise soreness and cramping.", dose: "300–400mg/day", timing: "Post-workout or evening", form: "Malate for daytime; glycinate for evening", warn: "Safe. Often deficient in athletes. Malate form particularly good for muscular fatigue.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=magnesium+malate"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "Tart Cherry Extract", badges: [["DOMS","rose"]], desc: "Reduces exercise-induced muscle damage in posterior chain exercises. Shows specific benefit for sprint and jump sports.", dose: "480mg Montmorency cherry extract, 2x/day", timing: "Morning and evening", form: "Standardised anthocyanin extract", warn: "Start protocol 5–7 days before a heavy training block for best preventative effect.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=tart+cherry+extract"],["H&B","https://www.hollandandbarrett.com"]] },
+      ]
+    },
+    calves: {
+      title: "Calves & Circulation",
+      subtitle: "Blood flow, cramp prevention, venous health, Achilles",
+      supplements: [
+        { name: "Magnesium + Potassium", badges: [["Cramps","green"]], desc: "The two most common electrolyte deficiencies causing calf cramps. Both required for proper muscle contraction-relaxation cycling.", dose: "300mg Mg + 300–500mg K", timing: "Evening or post-exercise", form: "Magnesium glycinate + potassium citrate", warn: "Potassium >500mg/day requires care in kidney disease or those on ACE inhibitors/ARBs — consult doctor.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=magnesium+potassium+electrolyte"],["Boots","https://www.boots.com"]] },
+        { name: "Horse Chestnut Extract (Aescin)", badges: [["Venous","blue"]], desc: "Aescin (active compound) clinically reduces chronic venous insufficiency, leg oedema, and varicose vein symptoms. Reduces capillary leakage.", dose: "300mg extract (50mg aescin) twice daily", timing: "With meals", form: "Standardised 20% aescin extract", warn: "Avoid in kidney/liver disease or if taking blood thinners. Do not use in pregnancy.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=horse+chestnut+extract"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "Collagen + Vitamin C", badges: [["Achilles","gold"]], desc: "Achilles tendinopathy is among the most common lower limb injuries. Pre-exercise collagen+Vit C specifically targets tendon collagen synthesis.", dose: "15g collagen + 500mg Vit C", timing: "1hr before calf/lower leg training", form: "Hydrolysed peptides", warn: "Combine with eccentric heel drops (Alfredson protocol) for clinical-level tendinopathy treatment.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=collagen+vitamin+c+powder"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "Ginkgo Biloba", badges: [["Circulation","rose"]], desc: "Improves peripheral microcirculation — especially beneficial for those with cold extremities, PAD, or prolonged sitting/standing work.", dose: "120–240mg/day", timing: "Split morning and afternoon", form: "EGb 761 standardised extract (24% flavonoids)", warn: "Avoid with blood thinners (warfarin, aspirin). Cease 2 weeks before surgery.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=ginkgo+biloba+extract"],["H&B","https://www.hollandandbarrett.com"]] },
+      ]
+    }
+  },
+  pregnancy: {
+    brain: {
+      title: "Brain & Cognitive Support",
+      subtitle: "Supporting mental clarity and mood during pregnancy",
+      supplements: [
+        { name: "DHA (Algal Omega-3)", badges: [["Essential","rose"]], desc: "DHA is critical for foetal brain and retinal development. Algal-derived DHA is safer than fish oil in pregnancy (avoids heavy metal exposure).", dose: "200–300mg DHA/day minimum (NHS); up to 600mg optimally", timing: "With meals", form: "Algal oil (vegan; safer than fish oil in pregnancy)", warn: "Avoid high-dose EPA-heavy fish oils. Focus on DHA. Do not take cod liver oil in pregnancy (vitamin A toxicity risk).", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=algal+dha+pregnancy"],["Pregnacare","https://www.vitabiotics.com/collections/pregnacare"],["Seven Seas","https://www.seven-seas.com"]] },
+        { name: "Choline (Phosphatidylcholine)", badges: [["Foetal Brain","gold"]], desc: "Choline is required for foetal neural tube closure and hippocampal development. 90% of pregnant women are deficient. Often missing from standard prenatal vitamins.", dose: "450–550mg/day during pregnancy", timing: "With meals", form: "CDP-choline or phosphatidylcholine (food sources: eggs)", warn: "Critical and underappreciated nutrient. Not always in prenatal vitamins — check your label.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=choline+supplement+pregnancy"],["Thorne","https://www.thorne.com"]] },
+        { name: "Saffron (Low-Dose)", badges: [["Mood","rose"]], desc: "Low-dose saffron (14–30mg) shown in RCTs to improve prenatal depression and anxiety without conventional antidepressant risks.", dose: "14–30mg/day standardised extract", timing: "With food", form: "Standardised extract (2% safranal)", warn: "ONLY at low doses. High-dose saffron has uterine-stimulating properties — never exceed 30mg/day in pregnancy. Discuss with your OB/midwife.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=saffron+extract+supplement"]] },
+      ]
+    },
+    heart: {
+      title: "Heart & Blood Pressure",
+      subtitle: "Cardiovascular support, blood pressure, pre-eclampsia prevention",
+      supplements: [
+        { name: "Magnesium Glycinate", badges: [["Essential","rose"]], desc: "Magnesium deficiency in pregnancy is associated with pre-eclampsia, leg cramps, and preterm labour. IV magnesium is first-line treatment for eclampsia in hospital.", dose: "300–400mg elemental Mg/day", timing: "Evening (also helps with sleep and leg cramps)", form: "Glycinate or citrate (gentle, well-absorbed)", warn: "Extremely important in pregnancy. Always inform your midwife of supplementation. IV magnesium is medical treatment — this is preventive.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=magnesium+glycinate+pregnancy"],["H&B","https://www.hollandandbarrett.com"],["Boots","https://www.boots.com"]] },
+        { name: "CoQ10", badges: [["Cardio","gold"]], desc: "Low CoQ10 has been associated with increased pre-eclampsia risk. Emerging evidence suggests supplementation may be protective.", dose: "100–200mg/day", timing: "With fatty meal", form: "Ubiquinol", warn: "Discuss with your OB. Research is promising but still emerging. Generally considered safe.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=coq10+pregnancy"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "Calcium", badges: [["Bones & BP","rose"]], desc: "WHO recommends calcium supplementation in areas of low dietary calcium to prevent pre-eclampsia. Also essential for foetal bone development.", dose: "1000–1200mg elemental calcium/day (diet + supplement)", timing: "Split doses with meals (not with iron — competes for absorption)", form: "Calcium citrate (better absorbed than carbonate)", warn: "Do NOT take calcium and iron supplements at the same time — take 2 hours apart.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=calcium+supplement+pregnancy"],["Boots","https://www.boots.com"],["Pregnacare","https://www.vitabiotics.com/collections/pregnacare"]] },
+      ]
+    },
+    gut: {
+      title: "Gut Health & Nausea",
+      subtitle: "Morning sickness, digestion, microbiome, constipation",
+      supplements: [
+        { name: "Ginger Extract", badges: [["Nausea","rose"]], desc: "Most evidence-backed supplement for pregnancy nausea. Multiple RCTs demonstrate significant reduction in morning sickness severity. Safe and effective.", dose: "250mg standardised extract 4x/day (1g/day total)", timing: "With meals and at first sign of nausea", form: "Standardised gingerol extract (NOT essential oil)", warn: "Very safe at food-equivalent doses. Some sources advise limiting to <1g/day — the evidence-based dose. Discuss if severe hyperemesis.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=ginger+extract+pregnancy"],["Boots","https://www.boots.com"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "Probiotics (Lactobacillus rhamnosus)", badges: [["Microbiome","gold"]], desc: "Improves maternal gut health, reduces GBS colonisation risk, and beneficially programmes infant microbiome during birth canal passage.", dose: "10–20 billion CFU/day", timing: "With or after meals", form: "L. rhamnosus GG or HN001 strains specifically", warn: "Extremely safe in pregnancy. HN001 strain specifically studied for gestational diabetes and eczema prevention.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=lactobacillus+rhamnosus+probiotic"],["Boots","https://www.boots.com"]] },
+        { name: "Psyllium Husk", badges: [["Constipation","blue"]], desc: "Pregnancy constipation affects ~40% of women due to progesterone slowing gut motility. Soluble fibre is the safest, most effective solution.", dose: "5–10g daily in water", timing: "With plenty of water (at least 250ml per dose)", form: "Psyllium husk powder", warn: "Must be taken with large amount of water. Can cause obstruction if taken with insufficient fluid. Start with low dose.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=psyllium+husk+powder"],["H&B","https://www.hollandandbarrett.com"],["Boots","https://www.boots.com"]] },
+        { name: "Vitamin B6 (Pyridoxine)", badges: [["Nausea","rose"]], desc: "B6 is an FDA-approved treatment for pregnancy nausea (Diclegis combines B6 + doxylamine). First-line pharmaceutical treatment.", dose: "10–25mg B6 3x/day (max 100mg/day)", timing: "With meals; bedtime dose particularly effective", form: "Pyridoxine HCl or P-5-P", warn: "At doses above 200mg/day, peripheral neuropathy possible. Stays well within these limits at 10–25mg 3x/day.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=vitamin+b6+pregnancy"],["Boots","https://www.boots.com"],["Pregnacare","https://www.vitabiotics.com/collections/pregnacare"]] },
+      ]
+    },
+    muscles: {
+      title: "Muscle Support & Recovery",
+      subtitle: "Pelvic floor, leg cramps, muscle repair in pregnancy",
+      supplements: [
+        { name: "Magnesium Glycinate", badges: [["Cramps","rose"]], desc: "Leg cramps affect 50%+ of pregnant women, peaking in the third trimester. Magnesium is the most evidence-backed solution and also aids sleep.", dose: "300–400mg elemental Mg/day", timing: "Evening (leg cramps most common at night)", form: "Glycinate or citrate", warn: "Safe and widely recommended by midwives. Inform your antenatal team.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=magnesium+pregnancy+leg+cramps"],["H&B","https://www.hollandandbarrett.com"],["Boots","https://www.boots.com"]] },
+        { name: "Protein (from whole foods)", badges: [["Foetal Growth","gold"]], desc: "Protein requirements increase to 71g/day in pregnancy. Adequate protein is essential for placental development, amniotic fluid, and foetal muscle/organ growth.", dose: "Aim for 70–100g protein/day from diet + supplementation if needed", timing: "Spread across all meals", form: "Whole foods first; whey or pea protein to bridge gaps", warn: "Prefer food sources first. If using protein powder, choose unflavoured with minimal additives.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=unflavoured+whey+protein"],["Myprotein","https://www.myprotein.com"]] },
+        { name: "Collagen Peptides", badges: [["Pelvic Floor","rose"]], desc: "Supports the collagen-dense structures of the pelvic floor and perineal tissue. May reduce perineal tearing severity at delivery (emerging evidence).", dose: "10–15g/day", timing: "Morning", form: "Hydrolysed marine or bovine collagen", warn: "Safe in pregnancy. Marine collagen preferable. Pair with Vitamin C.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=collagen+peptides+pregnancy"],["H&B","https://www.hollandandbarrett.com"],["Revive Collagen","https://www.revivecollagen.com"]] },
+      ]
+    },
+    joints: {
+      title: "Joints & Ligaments",
+      subtitle: "Pelvic girdle pain, SPD, joint laxity (relaxin)",
+      supplements: [
+        { name: "Vitamin D3", badges: [["Essential","rose"]], desc: "Vitamin D deficiency in pregnancy is associated with gestational diabetes, pre-eclampsia, rickets in the newborn, and increased SPD pain.", dose: "1000–2000 IU/day (NHS minimum 400 IU; optimal more)", timing: "Morning with fat", form: "D3 (cholecalciferol) only — NOT D2", warn: "UK NHS recommends ALL pregnant women take Vitamin D. Avoid doses over 4000 IU/day without medical supervision in pregnancy.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=vitamin+d3+pregnancy"],["Boots","https://www.boots.com"],["Pregnacare","https://www.vitabiotics.com/collections/pregnacare"]] },
+        { name: "Omega-3 (Algal DHA)", badges: [["Joints","blue"]], desc: "Anti-inflammatory EPA/DHA reduces joint pain and inflammation associated with relaxin-induced joint laxity in pregnancy.", dose: "200–300mg DHA + 100mg EPA from algal oil", timing: "With meals", form: "Algal (not fish oil — avoids contaminant risk)", warn: "Algal oil is the vegan, pregnancy-safe source of pre-formed DHA. Avoids mercury/PCB concerns.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=algal+oil+omega+3+pregnancy"],["Nordic Naturals","https://www.nordic.com"]] },
+        { name: "Magnesium", badges: [["Pelvic Girdle","rose"]], desc: "Helps manage muscle tension and cramping around the sacroiliac joint — key for managing pelvic girdle pain (PGP/SPD).", dose: "300–400mg/day", timing: "Evening with dinner", form: "Glycinate", warn: "Safe. Combine with physiotherapy and pelvic support belt for PGP management.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=magnesium+glycinate"],["H&B","https://www.hollandandbarrett.com"]] },
+      ]
+    },
+    skin: {
+      title: "Skin & Stretch Marks",
+      subtitle: "Skin elasticity, collagen, pregnancy glow vs. skin challenges",
+      supplements: [
+        { name: "Collagen Peptides", badges: [["Elasticity","rose"]], desc: "Supports skin collagen turnover and elasticity during rapid expansion of the abdomen. Some evidence for reducing stretch mark severity.", dose: "10g/day", timing: "Morning", form: "Hydrolysed marine collagen (best bioavailability)", warn: "Safe in pregnancy. Marine collagen from sustainable sources preferred. Always pair with Vitamin C.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=marine+collagen+powder"],["H&B","https://www.hollandandbarrett.com"],["Revive Collagen","https://www.revivecollagen.com"]] },
+        { name: "Vitamin C", badges: [["Collagen","green"]], desc: "Essential cofactor for collagen synthesis. Also reduces iron-deficiency risk (enhances non-haem iron absorption) and supports immune health.", dose: "250–500mg/day", timing: "With meals, or alongside iron supplement", form: "Buffered ascorbate (gentler on stomach)", warn: "Very safe. Enhances absorption when taken with iron-rich food or iron supplements.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=vitamin+c+pregnancy"],["Boots","https://www.boots.com"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "Zinc", badges: [["Skin & Immunity","gold"]], desc: "Zinc is required for skin repair, keratinocyte function, and wound healing. Deficiency linked to dermatitis and impaired immune function in pregnancy.", dose: "15–20mg elemental zinc/day (total from diet + supplement)", timing: "With food (reduces nausea)", form: "Bisglycinate or citrate form", warn: "Most prenatal vitamins contain some zinc — check total dose to avoid excess. >40mg/day can impair copper absorption.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=zinc+bisglycinate+pregnancy"],["H&B","https://www.hollandandbarrett.com"]] },
+      ]
+    },
+    thyroid: {
+      title: "Thyroid & Hormonal Balance",
+      subtitle: "Thyroid hormones, gestational diabetes, foetal development",
+      supplements: [
+        { name: "Iodine (Kelp / KI)", badges: [["Critical","rose"]], desc: "Foetal thyroid gland relies entirely on maternal iodine supply in early pregnancy. Deficiency causes cretinism. WHO: iodine is #1 global preventable cause of brain damage.", dose: "220–250mcg iodine/day in pregnancy", timing: "With meals", form: "Potassium iodide (in prenatal vitamin) or low-dose kelp", warn: "DO NOT self-supplement with high-dose iodine — excess is harmful. Check your prenatal vitamin first. Discuss with midwife.", stockists: [["Pregnacare","https://www.vitabiotics.com/collections/pregnacare"],["Boots","https://www.boots.com"]] },
+        { name: "Selenium", badges: [["Thyroid","gold"]], desc: "Selenium converts T4→T3. Deficiency in pregnancy linked to postpartum thyroiditis and gestational hypertension. Also reduces preeclampsia risk.", dose: "60–70mcg/day (do NOT exceed 400mcg)", timing: "With meals", form: "Selenomethionine (organic form, better absorbed)", warn: "Selenium toxicity (selenosis) occurs above 400mcg/day. Most prenatal vitamins include it — check before adding extra.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=selenomethionine+supplement"],["Thorne","https://www.thorne.com"]] },
+        { name: "Inositol (Myo)", badges: [["Gestational Diabetes","rose"]], desc: "Myo-inositol improves insulin signalling and is clinically shown to reduce gestational diabetes risk by up to 60% in high-risk women.", dose: "2–4g myo-inositol/day", timing: "Morning and evening away from meals", form: "Myo-inositol powder", warn: "Very safe. Particularly important for women with PCOS or family history of gestational diabetes.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=myo+inositol+pregnancy"],["H&B","https://www.hollandandbarrett.com"]] },
+      ]
+    },
+    energy: {
+      title: "Energy & Iron",
+      subtitle: "Fatigue, anaemia, mitochondrial support in pregnancy",
+      supplements: [
+        { name: "Folate (5-MTHF)", badges: [["Critical","rose"]], desc: "5-MTHF (active folate) prevents neural tube defects. Superior to folic acid for the 40–60% of women with MTHFR gene variants who cannot convert folic acid.", dose: "400–800mcg 5-MTHF/day (from 12 weeks before conception ideally)", timing: "Any time with food", form: "L-methylfolate (5-MTHF) — NOT folic acid", warn: "This is the single most important supplement to start BEFORE pregnancy. 5-MTHF is safer than folic acid for MTHFR variants.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=methylfolate+5-mthf"],["Thorne","https://www.thorne.com"],["Pregnacare","https://www.vitabiotics.com/collections/pregnacare"]] },
+        { name: "Iron (Bisglycinate)", badges: [["Anaemia","gold"]], desc: "Iron requirements nearly double in pregnancy (27mg/day vs 15mg). Iron deficiency anaemia affects 38% of pregnant women globally and impairs foetal development.", dose: "27–30mg elemental iron/day if iron-replete; up to 60mg if deficient", timing: "Fasted OR with Vitamin C. Take 2hrs away from calcium and tea/coffee.", form: "Bisglycinate (gentle on gut; less constipation than ferrous sulfate)", warn: "Iron and calcium MUST be taken 2 hours apart — they compete for absorption. Test serum ferritin — aim for >50mcg/L in pregnancy.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=iron+bisglycinate+pregnancy"],["H&B","https://www.hollandandbarrett.com"],["Boots","https://www.boots.com"]] },
+        { name: "B12 (Methylcobalamin)", badges: [["Energy & Neuro","rose"]], desc: "B12 is required alongside folate for neural tube development. Deficiency causes megaloblastic anaemia. Methylcobalamin is the active form.", dose: "2.6mcg/day minimum; 500–1000mcg for those deficient", timing: "Morning with food", form: "Methylcobalamin (NOT cyanocobalamin)", warn: "Vegans and vegetarians are at high risk of deficiency — test and supplement accordingly in pregnancy.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=methylcobalamin+b12"],["Thorne","https://www.thorne.com"],["Boots","https://www.boots.com"]] },
+      ]
+    },
+    repro: {
+      title: "Pregnancy Core Nutrients",
+      subtitle: "The essential prenatal supplement protocol",
+      supplements: [
+        { name: "High-Quality Prenatal Multivitamin", badges: [["Foundation","rose"]], desc: "A well-formulated prenatal covers folate (as 5-MTHF), iodine, D3, iron, B12, zinc, and selenium. Choose methylated forms. Avoid those using folic acid or cyanocobalamin.", dose: "As directed on label — typically 2–3 capsules/day", timing: "Split with meals to improve tolerability and absorption", form: "Look for: 5-MTHF, methylcobalamin, D3, chelated minerals, algal DHA", warn: "Not all prenatals are equal. Avoid cheap supermarket brands using folic acid and cyanocobalamin. Compare labels carefully.", stockists: [["Thorne Basic Prenatal","https://www.thorne.com"],["Wild Nutrition","https://www.wildnutrition.com"],["Proceive","https://www.proceive.com"]] },
+        { name: "DHA Algal Oil", badges: [["Critical","rose"]], desc: "The #1 nutrient for foetal brain and eye development. 90% of brain DHA accumulates in 3rd trimester — most prenatals don't contain enough.", dose: "300–600mg DHA/day", timing: "With meals", form: "Algal oil (no fish oil in pregnancy)", warn: "NEVER take cod liver oil in pregnancy — toxic levels of pre-formed vitamin A. Use algal DHA only.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=algal+dha+pregnancy"],["Nordic Naturals","https://www.nordic.com"]] },
+        { name: "Vitamin D3", badges: [["Essential","gold"]], desc: "UK NHS recommends ALL pregnant women take Vitamin D. Deficiency linked to gestational diabetes, pre-eclampsia, rickets, and poor immune development.", dose: "1000–2000 IU/day (NHS minimum: 400 IU)", timing: "Morning with fat", form: "D3 cholecalciferol", warn: "Do not take cod liver oil as Vitamin D source in pregnancy — excess Vitamin A risk.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=vitamin+d3+pregnancy+1000iu"],["Boots","https://www.boots.com"],["Pregnacare","https://www.vitabiotics.com/collections/pregnacare"]] },
+      ]
+    },
+    spine: {
+      title: "Back Pain & Posture",
+      subtitle: "Lower back pain is the most common pregnancy complaint",
+      supplements: [
+        { name: "Magnesium Glycinate", badges: [["Back Tension","rose"]], desc: "Reduces paravertebral muscle tension and sciatic irritation worsened by growing uterus. Also reduces leg cramps and improves sleep.", dose: "300–400mg/day", timing: "Evening", form: "Glycinate", warn: "Discuss with midwife. Safe and widely recommended during pregnancy.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=magnesium+glycinate"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "Vitamin D3", badges: [["Musculoskeletal","gold"]], desc: "Vitamin D receptors in spinal muscle and disc tissue. Deficiency dramatically worsens back pain severity during pregnancy.", dose: "1000–2000 IU/day", timing: "Morning with food", form: "D3 cholecalciferol", warn: "UK NHS recommends all pregnant women supplement. Critical for bone and muscle health.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=vitamin+d3"],["Boots","https://www.boots.com"]] },
+      ]
+    },
+    recovery: {
+      title: "Sleep & Recovery in Pregnancy",
+      subtitle: "Sleep quality declines through pregnancy — safe support options",
+      supplements: [
+        { name: "Magnesium Glycinate", badges: [["Sleep","rose"]], desc: "The safest and most effective sleep supplement in pregnancy. Reduces cortisol, relaxes muscles, eases restless legs, and promotes GABA-mediated sleep.", dose: "300–400mg elemental Mg", timing: "30–60 min before bed", form: "Glycinate (gentlest, best absorbed)", warn: "Completely safe. Widely recommended by midwives. Inform your antenatal team.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=magnesium+glycinate+pregnancy+sleep"],["H&B","https://www.hollandandbarrett.com"],["Boots","https://www.boots.com"]] },
+        { name: "L-Theanine", badges: [["Relaxation","gold"]], desc: "Promotes calm alertness and improves sleep quality without sedation. One of very few calming supplements with a reasonable safety profile in pregnancy.", dose: "100–200mg before bed", timing: "30–60 min before sleep", form: "Suntheanine brand (most studied)", warn: "Limited specific pregnancy studies but generally considered safe. Discuss with your OB or midwife.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=l-theanine+200mg"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "Lavender Oral Capsules (Silexan)", badges: [["Anxiety","rose"]], desc: "Silexan (80mg oral lavender oil) is clinically proven to reduce anxiety and improve sleep — the only oral lavender product with strong RCT evidence.", dose: "80mg Silexan/day", timing: "Evening", form: "Silexan (Kalms Lavender / Lasea — specific licensed form)", warn: "Only Silexan (oral licensed product) is evidence-based. Topical essential oils at high doses are NOT the same and some raise safety concerns in pregnancy.", stockists: [["Boots (Kalms Lavender)","https://www.boots.com/kalms-lavender"],["H&B","https://www.hollandandbarrett.com"]] },
+      ]
+    },
+    lungs: {
+      title: "Immune System in Pregnancy",
+      subtitle: "Immune modulation (not stimulation), infection defence, respiratory",
+      supplements: [
+        { name: "Vitamin D3", badges: [["Immune","rose"]], desc: "Vitamin D is an immune MODULATOR — it supports appropriate immune response without over-stimulating. Deficiency linked to higher infection rates and severity in pregnancy.", dose: "1000–2000 IU/day", timing: "Morning", form: "D3 cholecalciferol", warn: "Safe. NHS recommends for all pregnant women. Avoid >4000 IU/day without clinical guidance.", stockists: [["Boots","https://www.boots.com"],["Pregnacare","https://www.vitabiotics.com/collections/pregnacare"]] },
+        { name: "Vitamin C", badges: [["Antioxidant","gold"]], desc: "Safe antioxidant and immune support in pregnancy. Reduces oxidative stress, supports collagen, and enhances non-haem iron absorption when co-supplemented.", dose: "250–500mg/day", timing: "With meals", form: "Buffered ascorbate", warn: "Very safe at these doses. Some evidence high-dose >1g/day may affect prostaglandins — stay within 500mg/day.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=vitamin+c+pregnancy+supplement"],["Boots","https://www.boots.com"]] },
+        { name: "Probiotics (L. rhamnosus HN001)", badges: [["Immune + Allergy","rose"]], desc: "Shown to reduce gestational diabetes, GBS colonisation, and postpartum depression. Programmes infant immune system via birth canal and breastfeeding.", dose: "10–20 billion CFU/day", timing: "With food", form: "L. rhamnosus HN001 or GG strains", warn: "Very safe. HN001 is the most pregnancy-specific studied strain.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=lactobacillus+rhamnosus+hn001"],["Boots","https://www.boots.com"]] },
+      ]
+    },
+    glutes: {
+      title: "Pelvis & Hip Health",
+      subtitle: "SPD, pelvic girdle pain, sacroiliac joint",
+      supplements: [
+        { name: "Magnesium Glycinate", badges: [["PGP","rose"]], desc: "Reduces the muscular component of pelvic girdle pain — relaxin loosens ligaments but muscle tension is manageable with magnesium.", dose: "300–400mg/day", timing: "Evening", form: "Glycinate", warn: "Safe in pregnancy. Combine with physiotherapy and pelvic support belt.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=magnesium+glycinate"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "Vitamin D3", badges: [["Bone","gold"]], desc: "Pelvic bone density maintenance is dependent on Vitamin D. Deficiency worsens pelvic girdle pain and increases fracture risk post-partum.", dose: "1000–2000 IU/day", timing: "Morning", form: "D3", warn: "NHS recommends for all pregnant women.", stockists: [["Boots","https://www.boots.com"],["H&B","https://www.hollandandbarrett.com"]] },
+      ]
+    },
+    shoulders: {
+      title: "Upper Body & Posture",
+      subtitle: "Postural strain, breast tissue changes, shoulder tension",
+      supplements: [
+        { name: "Magnesium Glycinate", badges: [["Tension","rose"]], desc: "Pregnancy-related postural changes put enormous strain on traps and upper back. Magnesium reduces muscular hypertension and associated headaches.", dose: "300–400mg/day", timing: "Evening", form: "Glycinate", warn: "Safe throughout pregnancy.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=magnesium+glycinate"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "Vitamin D3", badges: [["Bone & Muscle","gold"]], desc: "Supports the musculoskeletal chain dealing with postural compensation during pregnancy. Important for shoulder and scapular muscle function.", dose: "1000–2000 IU/day", timing: "Morning", form: "D3", warn: "NHS recommended for all pregnant women.", stockists: [["Boots","https://www.boots.com"],["Pregnacare","https://www.vitabiotics.com/collections/pregnacare"]] },
+      ]
+    },
+    hamstrings: {
+      title: "Lower Body & Cramps",
+      subtitle: "Leg cramps, hamstring tension, relaxin-related issues",
+      supplements: [
+        { name: "Magnesium + Potassium", badges: [["Cramps","rose"]], desc: "Nocturnal leg cramps affect the majority of pregnant women in 2nd/3rd trimesters. Magnesium and potassium are the most evidence-backed solutions.", dose: "300mg Mg + 300mg K/day", timing: "Evening — cramps are worst at night", form: "Magnesium glycinate + potassium citrate", warn: "Potassium supplementation above 300mg/day should be discussed with your midwife, especially if you have kidney issues or are on medication.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=magnesium+potassium+pregnancy"],["H&B","https://www.hollandandbarrett.com"],["Boots","https://www.boots.com"]] },
+        { name: "Iron (Bisglycinate)", badges: [["RLS","gold"]], desc: "Restless leg syndrome in pregnancy is strongly linked to iron deficiency — particularly low ferritin. Iron supplementation often resolves pregnancy RLS.", dose: "25–30mg elemental iron (test ferritin first)", timing: "Fasted or with Vitamin C", form: "Bisglycinate (less constipating than sulfate)", warn: "Test ferritin before supplementing. RLS responds to iron primarily when ferritin is below 50mcg/L. Iron overload is dangerous.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=iron+bisglycinate"],["H&B","https://www.hollandandbarrett.com"],["Boots","https://www.boots.com"]] },
+      ]
+    },
+    calves: {
+      title: "Calves & Blood Flow",
+      subtitle: "DVT prevention, oedema, circulation, varicose veins",
+      supplements: [
+        { name: "Magnesium", badges: [["Cramps & Oedema","rose"]], desc: "Reduces oedema by improving cellular fluid balance and reduces calf cramps which are extremely common in pregnancy.", dose: "300–400mg/day", timing: "Evening", form: "Glycinate or citrate", warn: "Safe in pregnancy. Discuss with midwife.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=magnesium+glycinate"],["Boots","https://www.boots.com"]] },
+        { name: "Vitamin C + Bioflavonoids", badges: [["Veins","gold"]], desc: "Bioflavonoids (diosmin, hesperidin) support venous wall integrity and reduce pregnancy-induced varicose veins and haemorrhoids.", dose: "500mg Vit C + 500mg mixed bioflavonoids", timing: "Twice daily with meals", form: "Diosmin/hesperidin complex or citrus bioflavonoid complex", warn: "Generally safe. Diosmin is used medically for venous insufficiency in France. Inform your OB.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=diosmin+hesperidin+pregnancy"],["H&B","https://www.hollandandbarrett.com"]] },
+        { name: "Omega-3 DHA", badges: [["Circulation","rose"]], desc: "DHA's anti-inflammatory properties reduce platelet aggregation and support healthy circulation — important for DVT risk reduction during pregnancy.", dose: "200–300mg DHA/day", timing: "With meals", form: "Algal oil", warn: "Do not use fish oil with added Vitamin A (cod liver oil) in pregnancy.", stockists: [["Amazon UK","https://www.amazon.co.uk/s?k=algal+dha+supplement"],["Nordic Naturals","https://www.nordic.com"]] },
+      ]
+    }
+  }
+};
+
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+let currentMode = 'normal';
+let currentView = 'front';
+let expandedItems = new Set();
+
+// ═══════════════════════════════════════════════════════════
+// MODE
+// ═══════════════════════════════════════════════════════════
+function setMode(mode, btn) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const banner = document.getElementById('preg-banner');
+  const canvas = document.getElementById('body-canvas');
+  if (mode === 'pregnancy') {
+    banner.classList.add('visible');
+    canvas.classList.add('pregnancy-mode');
+  } else {
+    banner.classList.remove('visible');
+    canvas.classList.remove('pregnancy-mode');
+  }
+  // Clear panel
+  clearPanel();
+}
+
+// ═══════════════════════════════════════════════════════════
+// VIEW TOGGLE
+// ═══════════════════════════════════════════════════════════
+function switchView(view, btn) {
+  currentView = view;
+  document.querySelectorAll('.vtab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('front-view').style.display = view === 'front' ? 'block' : 'none';
+  document.getElementById('back-view').style.display = view === 'back' ? 'block' : 'none';
+  clearPanel();
+}
+
+// ═══════════════════════════════════════════════════════════
+// SHOW ZONE
+// ═══════════════════════════════════════════════════════════
+function showZone(zone) {
+  // Deactivate all hotspots
+  document.querySelectorAll('.hs').forEach(h => h.classList.remove('active'));
+  const hs = document.getElementById('hs-' + zone);
+  if (hs) hs.classList.add('active');
+
+  const data = DATA[currentMode]?.[zone] || DATA['normal']?.[zone];
+  if (!data) { clearPanel(); return; }
+
+  document.getElementById('zone-count').textContent = `${data.supplements?.length || 0} supplements for ${data.title}`;
+
+  const panel = document.getElementById('info-panel');
+  panel.innerHTML = buildPanel(zone, data, currentMode === 'pregnancy');
+}
+
+function clearPanel() {
+  document.querySelectorAll('.hs').forEach(h => h.classList.remove('active'));
+  document.getElementById('zone-count').textContent = 'Click a zone to explore →';
+  const panel = document.getElementById('info-panel');
+  panel.innerHTML = `<div class="panel-empty" id="panel-empty">
+    <div class="panel-empty-icon">◎</div>
+    <h3>Select a zone</h3>
+    <p>Tap any glowing point on the body map to see supplement recommendations for that zone — with dosing, timing, and stockists.</p>
+  </div>`;
+  expandedItems.clear();
+}
+
+function buildPanel(zone, data, isPreg) {
+  const supps = data.supplements || [];
+  const zoneClass = isPreg ? 'sp-zone preg' : 'sp-zone';
+
+  const items = supps.map((s, i) => {
+    const id = `si-${zone}-${i}`;
+    const badges = (s.badges || []).map(([label, type]) =>
+      `<span class="badge ${type}">${label}</span>`
+    ).join('');
+
+    const warn = s.warn ? `<div class="si-warn">${s.warn}</div>` : '';
+    const links = (s.stockists || []).map(([label, url]) =>
+      `<a class="sk-link" href="${url}" target="_blank" rel="noopener">${label}</a>`
+    ).join('');
+
+    return `
+    <div class="si" id="${id}" onclick="toggleItem('${id}')">
+      <div class="si-top">
+        <span class="si-name">${s.name}</span>
+        <div style="display:flex;align-items:center;gap:0.3rem">
+          <div class="si-badges">${badges}</div>
+          <span class="si-arrow">▾</span>
+        </div>
+      </div>
+      <div class="si-desc">${s.desc}</div>
+      <div class="si-details">
+        <div class="si-meta">
+          <div class="si-meta-item"><span class="mkey">Dose</span><span class="mval">${s.dose || '—'}</span></div>
+          <div class="si-meta-item"><span class="mkey">Timing</span><span class="mval">${s.timing || '—'}</span></div>
+          <div class="si-meta-item"><span class="mkey">Form</span><span class="mval">${s.form || '—'}</span></div>
+        </div>
+        ${warn}
+        ${links ? `<div class="si-stockists"><span class="sk-label">Trusted Stockists</span><div class="sk-links">${links}</div></div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="supp-panel visible" id="supp-panel-${zone}">
+    <div class="sp-header">
+      <div class="${zoneClass}">${isPreg ? 'Pregnancy — ' : ''}${zone.toUpperCase()}</div>
+      <div class="sp-title">${data.title}</div>
+      <div class="sp-sub">${data.subtitle}</div>
+    </div>
+    <div class="sp-body">
+      <div class="sp-section-head">${supps.length} recommended supplements — tap to expand</div>
+      <div class="sp-list">${items}</div>
+    </div>
+  </div>`;
+}
+
+function toggleItem(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('expanded');
+}
+</script>
+</body>
+</html>
