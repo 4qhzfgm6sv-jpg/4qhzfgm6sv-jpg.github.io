@@ -25,10 +25,12 @@
   --text: #ddeedd;
   --text2: #8fa897;
   --text3: #556b5a;
-  --body-fill: #1a2e22;
-  --body-muscle: #213828;
-  --body-stroke: #3a5a45;
-  --body-light: #2d4a38;
+  --body-fill: #2a2e35;
+  --body-mid: #353b45;
+  --body-light: #424a58;
+  --body-highlight: #555f70;
+  --body-stroke: #606878;
+  --body-glow: #7effa008;
   --shadow: #7effa008;
 }
 
@@ -552,406 +554,486 @@ nav {
 
       <!-- ═══ FRONT VIEW ═══ -->
       <div class="anatomy-wrap" id="front-view">
-        <svg viewBox="0 0 240 720" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 240 660" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#2a4535"/>
-              <stop offset="100%" stop-color="#1a2e22"/>
+            <linearGradient id="bodyGrad" x1="20%" y1="0%" x2="80%" y2="100%">
+              <stop offset="0%" stop-color="#3a4250"/>
+              <stop offset="50%" stop-color="#2e3540"/>
+              <stop offset="100%" stop-color="#252b35"/>
             </linearGradient>
-            <linearGradient id="limbGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#1e3528"/>
-              <stop offset="50%" stop-color="#2d4a38"/>
-              <stop offset="100%" stop-color="#1e3528"/>
+            <linearGradient id="limbL" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#222830"/>
+              <stop offset="40%" stop-color="#323a48"/>
+              <stop offset="100%" stop-color="#1e242c"/>
             </linearGradient>
-            <linearGradient id="faceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#2d4a38"/>
-              <stop offset="100%" stop-color="#213828"/>
+            <linearGradient id="limbR" x1="100%" y1="0%" x2="0%" y2="0%">
+              <stop offset="0%" stop-color="#222830"/>
+              <stop offset="40%" stop-color="#323a48"/>
+              <stop offset="100%" stop-color="#1e242c"/>
             </linearGradient>
-            <filter id="softShadow">
-              <feGaussianBlur stdDeviation="2" result="blur"/>
-              <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+            <linearGradient id="headGrad" x1="30%" y1="0%" x2="70%" y2="100%">
+              <stop offset="0%" stop-color="#404855"/>
+              <stop offset="100%" stop-color="#2a3040"/>
+            </linearGradient>
+            <linearGradient id="muscleHL" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#50596a" stop-opacity="0.6"/>
+              <stop offset="100%" stop-color="#30384a" stop-opacity="0"/>
+            </linearGradient>
+            <filter id="bodyBlur">
+              <feGaussianBlur stdDeviation="0.6"/>
+            </filter>
+            <filter id="softGlow">
+              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
             </filter>
           </defs>
 
           <!-- ── HEAD ── -->
-          <!-- Skull/cranium -->
-          <ellipse cx="120" cy="52" rx="38" ry="44" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <!-- Temples subtle indents -->
-          <ellipse cx="84" cy="50" rx="6" ry="10" fill="#1a2e22" opacity="0.4"/>
-          <ellipse cx="156" cy="50" rx="6" ry="10" fill="#1a2e22" opacity="0.4"/>
-          <!-- Brow ridge -->
-          <path d="M90 34 Q120 28 150 34" stroke="var(--body-stroke)" stroke-width="1.5" fill="none"/>
-          <!-- Eye sockets (subtle) -->
-          <ellipse cx="107" cy="46" rx="11" ry="8" fill="#1a2e22" opacity="0.5" stroke="var(--body-stroke)" stroke-width="0.8"/>
-          <ellipse cx="133" cy="46" rx="11" ry="8" fill="#1a2e22" opacity="0.5" stroke="var(--body-stroke)" stroke-width="0.8"/>
-          <!-- Eyes -->
-          <ellipse cx="107" cy="46" rx="6" ry="4" fill="#3a5a45" stroke="var(--body-stroke)" stroke-width="0.8"/>
-          <ellipse cx="133" cy="46" rx="6" ry="4" fill="#3a5a45" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <!-- Cranium — smooth rounded shape -->
+          <path d="M120 8 C88 8 82 22 80 38 C78 54 80 70 84 80 C88 92 96 100 104 104 C110 107 115 108 120 108 C125 108 130 107 136 104 C144 100 152 92 156 80 C160 70 162 54 160 38 C158 22 152 8 120 8Z" fill="url(#headGrad)" stroke="#505a6a" stroke-width="1.2"/>
+          <!-- Cheekbones — subtle width -->
+          <ellipse cx="86" cy="72" rx="8" ry="6" fill="#303845" opacity="0.5"/>
+          <ellipse cx="154" cy="72" rx="8" ry="6" fill="#303845" opacity="0.5"/>
+          <!-- Brow ridge — clean line -->
+          <path d="M94 44 Q107 40 120 40 Q133 40 146 44" stroke="#606878" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+          <!-- Left eye socket -->
+          <ellipse cx="106" cy="52" rx="12" ry="9" fill="#1e242e" opacity="0.7"/>
+          <!-- Right eye socket -->
+          <ellipse cx="134" cy="52" rx="12" ry="9" fill="#1e242e" opacity="0.7"/>
+          <!-- Left eye iris -->
+          <ellipse cx="106" cy="52" rx="7" ry="6" fill="#3a4255" stroke="#606878" stroke-width="0.8"/>
+          <!-- Right eye iris -->
+          <ellipse cx="134" cy="52" rx="7" ry="6" fill="#3a4255" stroke="#606878" stroke-width="0.8"/>
           <!-- Pupils -->
-          <circle cx="107" cy="46" r="2.5" fill="#0d1810"/>
-          <circle cx="133" cy="46" r="2.5" fill="#0d1810"/>
-          <!-- Nose -->
-          <path d="M117 50 Q115 60 112 65 Q117 68 123 68 Q128 65 128 65 Q125 60 123 50" fill="#1e3528" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <circle cx="106" cy="52" r="3" fill="#12161e"/>
+          <circle cx="134" cy="52" r="3" fill="#12161e"/>
+          <!-- Eye shine -->
+          <circle cx="108" cy="50" r="1.2" fill="#7090a0" opacity="0.7"/>
+          <circle cx="136" cy="50" r="1.2" fill="#7090a0" opacity="0.7"/>
+          <!-- Nose bridge -->
+          <path d="M120 58 L118 70 Q116 76 113 78 Q117 81 120 81 Q123 81 127 78 Q124 76 122 70 Z" fill="#2a3040" stroke="#505a6a" stroke-width="0.7"/>
           <!-- Nostrils -->
-          <ellipse cx="114" cy="65" rx="3.5" ry="2" fill="#132018" opacity="0.8"/>
-          <ellipse cx="126" cy="65" rx="3.5" ry="2" fill="#132018" opacity="0.8"/>
-          <!-- Mouth -->
-          <path d="M108 75 Q120 82 132 75" stroke="var(--body-stroke)" stroke-width="1.2" fill="none"/>
-          <path d="M112 75 Q120 79 128 75" fill="#1a2e22" stroke="none" opacity="0.6"/>
-          <!-- Chin -->
-          <path d="M96 84 Q120 96 144 84" stroke="var(--body-stroke)" stroke-width="1" fill="none" opacity="0.5"/>
-          <!-- Ears -->
-          <path d="M82 46 Q76 46 74 52 Q74 60 78 64 Q82 66 84 62 Q86 56 84 50Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
-          <path d="M158 46 Q164 46 166 52 Q166 60 162 64 Q158 66 156 62 Q154 56 156 50Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
-          <!-- Ear canal -->
-          <circle cx="80" cy="55" r="2" fill="#132018" opacity="0.7"/>
-          <circle cx="160" cy="55" r="2" fill="#132018" opacity="0.7"/>
-          <!-- Hair (subtle top) -->
-          <path d="M85 16 Q120 6 155 16 Q158 22 156 28 Q140 18 120 16 Q100 18 84 28 Q82 22 85 16Z" fill="#152218" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <ellipse cx="115" cy="79" rx="4" ry="2.5" fill="#1a1e28" opacity="0.9"/>
+          <ellipse cx="125" cy="79" rx="4" ry="2.5" fill="#1a1e28" opacity="0.9"/>
+          <!-- Philtrum -->
+          <path d="M118 80 Q120 84 122 80" stroke="#404858" stroke-width="0.8" fill="none"/>
+          <!-- Lips -->
+          <path d="M110 88 Q115 91 120 90 Q125 91 130 88" stroke="#505a6a" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+          <path d="M112 88 Q120 85 128 88" stroke="#404858" stroke-width="0.9" fill="none"/>
+          <!-- Chin line -->
+          <path d="M104 100 Q112 106 120 107 Q128 106 136 100" stroke="#404858" stroke-width="0.8" fill="none" opacity="0.6"/>
+          <!-- Left ear -->
+          <path d="M83 54 C77 54 74 58 74 64 C74 70 77 76 82 78 C84 79 86 78 87 76 C88 73 86 68 85 64 C84 60 84 56 83 54Z" fill="url(#headGrad)" stroke="#505a6a" stroke-width="1"/>
+          <path d="M80 60 Q79 66 80 72" stroke="#3a4252" stroke-width="1" fill="none"/>
+          <!-- Right ear -->
+          <path d="M157 54 C163 54 166 58 166 64 C166 70 163 76 158 78 C156 79 154 78 153 76 C152 73 154 68 155 64 C156 60 156 56 157 54Z" fill="url(#headGrad)" stroke="#505a6a" stroke-width="1"/>
+          <path d="M160 60 Q161 66 160 72" stroke="#3a4252" stroke-width="1" fill="none"/>
 
           <!-- ── NECK ── -->
-          <path d="M105 92 Q100 96 100 110 L100 118 Q110 122 120 122 Q130 122 140 118 L140 110 Q140 96 135 92Z" fill="url(#limbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <path d="M107 106 C103 110 102 116 102 122 L102 130 Q111 134 120 134 Q129 134 138 130 L138 122 C138 116 137 110 133 106 Q127 104 120 104 Q113 104 107 106Z" fill="url(#bodyGrad)" stroke="#505a6a" stroke-width="1"/>
           <!-- SCM muscles -->
-          <path d="M108 94 Q106 105 108 118" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.6"/>
-          <path d="M132 94 Q134 105 132 118" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.6"/>
+          <path d="M110 108 Q109 118 110 130" stroke="#606878" stroke-width="1" fill="none" opacity="0.5"/>
+          <path d="M130 108 Q131 118 130 130" stroke="#606878" stroke-width="1" fill="none" opacity="0.5"/>
+          <!-- Throat notch -->
+          <path d="M116 130 Q120 133 124 130" stroke="#404858" stroke-width="1" fill="none"/>
 
-          <!-- ── SHOULDERS ── -->
-          <!-- Left shoulder -->
-          <path d="M100 118 Q80 118 68 126 Q58 134 56 148 Q60 152 66 150 Q72 148 76 140 Q84 130 100 126Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <!-- Right shoulder -->
-          <path d="M140 118 Q160 118 172 126 Q182 134 184 148 Q180 152 174 150 Q168 148 164 140 Q156 130 140 126Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <!-- Clavicles -->
-          <path d="M106 122 Q120 118 134 122" stroke="#4a6a55" stroke-width="1.5" fill="none"/>
-          <!-- Deltoid definition -->
-          <path d="M68 130 Q64 140 66 150" stroke="var(--body-stroke)" stroke-width="1" fill="none" opacity="0.7"/>
-          <path d="M172 130 Q176 140 174 150" stroke="var(--body-stroke)" stroke-width="1" fill="none" opacity="0.7"/>
+          <!-- ── CLAVICLES ── -->
+          <path d="M102 132 Q111 128 120 127 Q129 128 138 132" stroke="#7080a0" stroke-width="2" fill="none" stroke-linecap="round"/>
 
-          <!-- ── TORSO ── -->
-          <!-- Main chest/torso -->
-          <path d="M76 126 Q62 130 58 158 L56 200 Q56 220 58 240 Q60 260 64 272 L74 280 Q96 288 120 288 Q144 288 166 280 L176 272 Q180 260 184 240 Q186 220 184 200 L182 158 Q178 130 164 126 Q142 120 120 120 Q98 120 76 126Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <!-- Chest pec definition -->
-          <path d="M76 140 Q96 148 118 145 Q116 168 108 175 Q86 175 72 162 Q70 155 76 140Z" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.9" opacity="0.8"/>
-          <path d="M164 140 Q144 148 122 145 Q124 168 132 175 Q154 175 168 162 Q170 155 164 140Z" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.9" opacity="0.8"/>
-          <!-- Sternum -->
-          <line x1="120" y1="126" x2="120" y2="200" stroke="#4a6a55" stroke-width="0.8" opacity="0.5"/>
-          <!-- Ribcage subtle arcs -->
-          <path d="M80 155 Q120 162 160 155" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.4"/>
-          <path d="M78 170 Q120 178 162 170" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.4"/>
-          <path d="M78 185 Q120 192 162 185" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.35"/>
-          <path d="M80 200 Q120 206 160 200" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.3"/>
-          <!-- Solar plexus -->
-          <ellipse cx="120" cy="195" rx="10" ry="7" fill="#1a2e22" opacity="0.5"/>
+          <!-- ── SHOULDERS & TORSO ── -->
+          <!-- Left deltoid -->
+          <path d="M102 130 C88 130 74 136 68 148 C64 156 66 164 70 168 C76 160 84 148 100 138Z" fill="url(#limbL)" stroke="#505a6a" stroke-width="1.2"/>
+          <!-- Right deltoid -->
+          <path d="M138 130 C152 130 166 136 172 148 C176 156 174 164 170 168 C164 160 156 148 140 138Z" fill="url(#limbR)" stroke="#505a6a" stroke-width="1.2"/>
+          <!-- Deltoid highlight L -->
+          <path d="M74 140 Q70 152 72 164" stroke="#606878" stroke-width="1.2" fill="none" opacity="0.7"/>
+          <path d="M174 140 Q178 152 176 164" stroke="#606878" stroke-width="1.2" fill="none" opacity="0.7"/>
+
+          <!-- Main torso -->
+          <path d="M74 138 C62 144 56 162 54 186 L54 224 C54 246 56 264 60 278 L68 288 Q90 298 120 298 Q150 298 172 288 L180 278 C184 264 186 246 186 224 L186 186 C184 162 178 144 166 138 C152 132 138 130 120 130 C102 130 88 132 74 138Z" fill="url(#bodyGrad)" stroke="#505a6a" stroke-width="1.2"/>
+
+          <!-- Pec left — shaped muscle -->
+          <path d="M74 148 C80 152 92 158 116 156 C114 172 108 182 96 184 C82 184 70 174 68 162 C66 156 68 150 74 148Z" fill="url(#muscleHL)" stroke="#606878" stroke-width="0.8" opacity="0.9"/>
+          <!-- Pec right -->
+          <path d="M166 148 C160 152 148 158 124 156 C126 172 132 182 144 184 C158 184 170 174 172 162 C174 156 172 150 166 148Z" fill="url(#muscleHL)" stroke="#606878" stroke-width="0.8" opacity="0.9"/>
+          <!-- Sternum groove -->
+          <path d="M120 132 C120 160 120 200 120 290" stroke="#404858" stroke-width="1" fill="none" opacity="0.5"/>
+          <!-- Rib arcs -->
+          <path d="M82 162 Q120 170 158 162" stroke="#505a6a" stroke-width="0.7" fill="none" opacity="0.4"/>
+          <path d="M80 178 Q120 186 160 178" stroke="#505a6a" stroke-width="0.7" fill="none" opacity="0.35"/>
+          <path d="M80 194 Q120 200 160 194" stroke="#505a6a" stroke-width="0.7" fill="none" opacity="0.3"/>
+          <path d="M82 210 Q120 215 158 210" stroke="#505a6a" stroke-width="0.7" fill="none" opacity="0.25"/>
+          <!-- Rectus abdominis — tendinous inscriptions -->
+          <path d="M108 218 L108 286" stroke="#505a6a" stroke-width="0.9" fill="none" opacity="0.5"/>
+          <path d="M132 218 L132 286" stroke="#505a6a" stroke-width="0.9" fill="none" opacity="0.5"/>
+          <path d="M108 226 Q120 228 132 226" stroke="#505a6a" stroke-width="0.8" fill="none" opacity="0.5"/>
+          <path d="M108 240 Q120 242 132 240" stroke="#505a6a" stroke-width="0.8" fill="none" opacity="0.5"/>
+          <path d="M108 254 Q120 256 132 254" stroke="#505a6a" stroke-width="0.8" fill="none" opacity="0.5"/>
+          <path d="M108 268 Q120 270 132 268" stroke="#505a6a" stroke-width="0.8" fill="none" opacity="0.4"/>
           <!-- Navel -->
-          <ellipse cx="120" cy="240" rx="4" ry="5" fill="#132018" stroke="var(--body-stroke)" stroke-width="0.8"/>
-          <!-- Abs definition -->
-          <path d="M108 210 L108 265" stroke="var(--body-stroke)" stroke-width="1" fill="none" opacity="0.5"/>
-          <path d="M132 210 L132 265" stroke="var(--body-stroke)" stroke-width="1" fill="none" opacity="0.5"/>
-          <line x1="106" y1="218" x2="134" y2="218" stroke="var(--body-stroke)" stroke-width="0.8" opacity="0.5"/>
-          <line x1="106" y1="230" x2="134" y2="230" stroke="var(--body-stroke)" stroke-width="0.8" opacity="0.5"/>
-          <line x1="106" y1="242" x2="134" y2="242" stroke="var(--body-stroke)" stroke-width="0.8" opacity="0.5"/>
-          <line x1="106" y1="254" x2="134" y2="254" stroke="var(--body-stroke)" stroke-width="0.8" opacity="0.5"/>
+          <ellipse cx="120" cy="248" rx="3.5" ry="4" fill="#151a22" stroke="#404858" stroke-width="0.8"/>
           <!-- Obliques -->
-          <path d="M74 210 Q80 235 78 270" stroke="var(--body-stroke)" stroke-width="0.9" fill="none" opacity="0.4"/>
-          <path d="M166 210 Q160 235 162 270" stroke="var(--body-stroke)" stroke-width="0.9" fill="none" opacity="0.4"/>
+          <path d="M76 218 Q80 244 78 278" stroke="#505a6a" stroke-width="1" fill="none" opacity="0.4"/>
+          <path d="M164 218 Q160 244 162 278" stroke="#505a6a" stroke-width="1" fill="none" opacity="0.4"/>
 
-          <!-- ── ARMS ── -->
-          <!-- LEFT UPPER ARM (bicep/tricep) -->
-          <path d="M66 150 Q52 154 44 170 Q38 188 40 208 Q44 218 52 218 Q62 218 66 208 Q72 190 72 172 Q72 162 68 152Z" fill="url(#limbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <!-- Bicep peak left -->
-          <path d="M48 172 Q44 185 46 200" stroke="var(--body-light)" stroke-width="1" fill="none" opacity="0.6"/>
-          <!-- LEFT FOREARM -->
-          <path d="M52 218 Q44 224 38 240 Q34 256 36 272 Q40 280 48 278 Q58 276 62 266 Q68 248 66 228 Q64 222 56 218Z" fill="url(#limbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <!-- Forearm muscles left -->
-          <path d="M42 238 Q40 252 42 266" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.5"/>
-          <!-- LEFT HAND -->
-          <path d="M36 272 Q30 272 28 278 Q26 286 30 292 Q32 296 38 296 Q44 296 48 290 Q52 282 50 274Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
-          <!-- Knuckles L -->
-          <path d="M28 284 Q38 280 50 282" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.5"/>
+          <!-- ── UPPER ARMS ── -->
+          <!-- Left bicep -->
+          <path d="M68 166 C56 170 46 182 42 198 C38 214 42 228 48 234 C56 240 66 238 70 228 C76 214 76 196 74 180 C72 174 70 168 68 166Z" fill="url(#limbL)" stroke="#505a6a" stroke-width="1.2"/>
+          <!-- Bicep peak L -->
+          <path d="M50 188 Q46 202 48 218" stroke="#707a8a" stroke-width="1.3" fill="none" opacity="0.6"/>
+          <path d="M62 172 Q60 195 62 218" stroke="#505a6a" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <!-- Right bicep -->
+          <path d="M172 166 C184 170 194 182 198 198 C202 214 198 228 192 234 C184 240 174 238 170 228 C164 214 164 196 166 180 C168 174 170 168 172 166Z" fill="url(#limbR)" stroke="#505a6a" stroke-width="1.2"/>
+          <path d="M190 188 Q194 202 192 218" stroke="#707a8a" stroke-width="1.3" fill="none" opacity="0.6"/>
+          <path d="M178 172 Q180 195 178 218" stroke="#505a6a" stroke-width="0.8" fill="none" opacity="0.4"/>
 
-          <!-- RIGHT UPPER ARM -->
-          <path d="M174 150 Q188 154 196 170 Q202 188 200 208 Q196 218 188 218 Q178 218 174 208 Q168 190 168 172 Q168 162 172 152Z" fill="url(#limbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <path d="M192 172 Q196 185 194 200" stroke="var(--body-light)" stroke-width="1" fill="none" opacity="0.6"/>
-          <!-- RIGHT FOREARM -->
-          <path d="M188 218 Q196 224 202 240 Q206 256 204 272 Q200 280 192 278 Q182 276 178 266 Q172 248 174 228 Q176 222 184 218Z" fill="url(#limbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <path d="M198 238 Q200 252 198 266" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.5"/>
-          <!-- RIGHT HAND -->
-          <path d="M204 272 Q210 272 212 278 Q214 286 210 292 Q208 296 202 296 Q196 296 192 290 Q188 282 190 274Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
-          <path d="M212 284 Q202 280 190 282" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.5"/>
+          <!-- ── FOREARMS ── -->
+          <!-- Left forearm -->
+          <path d="M48 234 C40 240 34 254 32 270 C30 284 32 294 38 298 C46 302 56 300 62 290 C68 278 70 260 68 244 C66 238 58 234 48 234Z" fill="url(#limbL)" stroke="#505a6a" stroke-width="1.2"/>
+          <path d="M38 248 Q36 264 38 280" stroke="#606878" stroke-width="0.8" fill="none" opacity="0.5"/>
+          <path d="M52 238 Q50 260 52 282" stroke="#505a6a" stroke-width="0.7" fill="none" opacity="0.4"/>
+          <!-- Right forearm -->
+          <path d="M192 234 C200 240 206 254 208 270 C210 284 208 294 202 298 C194 302 184 300 178 290 C172 278 170 260 172 244 C174 238 182 234 192 234Z" fill="url(#limbR)" stroke="#505a6a" stroke-width="1.2"/>
+          <path d="M202 248 Q204 264 202 280" stroke="#606878" stroke-width="0.8" fill="none" opacity="0.5"/>
+          <path d="M188 238 Q190 260 188 282" stroke="#505a6a" stroke-width="0.7" fill="none" opacity="0.4"/>
 
-          <!-- ── HIPS / PELVIS ── -->
-          <path d="M64 272 Q58 280 60 298 Q66 316 80 320 Q96 324 120 324 Q144 324 160 320 Q174 316 180 298 Q182 280 176 272 Q152 285 120 288 Q88 285 64 272Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <!-- Hip crease lines -->
-          <path d="M80 300 Q100 308 120 308 Q140 308 160 300" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.4"/>
-          <!-- Iliac crest hints -->
-          <path d="M68 285 Q72 298 76 310" stroke="var(--body-light)" stroke-width="1" fill="none" opacity="0.5"/>
-          <path d="M172 285 Q168 298 164 310" stroke="var(--body-light)" stroke-width="1" fill="none" opacity="0.5"/>
+          <!-- ── HANDS ── -->
+          <!-- Left hand -->
+          <path d="M32 294 C26 294 24 300 24 306 C24 314 28 320 36 322 C42 323 50 320 54 312 C56 306 54 298 50 295Z" fill="url(#bodyGrad)" stroke="#505a6a" stroke-width="1"/>
+          <path d="M26 304 Q36 300 50 302" stroke="#505a6a" stroke-width="0.7" fill="none" opacity="0.5"/>
+          <!-- Fingers L subtle -->
+          <path d="M28 318 Q24 326 26 330" stroke="#505a6a" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <path d="M34 320 Q32 328 34 333" stroke="#505a6a" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <path d="M40 320 Q40 329 41 334" stroke="#505a6a" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <path d="M46 318 Q48 326 48 330" stroke="#505a6a" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <!-- Right hand -->
+          <path d="M208 294 C214 294 216 300 216 306 C216 314 212 320 204 322 C198 323 190 320 186 312 C184 306 186 298 190 295Z" fill="url(#bodyGrad)" stroke="#505a6a" stroke-width="1"/>
+          <path d="M214 304 Q204 300 190 302" stroke="#505a6a" stroke-width="0.7" fill="none" opacity="0.5"/>
+          <path d="M212 318 Q216 326 214 330" stroke="#505a6a" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <path d="M206 320 Q208 328 206 333" stroke="#505a6a" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <path d="M200 320 Q200 329 199 334" stroke="#505a6a" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <path d="M194 318 Q192 326 192 330" stroke="#505a6a" stroke-width="0.8" fill="none" opacity="0.4"/>
 
-          <!-- ── LEGS ── -->
-          <!-- LEFT THIGH (quad + VMO) -->
-          <path d="M80 318 Q68 322 60 340 Q54 358 54 380 Q54 400 58 418 Q64 432 74 436 Q86 440 94 432 Q102 422 102 400 Q104 378 100 354 Q96 334 88 320Z" fill="url(#limbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <!-- Quad definition left -->
-          <path d="M64 340 Q62 365 64 390" stroke="var(--body-light)" stroke-width="1" fill="none" opacity="0.5"/>
-          <path d="M80 325 Q78 360 78 395" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.4"/>
-          <!-- VMO -->
-          <path d="M86 420 Q90 428 92 432" stroke="var(--body-light)" stroke-width="1.2" fill="none" opacity="0.6"/>
+          <!-- ── PELVIS / HIPS ── -->
+          <path d="M60 288 C52 298 50 314 54 330 C58 344 70 354 86 358 Q100 362 120 362 Q140 362 154 358 C170 354 182 344 186 330 C190 314 188 298 180 288 C160 300 142 302 120 302 C98 302 80 300 60 288Z" fill="url(#bodyGrad)" stroke="#505a6a" stroke-width="1.2"/>
+          <!-- Hip flexor lines -->
+          <path d="M80 334 Q88 342 96 346" stroke="#606878" stroke-width="1" fill="none" opacity="0.5"/>
+          <path d="M160 334 Q152 342 144 346" stroke="#606878" stroke-width="1" fill="none" opacity="0.5"/>
+          <!-- Iliac crests -->
+          <path d="M62 300 Q66 316 70 328" stroke="#707a8a" stroke-width="1.2" fill="none" opacity="0.5"/>
+          <path d="M178 300 Q174 316 170 328" stroke="#707a8a" stroke-width="1.2" fill="none" opacity="0.5"/>
 
-          <!-- RIGHT THIGH -->
-          <path d="M160 318 Q172 322 180 340 Q186 358 186 380 Q186 400 182 418 Q176 432 166 436 Q154 440 146 432 Q138 422 138 400 Q136 378 140 354 Q144 334 152 320Z" fill="url(#limbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <path d="M176 340 Q178 365 176 390" stroke="var(--body-light)" stroke-width="1" fill="none" opacity="0.5"/>
-          <path d="M160 325 Q162 360 162 395" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.4"/>
-          <path d="M154 420 Q150 428 148 432" stroke="var(--body-light)" stroke-width="1.2" fill="none" opacity="0.6"/>
+          <!-- ── THIGHS ── -->
+          <!-- Left thigh — quad groups -->
+          <path d="M82 356 C68 362 58 376 54 396 C50 416 52 436 58 450 C66 462 78 466 90 460 C100 454 108 440 108 418 C110 396 106 374 98 360Z" fill="url(#limbL)" stroke="#505a6a" stroke-width="1.2"/>
+          <!-- Vastus lateralis L -->
+          <path d="M62 372 Q58 396 60 422" stroke="#707a8a" stroke-width="1.3" fill="none" opacity="0.55"/>
+          <!-- Rectus femoris L -->
+          <path d="M80 360 Q78 396 80 428" stroke="#606878" stroke-width="1" fill="none" opacity="0.45"/>
+          <!-- VMO L -->
+          <path d="M90 444 Q94 452 96 458" stroke="#707a8a" stroke-width="1.4" fill="none" opacity="0.6"/>
+          <!-- Right thigh -->
+          <path d="M158 356 C172 362 182 376 186 396 C190 416 188 436 182 450 C174 462 162 466 150 460 C140 454 132 440 132 418 C130 396 134 374 142 360Z" fill="url(#limbR)" stroke="#505a6a" stroke-width="1.2"/>
+          <path d="M178 372 Q182 396 180 422" stroke="#707a8a" stroke-width="1.3" fill="none" opacity="0.55"/>
+          <path d="M160 360 Q162 396 160 428" stroke="#606878" stroke-width="1" fill="none" opacity="0.45"/>
+          <path d="M150 444 Q146 452 144 458" stroke="#707a8a" stroke-width="1.4" fill="none" opacity="0.6"/>
 
-          <!-- LEFT KNEE -->
-          <ellipse cx="78" cy="440" rx="22" ry="16" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <!-- Patella -->
-          <ellipse cx="78" cy="438" rx="12" ry="10" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1"/>
-          <!-- RIGHT KNEE -->
-          <ellipse cx="162" cy="440" rx="22" ry="16" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <ellipse cx="162" cy="438" rx="12" ry="10" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1"/>
+          <!-- ── KNEES ── -->
+          <!-- Left knee — rounded with patella -->
+          <ellipse cx="80" cy="466" rx="24" ry="18" fill="#2a3040" stroke="#606878" stroke-width="1.2"/>
+          <ellipse cx="80" cy="464" rx="14" ry="11" fill="#323a4a" stroke="#606878" stroke-width="1"/>
+          <!-- Knee creases L -->
+          <path d="M64 470 Q72 474 80 474 Q88 474 96 470" stroke="#404858" stroke-width="0.8" fill="none" opacity="0.5"/>
+          <!-- Right knee -->
+          <ellipse cx="160" cy="466" rx="24" ry="18" fill="#2a3040" stroke="#606878" stroke-width="1.2"/>
+          <ellipse cx="160" cy="464" rx="14" ry="11" fill="#323a4a" stroke="#606878" stroke-width="1"/>
+          <path d="M144 470 Q152 474 160 474 Q168 474 176 470" stroke="#404858" stroke-width="0.8" fill="none" opacity="0.5"/>
 
-          <!-- LEFT SHIN/CALF (front tibia) -->
-          <path d="M58 452 Q52 468 50 490 Q48 512 50 534 Q54 546 64 550 Q74 554 82 548 Q90 540 92 520 Q96 498 92 474 Q90 460 84 452Z" fill="url(#limbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <!-- Shin bone line -->
-          <path d="M70 455 Q68 490 68 525" stroke="var(--body-light)" stroke-width="1.5" fill="none" opacity="0.5"/>
-          <!-- RIGHT SHIN -->
-          <path d="M182 452 Q188 468 190 490 Q192 512 190 534 Q186 546 176 550 Q166 554 158 548 Q150 540 148 520 Q144 498 148 474 Q150 460 156 452Z" fill="url(#limbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <path d="M170 455 Q172 490 172 525" stroke="var(--body-light)" stroke-width="1.5" fill="none" opacity="0.5"/>
+          <!-- ── SHINS / LOWER LEGS ── -->
+          <!-- Left shin — tibialis anterior -->
+          <path d="M58 480 C50 496 48 518 50 540 C52 556 60 566 72 568 C82 570 92 562 96 548 C100 532 100 508 96 488 C92 474 86 468 78 468Z" fill="url(#limbL)" stroke="#505a6a" stroke-width="1.2"/>
+          <!-- Shin crest L -->
+          <path d="M72 484 Q70 514 72 542" stroke="#808898" stroke-width="1.8" fill="none" opacity="0.5" stroke-linecap="round"/>
+          <!-- Right shin -->
+          <path d="M182 480 C190 496 192 518 190 540 C188 556 180 566 168 568 C158 570 148 562 144 548 C140 532 140 508 144 488 C148 474 154 468 162 468Z" fill="url(#limbR)" stroke="#505a6a" stroke-width="1.2"/>
+          <path d="M168 484 Q170 514 168 542" stroke="#808898" stroke-width="1.8" fill="none" opacity="0.5" stroke-linecap="round"/>
 
-          <!-- LEFT ANKLE -->
-          <path d="M52 540 Q50 548 52 556 Q58 560 68 560 Q78 560 84 556 Q88 548 88 540Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
-          <!-- Malleolus bumps -->
-          <circle cx="54" cy="548" r="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
-          <circle cx="86" cy="548" r="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
-          <!-- RIGHT ANKLE -->
-          <path d="M188 540 Q190 548 188 556 Q182 560 172 560 Q162 560 156 556 Q152 548 152 540Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
-          <circle cx="154" cy="548" r="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
-          <circle cx="186" cy="548" r="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <!-- ── ANKLES ── -->
+          <!-- Left ankle -->
+          <path d="M50 546 C48 556 50 562 56 566 C62 568 72 568 78 564 C86 560 90 554 90 546Z" fill="url(#bodyGrad)" stroke="#505a6a" stroke-width="1"/>
+          <!-- Medial malleolus L -->
+          <ellipse cx="54" cy="558" rx="5" ry="4" fill="#323a4a" stroke="#606878" stroke-width="0.8"/>
+          <!-- Lateral malleolus L -->
+          <ellipse cx="88" cy="556" rx="5" ry="4" fill="#323a4a" stroke="#606878" stroke-width="0.8"/>
+          <!-- Right ankle -->
+          <path d="M190 546 C192 556 190 562 184 566 C178 568 168 568 162 564 C154 560 150 554 150 546Z" fill="url(#bodyGrad)" stroke="#505a6a" stroke-width="1"/>
+          <ellipse cx="152" cy="558" rx="5" ry="4" fill="#323a4a" stroke="#606878" stroke-width="0.8"/>
+          <ellipse cx="186" cy="556" rx="5" ry="4" fill="#323a4a" stroke="#606878" stroke-width="0.8"/>
 
-          <!-- LEFT FOOT -->
-          <path d="M52 556 Q44 558 36 562 Q28 568 28 574 Q30 582 42 584 Q54 586 66 582 Q76 578 82 570 Q86 564 86 556Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <!-- Toes left -->
-          <ellipse cx="34" cy="582" rx="5" ry="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
-          <ellipse cx="44" cy="585" rx="5" ry="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
-          <ellipse cx="54" cy="585" rx="5" ry="3.5" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
-          <ellipse cx="63" cy="583" rx="4.5" ry="3.5" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
-          <ellipse cx="71" cy="580" rx="4" ry="3" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <!-- ── FEET ── -->
+          <!-- Left foot -->
+          <path d="M50 562 C40 562 30 566 24 572 C20 578 22 586 32 590 C44 594 62 592 74 586 C84 580 90 572 88 564Z" fill="url(#bodyGrad)" stroke="#505a6a" stroke-width="1.2"/>
+          <!-- Toes L -->
+          <ellipse cx="27" cy="589" rx="5.5" ry="4" fill="#2a3040" stroke="#505a6a" stroke-width="0.8"/>
+          <ellipse cx="38" cy="592" rx="5.5" ry="4" fill="#2a3040" stroke="#505a6a" stroke-width="0.8"/>
+          <ellipse cx="49" cy="592" rx="5" ry="3.5" fill="#2a3040" stroke="#505a6a" stroke-width="0.8"/>
+          <ellipse cx="59" cy="590" rx="4.5" ry="3.5" fill="#2a3040" stroke="#505a6a" stroke-width="0.8"/>
+          <ellipse cx="68" cy="587" rx="4" ry="3" fill="#2a3040" stroke="#505a6a" stroke-width="0.8"/>
+          <!-- Right foot -->
+          <path d="M190 562 C200 562 210 566 216 572 C220 578 218 586 208 590 C196 594 178 592 166 586 C156 580 150 572 152 564Z" fill="url(#bodyGrad)" stroke="#505a6a" stroke-width="1.2"/>
+          <ellipse cx="213" cy="589" rx="5.5" ry="4" fill="#2a3040" stroke="#505a6a" stroke-width="0.8"/>
+          <ellipse cx="202" cy="592" rx="5.5" ry="4" fill="#2a3040" stroke="#505a6a" stroke-width="0.8"/>
+          <ellipse cx="191" cy="592" rx="5" ry="3.5" fill="#2a3040" stroke="#505a6a" stroke-width="0.8"/>
+          <ellipse cx="181" cy="590" rx="4.5" ry="3.5" fill="#2a3040" stroke="#505a6a" stroke-width="0.8"/>
+          <ellipse cx="172" cy="587" rx="4" ry="3" fill="#2a3040" stroke="#505a6a" stroke-width="0.8"/>
 
-          <!-- RIGHT FOOT -->
-          <path d="M188 556 Q196 558 204 562 Q212 568 212 574 Q210 582 198 584 Q186 586 174 582 Q164 578 158 570 Q154 564 154 556Z" fill="url(#bodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <ellipse cx="206" cy="582" rx="5" ry="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
-          <ellipse cx="196" cy="585" rx="5" ry="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
-          <ellipse cx="186" cy="585" rx="5" ry="3.5" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
-          <ellipse cx="177" cy="583" rx="4.5" ry="3.5" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
-          <ellipse cx="169" cy="580" rx="4" ry="3" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <!-- Global body ambient highlight — left side -->
+          <path d="M80 140 C76 180 74 240 76 300 C78 340 82 370 86 400" stroke="#707a8a" stroke-width="1.5" fill="none" opacity="0.18" stroke-linecap="round"/>
         </svg>
 
         <!-- ═══ FRONT HOTSPOTS ═══ -->
-        <!-- Brain (top of head) -->
-        <div class="hs" style="left:120px;top:25px" onclick="showZone('brain')" id="hs-brain">
+        <div class="hs" style="left:120px;top:20px" onclick="showZone('brain')" id="hs-brain">
           <div class="hs-ring"></div><div class="hs-dot"></div>
           <div class="hs-tip">Brain & Focus</div>
         </div>
-        <!-- Eyes/vision -->
-        <div class="hs" style="left:80px;top:48px" onclick="showZone('eyes')" id="hs-eyes">
+        <div class="hs" style="left:84px;top:52px" onclick="showZone('eyes')" id="hs-eyes">
           <div class="hs-ring"></div><div class="hs-dot"></div>
           <div class="hs-tip tip-left">Eyes & Vision</div>
         </div>
-        <!-- Heart (left chest) -->
-        <div class="hs" style="left:88px;top:155px" onclick="showZone('heart')" id="hs-heart">
-          <div class="hs-ring"></div><div class="hs-dot"></div>
-          <div class="hs-tip tip-left">Heart & Cardio</div>
-        </div>
-        <!-- Lungs (right chest) -->
-        <div class="hs" style="left:158px;top:155px" onclick="showZone('lungs')" id="hs-lungs">
-          <div class="hs-ring"></div><div class="hs-dot"></div>
-          <div class="hs-tip">Lungs & Immune</div>
-        </div>
-        <!-- Gut/liver area -->
-        <div class="hs" style="left:120px;top:220px" onclick="showZone('gut')" id="hs-gut">
-          <div class="hs-ring"></div><div class="hs-dot"></div>
-          <div class="hs-tip">Gut & Liver</div>
-        </div>
-        <!-- Hormones/thyroid -->
-        <div class="hs" style="left:120px;top:110px" onclick="showZone('thyroid')" id="hs-thyroid">
+        <div class="hs" style="left:120px;top:120px" onclick="showZone('thyroid')" id="hs-thyroid">
           <div class="hs-ring"></div><div class="hs-dot"></div>
           <div class="hs-tip">Thyroid & Hormones</div>
         </div>
-        <!-- Muscles/bicep left -->
-        <div class="hs" style="left:50px;top:185px" onclick="showZone('muscles')" id="hs-muscles">
+        <div class="hs" style="left:86px;top:168px" onclick="showZone('heart')" id="hs-heart">
+          <div class="hs-ring"></div><div class="hs-dot"></div>
+          <div class="hs-tip tip-left">Heart & Cardio</div>
+        </div>
+        <div class="hs" style="left:158px;top:168px" onclick="showZone('lungs')" id="hs-lungs">
+          <div class="hs-ring"></div><div class="hs-dot"></div>
+          <div class="hs-tip">Lungs & Immune</div>
+        </div>
+        <div class="hs" style="left:48px;top:200px" onclick="showZone('muscles')" id="hs-muscles">
           <div class="hs-ring"></div><div class="hs-dot"></div>
           <div class="hs-tip tip-left">Muscle & Performance</div>
         </div>
-        <!-- Joints / knee -->
-        <div class="hs" style="left:162px;top:440px" onclick="showZone('joints')" id="hs-joints">
+        <div class="hs" style="left:120px;top:235px" onclick="showZone('gut')" id="hs-gut">
           <div class="hs-ring"></div><div class="hs-dot"></div>
-          <div class="hs-tip">Joints & Bones</div>
+          <div class="hs-tip">Gut & Liver</div>
         </div>
-        <!-- Skin/hair (shoulder area) -->
-        <div class="hs" style="left:170px;top:130px" onclick="showZone('skin')" id="hs-skin">
+        <div class="hs" style="left:158px;top:235px" onclick="showZone('energy')" id="hs-energy">
+          <div class="hs-ring"></div><div class="hs-dot"></div>
+          <div class="hs-tip">Energy & Adrenals</div>
+        </div>
+        <div class="hs" style="left:170px;top:145px" onclick="showZone('skin')" id="hs-skin">
           <div class="hs-ring"></div><div class="hs-dot"></div>
           <div class="hs-tip">Skin & Hair</div>
         </div>
-        <!-- Reproductive/pelvic -->
-        <div class="hs" style="left:120px;top:308px" onclick="showZone('repro')" id="hs-repro">
+        <div class="hs" style="left:120px;top:330px" onclick="showZone('repro')" id="hs-repro">
           <div class="hs-ring"></div><div class="hs-dot"></div>
           <div class="hs-tip">Reproductive Health</div>
         </div>
-        <!-- Energy/adrenal -->
-        <div class="hs" style="left:155px;top:228px" onclick="showZone('energy')" id="hs-energy">
+        <div class="hs" style="left:160px;top:466px" onclick="showZone('joints')" id="hs-joints">
           <div class="hs-ring"></div><div class="hs-dot"></div>
-          <div class="hs-tip">Energy & Adrenals</div>
+          <div class="hs-tip">Joints & Bones</div>
         </div>
       </div>
 
       <!-- ═══ BACK VIEW ═══ -->
       <div class="anatomy-wrap" id="back-view" style="display:none">
-        <svg viewBox="0 0 240 720" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 240 660" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <linearGradient id="bBodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#253d2e"/>
-              <stop offset="100%" stop-color="#1a2e22"/>
+            <linearGradient id="bBodyGrad" x1="20%" y1="0%" x2="80%" y2="100%">
+              <stop offset="0%" stop-color="#38404e"/>
+              <stop offset="50%" stop-color="#2c3340"/>
+              <stop offset="100%" stop-color="#232a35"/>
             </linearGradient>
-            <linearGradient id="bLimbGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#1e3528"/>
-              <stop offset="50%" stop-color="#2a4235"/>
-              <stop offset="100%" stop-color="#1e3528"/>
+            <linearGradient id="bLimbL" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#1e242e"/>
+              <stop offset="40%" stop-color="#303848"/>
+              <stop offset="100%" stop-color="#1c222c"/>
+            </linearGradient>
+            <linearGradient id="bLimbR" x1="100%" y1="0%" x2="0%" y2="0%">
+              <stop offset="0%" stop-color="#1e242e"/>
+              <stop offset="40%" stop-color="#303848"/>
+              <stop offset="100%" stop-color="#1c222c"/>
+            </linearGradient>
+            <linearGradient id="bMuscle" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#505a6e" stop-opacity="0.7"/>
+              <stop offset="100%" stop-color="#2a3040" stop-opacity="0.1"/>
             </linearGradient>
           </defs>
 
-          <!-- HEAD BACK -->
-          <ellipse cx="120" cy="52" rx="38" ry="44" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <!-- Occipital -->
-          <path d="M90 88 Q120 96 150 88 Q148 78 120 82 Q92 78 90 88Z" fill="#1e3528" opacity="0.5"/>
-          <!-- Hair back -->
-          <path d="M85 12 Q120 4 155 12 Q160 20 155 30 Q140 20 120 18 Q100 20 85 30 Q80 20 85 12Z" fill="#152218" stroke="var(--body-stroke)" stroke-width="0.8"/>
+          <!-- ── HEAD BACK ── -->
+          <path d="M120 8 C88 8 82 22 80 38 C78 54 80 70 84 80 C88 92 96 100 104 104 C110 107 115 108 120 108 C125 108 130 107 136 104 C144 100 152 92 156 80 C160 70 162 54 160 38 C158 22 152 8 120 8Z" fill="url(#bBodyGrad)" stroke="#505a6a" stroke-width="1.2"/>
+          <!-- Occipital protuberance -->
+          <path d="M102 96 Q120 102 138 96 Q136 88 120 90 Q104 88 102 96Z" fill="#2a3040" opacity="0.6"/>
           <!-- Ears back -->
-          <path d="M82 46 Q76 46 74 52 Q74 60 78 64 Q82 66 84 62 Q86 56 84 50Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
-          <path d="M158 46 Q164 46 166 52 Q166 60 162 64 Q158 66 156 62 Q154 56 156 50Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
+          <path d="M83 54 C77 54 74 58 74 64 C74 70 77 76 82 78 C84 79 86 78 87 76 C88 73 86 68 85 64 C84 60 84 56 83 54Z" fill="url(#bBodyGrad)" stroke="#505a6a" stroke-width="1"/>
+          <path d="M157 54 C163 54 166 58 166 64 C166 70 163 76 158 78 C156 79 154 78 153 76 C152 73 154 68 155 64 C156 60 156 56 157 54Z" fill="url(#bBodyGrad)" stroke="#505a6a" stroke-width="1"/>
 
-          <!-- NECK BACK -->
-          <path d="M106 92 Q100 96 100 116 L100 118 Q110 122 120 122 Q130 122 140 118 L140 116 Q140 96 134 92Z" fill="url(#bLimbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <!-- Trapezius top -->
-          <path d="M100 114 Q120 120 140 114 Q152 118 160 126 Q140 124 120 124 Q100 124 80 126 Q88 118 100 114Z" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="1" opacity="0.8"/>
+          <!-- ── NECK BACK ── -->
+          <path d="M107 106 C103 110 102 116 102 124 L102 132 Q111 136 120 136 Q129 136 138 132 L138 124 C138 116 137 110 133 106 Q127 104 120 104 Q113 104 107 106Z" fill="url(#bBodyGrad)" stroke="#505a6a" stroke-width="1"/>
+          <!-- Neck muscles back -->
+          <path d="M110 108 Q109 120 110 132" stroke="#606878" stroke-width="1" fill="none" opacity="0.5"/>
+          <path d="M130 108 Q131 120 130 132" stroke="#606878" stroke-width="1" fill="none" opacity="0.5"/>
 
-          <!-- BACK TORSO (trapezius, lats, etc.) -->
-          <path d="M76 126 Q60 130 56 158 L54 200 Q54 230 58 256 Q62 272 68 280 L76 288 Q96 296 120 296 Q144 296 164 288 L172 280 Q178 272 182 256 Q186 230 186 200 L184 158 Q180 130 164 126 Q142 120 120 120 Q98 120 76 126Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <!-- Spine -->
-          <path d="M120 126 L120 290" stroke="#4a6a55" stroke-width="1.8" fill="none" opacity="0.7"/>
-          <!-- Vertebrae dots -->
-          <circle cx="120" cy="136" r="2.5" fill="#3a5a45"/>
-          <circle cx="120" cy="150" r="2.5" fill="#3a5a45"/>
-          <circle cx="120" cy="164" r="2.5" fill="#3a5a45"/>
-          <circle cx="120" cy="178" r="2.5" fill="#3a5a45"/>
-          <circle cx="120" cy="192" r="2.5" fill="#3a5a45"/>
-          <circle cx="120" cy="206" r="2.5" fill="#3a5a45"/>
-          <circle cx="120" cy="220" r="2.5" fill="#3a5a45"/>
-          <circle cx="120" cy="234" r="2.5" fill="#3a5a45"/>
-          <circle cx="120" cy="248" r="2.5" fill="#3a5a45"/>
-          <circle cx="120" cy="262" r="2.5" fill="#3a5a45"/>
-          <circle cx="120" cy="276" r="2.5" fill="#3a5a45"/>
+          <!-- ── BACK TORSO ── -->
+          <!-- Main back body -->
+          <path d="M74 140 C62 146 54 164 52 188 L52 226 C52 248 54 268 60 282 L68 292 Q90 302 120 302 Q150 302 172 292 L180 282 C186 268 188 248 188 226 L188 188 C186 164 178 146 166 140 C152 133 138 130 120 130 C102 130 88 133 74 140Z" fill="url(#bBodyGrad)" stroke="#505a6a" stroke-width="1.2"/>
+
+          <!-- Trapezius — dominant upper back muscle -->
+          <path d="M100 132 Q120 138 140 132 Q155 136 168 144 Q160 148 148 148 Q136 146 120 144 Q104 146 92 148 Q80 148 72 144 Q85 136 100 132Z" fill="url(#bMuscle)" stroke="#606878" stroke-width="1" opacity="0.9"/>
+          <!-- Trap lower fibres -->
+          <path d="M76 148 Q96 158 120 160 Q144 158 164 148 Q148 162 120 164 Q92 162 76 148Z" fill="url(#bMuscle)" stroke="#505a6a" stroke-width="0.8" opacity="0.5"/>
+
+          <!-- Spine column -->
+          <path d="M120 134 L120 294" stroke="#6a7888" stroke-width="2" fill="none" opacity="0.6" stroke-linecap="round"/>
+          <!-- Vertebrae -->
+          <circle cx="120" cy="142" r="2.8" fill="#505a6a"/>
+          <circle cx="120" cy="154" r="2.8" fill="#505a6a"/>
+          <circle cx="120" cy="166" r="2.8" fill="#505a6a"/>
+          <circle cx="120" cy="178" r="2.8" fill="#505a6a"/>
+          <circle cx="120" cy="190" r="2.8" fill="#505a6a"/>
+          <circle cx="120" cy="202" r="2.8" fill="#505a6a"/>
+          <circle cx="120" cy="214" r="2.8" fill="#505a6a"/>
+          <circle cx="120" cy="226" r="2.8" fill="#505a6a"/>
+          <circle cx="120" cy="238" r="2.8" fill="#505a6a"/>
+          <circle cx="120" cy="250" r="2.8" fill="#505a6a"/>
+          <circle cx="120" cy="262" r="2.8" fill="#505a6a"/>
+          <circle cx="120" cy="274" r="2.8" fill="#505a6a"/>
+          <circle cx="120" cy="286" r="2.8" fill="#505a6a"/>
+
           <!-- Left scapula -->
-          <path d="M80 136 Q70 148 70 168 Q74 178 82 178 Q94 178 100 168 Q106 156 102 140 Q94 132 80 136Z" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="1" opacity="0.7"/>
+          <path d="M78 142 C70 152 68 168 72 180 C76 188 84 190 92 186 C100 180 106 168 104 152 C102 140 94 134 84 136 Z" fill="url(#bMuscle)" stroke="#606878" stroke-width="1" opacity="0.8"/>
+          <!-- Scapula spine -->
+          <path d="M78 152 Q90 148 104 152" stroke="#707a8a" stroke-width="1.3" fill="none" opacity="0.6"/>
           <!-- Right scapula -->
-          <path d="M160 136 Q170 148 170 168 Q166 178 158 178 Q146 178 140 168 Q134 156 138 140 Q146 132 160 136Z" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="1" opacity="0.7"/>
-          <!-- Lat (left) -->
-          <path d="M68 178 Q58 200 62 230 Q66 248 76 255 Q90 258 98 245 Q106 230 104 205 Q100 185 92 178Z" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="1" opacity="0.6"/>
-          <!-- Lat (right) -->
-          <path d="M172 178 Q182 200 178 230 Q174 248 164 255 Q150 258 142 245 Q134 230 136 205 Q140 185 148 178Z" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="1" opacity="0.6"/>
-          <!-- Erector spinae -->
-          <path d="M110 136 Q108 200 110 265" stroke="var(--body-light)" stroke-width="1.2" fill="none" opacity="0.5"/>
-          <path d="M130 136 Q132 200 130 265" stroke="var(--body-light)" stroke-width="1.2" fill="none" opacity="0.5"/>
+          <path d="M162 142 C170 152 172 168 168 180 C164 188 156 190 148 186 C140 180 134 168 136 152 C138 140 146 134 156 136 Z" fill="url(#bMuscle)" stroke="#606878" stroke-width="1" opacity="0.8"/>
+          <path d="M162 152 Q150 148 136 152" stroke="#707a8a" stroke-width="1.3" fill="none" opacity="0.6"/>
 
-          <!-- SHOULDERS BACK -->
-          <path d="M100 118 Q80 118 68 126 Q56 134 54 148 Q58 152 64 150 Q70 148 74 140 Q82 130 100 126Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <path d="M140 118 Q160 118 172 126 Q184 134 186 148 Q182 152 176 150 Q170 148 166 140 Q158 130 140 126Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <!-- Rhomboids between scapulae -->
+          <path d="M106 148 Q120 152 134 148 Q130 164 120 168 Q110 164 106 148Z" fill="url(#bMuscle)" opacity="0.4"/>
 
-          <!-- ARMS BACK (tricep visible) -->
-          <!-- Left upper arm back -->
-          <path d="M64 150 Q50 154 42 170 Q36 188 38 208 Q42 218 50 218 Q60 218 64 208 Q70 190 70 172 Q70 162 66 152Z" fill="url(#bLimbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <!-- Tricep left -->
-          <path d="M55 164 Q50 180 52 202" stroke="var(--body-light)" stroke-width="1.5" fill="none" opacity="0.6"/>
-          <!-- Left forearm back -->
-          <path d="M50 218 Q42 224 36 240 Q32 256 34 272 Q38 280 46 278 Q56 276 60 266 Q66 248 64 228 Q62 222 54 218Z" fill="url(#bLimbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <!-- Left hand back -->
-          <path d="M34 272 Q28 272 26 278 Q24 286 28 292 Q30 296 36 296 Q42 296 46 290 Q50 282 48 274Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
+          <!-- Latissimus dorsi — left -->
+          <path d="M66 184 C56 204 58 232 64 252 C70 264 80 270 90 264 C100 256 104 240 102 216 C100 196 94 182 84 178Z" fill="url(#bMuscle)" stroke="#606878" stroke-width="1" opacity="0.7"/>
+          <!-- Lat right -->
+          <path d="M174 184 C184 204 182 232 176 252 C170 264 160 270 150 264 C140 256 136 240 138 216 C140 196 146 182 156 178Z" fill="url(#bMuscle)" stroke="#606878" stroke-width="1" opacity="0.7"/>
 
-          <!-- Right upper arm back -->
-          <path d="M176 150 Q190 154 198 170 Q204 188 202 208 Q198 218 190 218 Q180 218 176 208 Q170 190 170 172 Q170 162 174 152Z" fill="url(#bLimbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <path d="M185 164 Q190 180 188 202" stroke="var(--body-light)" stroke-width="1.5" fill="none" opacity="0.6"/>
-          <!-- Right forearm back -->
-          <path d="M190 218 Q198 224 204 240 Q208 256 206 272 Q202 280 194 278 Q184 276 180 266 Q174 248 176 228 Q178 222 186 218Z" fill="url(#bLimbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <!-- Right hand back -->
-          <path d="M206 272 Q212 272 214 278 Q216 286 212 292 Q210 296 204 296 Q198 296 194 290 Q190 282 192 274Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
+          <!-- Erector spinae (para-spinal muscles) -->
+          <path d="M110 142 Q108 200 110 270" stroke="#707a8a" stroke-width="1.3" fill="none" opacity="0.45"/>
+          <path d="M130 142 Q132 200 130 270" stroke="#707a8a" stroke-width="1.3" fill="none" opacity="0.45"/>
 
-          <!-- GLUTES -->
-          <path d="M64 280 Q56 288 56 308 Q58 326 74 334 Q92 340 120 340 Q148 340 166 334 Q182 326 184 308 Q184 288 176 280 Q152 296 120 296 Q88 296 64 280Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <!-- Glute crease -->
-          <path d="M80 330 Q120 338 160 330" stroke="var(--body-stroke)" stroke-width="1" fill="none" opacity="0.5"/>
+          <!-- ── SHOULDERS BACK ── -->
+          <!-- Left deltoid back -->
+          <path d="M102 132 C88 132 74 138 68 150 C64 158 66 166 70 170 C76 162 84 150 100 140Z" fill="url(#bLimbL)" stroke="#505a6a" stroke-width="1.2"/>
+          <!-- Right deltoid back -->
+          <path d="M138 132 C152 132 166 138 172 150 C176 158 174 166 170 170 C164 162 156 150 140 140Z" fill="url(#bLimbR)" stroke="#505a6a" stroke-width="1.2"/>
+
+          <!-- ── UPPER ARMS BACK (triceps visible) ── -->
+          <!-- Left tricep -->
+          <path d="M68 168 C56 172 46 184 42 200 C38 216 42 230 48 236 C56 242 66 240 70 230 C76 216 76 198 74 182 C72 176 70 170 68 168Z" fill="url(#bLimbL)" stroke="#505a6a" stroke-width="1.2"/>
+          <!-- Tricep long head L -->
+          <path d="M56 176 Q52 194 54 214" stroke="#707a8a" stroke-width="1.6" fill="none" opacity="0.6"/>
+          <path d="M64 172 Q62 196 64 220" stroke="#606878" stroke-width="1" fill="none" opacity="0.4"/>
+          <!-- Right tricep -->
+          <path d="M172 168 C184 172 194 184 198 200 C202 216 198 230 192 236 C184 242 174 240 170 230 C164 216 164 198 166 182 C168 176 170 170 172 168Z" fill="url(#bLimbR)" stroke="#505a6a" stroke-width="1.2"/>
+          <path d="M184 176 Q188 194 186 214" stroke="#707a8a" stroke-width="1.6" fill="none" opacity="0.6"/>
+          <path d="M176 172 Q178 196 176 220" stroke="#606878" stroke-width="1" fill="none" opacity="0.4"/>
+
+          <!-- ── FOREARMS BACK ── -->
+          <path d="M48 236 C40 242 34 256 32 272 C30 286 32 296 38 300 C46 304 56 302 62 292 C68 280 70 262 68 246 C66 240 58 236 48 236Z" fill="url(#bLimbL)" stroke="#505a6a" stroke-width="1.2"/>
+          <path d="M192 236 C200 242 206 256 208 272 C210 286 208 296 202 300 C194 304 184 302 178 292 C172 280 170 262 172 246 C174 240 182 236 192 236Z" fill="url(#bLimbR)" stroke="#505a6a" stroke-width="1.2"/>
+
+          <!-- ── HANDS BACK ── -->
+          <path d="M32 296 C26 296 24 302 24 308 C24 316 28 322 36 324 C42 325 50 322 54 314 C56 308 54 300 50 297Z" fill="url(#bBodyGrad)" stroke="#505a6a" stroke-width="1"/>
+          <path d="M208 296 C214 296 216 302 216 308 C216 316 212 322 204 324 C198 325 190 322 186 314 C184 308 186 300 190 297Z" fill="url(#bBodyGrad)" stroke="#505a6a" stroke-width="1"/>
+
+          <!-- ── GLUTES ── -->
+          <path d="M60 292 C52 302 50 318 54 334 C58 350 72 360 92 364 Q104 366 120 366 Q136 366 148 364 C168 360 182 350 186 334 C190 318 188 302 180 292 C160 304 142 306 120 306 C98 306 80 304 60 292Z" fill="url(#bBodyGrad)" stroke="#505a6a" stroke-width="1.2"/>
+          <!-- Glute max crease -->
+          <path d="M76 354 Q120 362 164 354" stroke="#606878" stroke-width="1" fill="none" opacity="0.5"/>
           <!-- Glute division -->
-          <path d="M120 296 L120 338" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <path d="M120 306 Q120 330 120 362" stroke="#505a6a" stroke-width="1" fill="none" opacity="0.4"/>
+          <!-- Glute highlight L -->
+          <path d="M72 312 Q64 328 68 346" stroke="#707a8a" stroke-width="1.2" fill="none" opacity="0.4"/>
+          <!-- Glute highlight R -->
+          <path d="M168 312 Q176 328 172 346" stroke="#707a8a" stroke-width="1.2" fill="none" opacity="0.4"/>
 
-          <!-- LEFT HAMSTRING -->
-          <path d="M80 334 Q68 342 60 362 Q54 382 56 404 Q60 420 70 428 Q82 436 92 428 Q102 418 104 396 Q108 372 104 350 Q100 336 88 330Z" fill="url(#bLimbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <path d="M68 352 Q66 378 68 404" stroke="var(--body-light)" stroke-width="1" fill="none" opacity="0.5"/>
-          <path d="M84 336 Q82 370 84 405" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <!-- ── HAMSTRINGS ── -->
+          <!-- Left hamstring group -->
+          <path d="M82 360 C68 368 58 384 54 404 C50 424 52 444 58 458 C66 470 80 474 92 468 C104 460 110 444 110 420 C112 396 108 374 100 362Z" fill="url(#bLimbL)" stroke="#505a6a" stroke-width="1.2"/>
+          <!-- Biceps femoris L -->
+          <path d="M62 376 Q58 400 60 428" stroke="#707a8a" stroke-width="1.4" fill="none" opacity="0.55"/>
+          <!-- Semimembranosus/semitendinosus L -->
+          <path d="M82 362 Q80 398 82 428" stroke="#606878" stroke-width="1" fill="none" opacity="0.45"/>
+          <!-- Right hamstring -->
+          <path d="M158 360 C172 368 182 384 186 404 C190 424 188 444 182 458 C174 470 160 474 148 468 C136 460 130 444 130 420 C128 396 132 374 140 362Z" fill="url(#bLimbR)" stroke="#505a6a" stroke-width="1.2"/>
+          <path d="M178 376 Q182 400 180 428" stroke="#707a8a" stroke-width="1.4" fill="none" opacity="0.55"/>
+          <path d="M158 362 Q160 398 158 428" stroke="#606878" stroke-width="1" fill="none" opacity="0.45"/>
 
-          <!-- RIGHT HAMSTRING -->
-          <path d="M160 334 Q172 342 180 362 Q186 382 184 404 Q180 420 170 428 Q158 436 148 428 Q138 418 136 396 Q132 372 136 350 Q140 336 152 330Z" fill="url(#bLimbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <path d="M172 352 Q174 378 172 404" stroke="var(--body-light)" stroke-width="1" fill="none" opacity="0.5"/>
-          <path d="M156 336 Q158 370 156 405" stroke="var(--body-stroke)" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <!-- ── KNEES BACK ── -->
+          <ellipse cx="82" cy="470" rx="24" ry="17" fill="#252c3a" stroke="#606878" stroke-width="1.2"/>
+          <ellipse cx="158" cy="470" rx="24" ry="17" fill="#252c3a" stroke="#606878" stroke-width="1.2"/>
+          <!-- Popliteal crease -->
+          <path d="M66 470 Q82 476 98 470" stroke="#404858" stroke-width="0.9" fill="none" opacity="0.5"/>
+          <path d="M142 470 Q158 476 174 470" stroke="#404858" stroke-width="0.9" fill="none" opacity="0.5"/>
 
-          <!-- KNEES BACK -->
-          <ellipse cx="80" cy="435" rx="22" ry="15" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <ellipse cx="160" cy="435" rx="22" ry="15" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="1.2"/>
+          <!-- ── CALVES ── -->
+          <!-- Left gastrocnemius -->
+          <path d="M58 484 C50 500 48 522 50 544 C52 558 62 568 74 570 C84 572 96 564 98 548 C102 530 100 506 96 488 C92 476 84 470 76 470Z" fill="url(#bLimbL)" stroke="#505a6a" stroke-width="1.2"/>
+          <!-- Gastroc medial head L -->
+          <path d="M64 484 Q60 508 62 534" stroke="#808898" stroke-width="1.8" fill="none" opacity="0.5" stroke-linecap="round"/>
+          <!-- Gastroc lateral head L -->
+          <path d="M80 476 Q78 506 80 532" stroke="#606878" stroke-width="1.2" fill="none" opacity="0.4"/>
+          <!-- Soleus L -->
+          <path d="M72 534 Q70 546 72 558" stroke="#707a8a" stroke-width="1.2" fill="none" opacity="0.4"/>
+          <!-- Right calf -->
+          <path d="M182 484 C190 500 192 522 190 544 C188 558 178 568 166 570 C156 572 144 564 142 548 C138 530 140 506 144 488 C148 476 156 470 164 470Z" fill="url(#bLimbR)" stroke="#505a6a" stroke-width="1.2"/>
+          <path d="M176 484 Q180 508 178 534" stroke="#808898" stroke-width="1.8" fill="none" opacity="0.5" stroke-linecap="round"/>
+          <path d="M160 476 Q162 506 160 532" stroke="#606878" stroke-width="1.2" fill="none" opacity="0.4"/>
+          <path d="M168 534 Q170 546 168 558" stroke="#707a8a" stroke-width="1.2" fill="none" opacity="0.4"/>
 
-          <!-- CALVES -->
-          <path d="M60 448 Q52 466 50 490 Q48 514 52 536 Q56 548 66 552 Q78 556 86 548 Q94 538 94 514 Q96 490 90 468 Q86 454 78 448Z" fill="url(#bLimbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <!-- Calf belly -->
-          <path d="M62 460 Q56 480 58 505" stroke="var(--body-light)" stroke-width="2" fill="none" opacity="0.5"/>
-          <path d="M78 450 Q76 476 78 505" stroke="var(--body-stroke)" stroke-width="1" fill="none" opacity="0.4"/>
+          <!-- ── ANKLES BACK ── -->
+          <path d="M50 550 C48 560 50 566 58 570 C64 572 74 572 80 568 C88 564 92 558 90 550Z" fill="url(#bBodyGrad)" stroke="#505a6a" stroke-width="1"/>
+          <ellipse cx="52" cy="562" rx="5" ry="4" fill="#303848" stroke="#606878" stroke-width="0.8"/>
+          <ellipse cx="88" cy="560" rx="5" ry="4" fill="#303848" stroke="#606878" stroke-width="0.8"/>
+          <path d="M190 550 C192 560 190 566 182 570 C176 572 166 572 160 568 C152 564 148 558 150 550Z" fill="url(#bBodyGrad)" stroke="#505a6a" stroke-width="1"/>
+          <ellipse cx="188" cy="562" rx="5" ry="4" fill="#303848" stroke="#606878" stroke-width="0.8"/>
+          <ellipse cx="152" cy="560" rx="5" ry="4" fill="#303848" stroke="#606878" stroke-width="0.8"/>
 
-          <path d="M180 448 Q188 466 190 490 Q192 514 188 536 Q184 548 174 552 Q162 556 154 548 Q146 538 146 514 Q144 490 150 468 Q154 454 162 448Z" fill="url(#bLimbGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <path d="M178 460 Q184 480 182 505" stroke="var(--body-light)" stroke-width="2" fill="none" opacity="0.5"/>
-          <path d="M162 450 Q164 476 162 505" stroke="var(--body-stroke)" stroke-width="1" fill="none" opacity="0.4"/>
+          <!-- ── HEELS / FEET BACK ── -->
+          <path d="M50 566 C40 566 28 570 24 578 C22 584 26 592 40 596 C54 600 70 598 82 590 C90 584 92 574 90 566Z" fill="url(#bBodyGrad)" stroke="#505a6a" stroke-width="1.2"/>
+          <ellipse cx="42" cy="592" rx="16" ry="8" fill="#2a3040" stroke="#505a6a" stroke-width="0.8" opacity="0.8"/>
+          <path d="M190 566 C200 566 212 570 216 578 C218 584 214 592 200 596 C186 600 170 598 158 590 C150 584 148 574 150 566Z" fill="url(#bBodyGrad)" stroke="#505a6a" stroke-width="1.2"/>
+          <ellipse cx="198" cy="592" rx="16" ry="8" fill="#2a3040" stroke="#505a6a" stroke-width="0.8" opacity="0.8"/>
 
-          <!-- ANKLES BACK -->
-          <path d="M50 542 Q48 552 52 560 Q58 564 68 564 Q78 564 84 560 Q88 552 88 542Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
-          <circle cx="52" cy="552" r="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
-          <circle cx="86" cy="552" r="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
-          <path d="M190 542 Q192 552 188 560 Q182 564 172 564 Q162 564 156 560 Q152 552 152 542Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1"/>
-          <circle cx="154" cy="552" r="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
-          <circle cx="188" cy="552" r="4" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8"/>
-
-          <!-- HEELS + FEET BACK -->
-          <path d="M52 560 Q44 560 36 564 Q28 570 30 578 Q32 586 46 588 Q60 590 72 584 Q82 578 86 568 Q86 562 84 560Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <path d="M188 560 Q196 560 204 564 Q212 570 210 578 Q208 586 194 588 Q180 590 168 584 Q158 578 154 568 Q154 562 156 560Z" fill="url(#bBodyGrad)" stroke="var(--body-stroke)" stroke-width="1.2"/>
-          <!-- Heel bumps -->
-          <ellipse cx="45" cy="584" rx="14" ry="8" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8" opacity="0.7"/>
-          <ellipse cx="195" cy="584" rx="14" ry="8" fill="var(--body-muscle)" stroke="var(--body-stroke)" stroke-width="0.8" opacity="0.7"/>
+          <!-- Achilles tendon lines -->
+          <path d="M72 544 Q72 554 74 566" stroke="#808898" stroke-width="1.5" fill="none" opacity="0.5"/>
+          <path d="M168 544 Q168 554 166 566" stroke="#808898" stroke-width="1.5" fill="none" opacity="0.5"/>
         </svg>
 
         <!-- ═══ BACK HOTSPOTS ═══ -->
-        <div class="hs" style="left:120px;top:150px" onclick="showZone('spine')" id="hs-spine">
+        <div class="hs" style="left:120px;top:155px" onclick="showZone('spine')" id="hs-spine">
           <div class="hs-ring"></div><div class="hs-dot"></div>
           <div class="hs-tip">Spine & Back</div>
         </div>
-        <div class="hs" style="left:84px;top:158px" onclick="showZone('shoulders')" id="hs-shoulders">
+        <div class="hs" style="left:84px;top:162px" onclick="showZone('shoulders')" id="hs-shoulders">
           <div class="hs-ring"></div><div class="hs-dot"></div>
           <div class="hs-tip tip-left">Shoulders & Traps</div>
         </div>
-        <div class="hs" style="left:66px;top:195px" onclick="showZone('recovery')" id="hs-recovery">
+        <div class="hs" style="left:64px;top:205px" onclick="showZone('recovery')" id="hs-recovery">
           <div class="hs-ring"></div><div class="hs-dot"></div>
           <div class="hs-tip tip-left">Recovery & Sleep</div>
         </div>
-        <div class="hs" style="left:120px;top:315px" onclick="showZone('glutes')" id="hs-glutes">
+        <div class="hs" style="left:120px;top:328px" onclick="showZone('glutes')" id="hs-glutes">
           <div class="hs-ring"></div><div class="hs-dot"></div>
           <div class="hs-tip">Glutes & Hip</div>
         </div>
-        <div class="hs" style="left:72px;top:382px" onclick="showZone('hamstrings')" id="hs-hamstrings">
+        <div class="hs" style="left:70px;top:400px" onclick="showZone('hamstrings')" id="hs-hamstrings">
           <div class="hs-ring"></div><div class="hs-dot"></div>
           <div class="hs-tip tip-left">Hamstrings</div>
         </div>
-        <div class="hs" style="left:66px;top:488px" onclick="showZone('calves')" id="hs-calves">
+        <div class="hs" style="left:64px;top:510px" onclick="showZone('calves')" id="hs-calves">
           <div class="hs-ring"></div><div class="hs-dot"></div>
           <div class="hs-tip tip-left">Calves & Circulation</div>
         </div>
