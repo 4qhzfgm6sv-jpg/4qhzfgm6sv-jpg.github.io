@@ -621,6 +621,7 @@ function setStage(stage,btn){
     btn.style.setProperty('--stage-colour-bg', 'var(--b-'+stageCol+')');
   }
   var cfg=STAGE_CONFIG[stage]||{};
+  var col=cfg.colour||'brain';
   var supps=ALL_DATA[stage]||[];
   var pri=supps.filter(function(s){return s.priority;}).length;
   // Update panel active colour
