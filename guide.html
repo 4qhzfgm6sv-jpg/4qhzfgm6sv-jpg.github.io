@@ -561,25 +561,47 @@ function splitLine(line){
 }
 
 function loadSheet(){
-  var proxy='https://corsproxy.io/?'+encodeURIComponent(SHEET_URL);
-  fetch(proxy)
-    .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text();})
-    .then(function(csv){
-      var rows=parseCSV(csv);
-      ALL_DATA={};
-      rows.forEach(function(r){
-        var stage=(r.stage||'').toLowerCase().trim();
-        if(!stage)return;
-        if(!ALL_DATA[stage])ALL_DATA[stage]=[];
-        ALL_DATA[stage].push({name:r.name||'',why:r.why||'',dose:r.dose||'',timing:r.timing||'',form:r.form||'',warn:r.warn||'',priority:(r.priority||'').toLowerCase()==='true',badge:r.badge||'',badge_type:r.badge_type||'green',s1n:r.stockist1_name||'',s1u:r.stockist1_url||'',s2n:r.stockist2_name||'',s2u:r.stockist2_url||'',s3n:r.stockist3_name||'',s3u:r.stockist3_url||''});
-      });
-      document.getElementById('ls-loading').style.display='none';
-      document.getElementById('ls-main').style.display='block';
-      setStage('bone',document.querySelector('.stage-btn.active'));
-    })
-    .catch(function(err){
-      document.getElementById('ls-loading').innerHTML='<span style="color:#fda4af;font-size:0.75rem;">Could not load data. Check your Google Sheet is published as CSV.</span>';
-    });
+  var urls=[
+    'https://corsproxy.io/?'+encodeURIComponent(SHEET_URL),
+    'https://api.allorigins.win/raw?url='+encodeURIComponent(SHEET_URL)
+  ];
+  var tried=0;
+  function attempt(){
+    if(tried>=urls.length){
+      document.getElementById('ls-loading').innerHTML='<span style="color:#f87171;font-size:0.75rem;">Could not load data. Check your Google Sheet is published as CSV.</span>';
+      return;
+    }
+    var url=urls[tried++];
+    fetch(url)
+      .then(function(r){
+        if(!r.ok) throw new Error('HTTP '+r.status);
+        return r.text();
+      })
+      .then(function(csv){
+        var rows=parseCSV(csv);
+        if(!rows||rows.length<2){throw new Error('Empty');}
+        ALL_DATA={};
+        rows.forEach(function(r){
+          var stage=(r.stage||'').toLowerCase().trim();
+          if(!stage)return;
+          if(!ALL_DATA[stage])ALL_DATA[stage]=[];
+          ALL_DATA[stage].push({
+            name:r.name||'',why:r.why||'',dose:r.dose||'',
+            timing:r.timing||'',form:r.form||'',warn:r.warn||'',
+            priority:(r.priority||'').toLowerCase()==='true',
+            badge:r.badge||'',badge_type:r.badge_type||'brain',
+            s1n:r.stockist1_name||'',s1u:r.stockist1_url||'',
+            s2n:r.stockist2_name||'',s2u:r.stockist2_url||'',
+            s3n:r.stockist3_name||'',s3u:r.stockist3_url||''
+          });
+        });
+        document.getElementById('ls-loading').style.display='none';
+        document.getElementById('ls-main').style.display='block';
+        setStage('pregnancy',document.querySelector('.stage-btn.active'));
+      })
+      .catch(function(){attempt();});
+  }
+  attempt();
 }
 
 function setStage(stage,btn){
