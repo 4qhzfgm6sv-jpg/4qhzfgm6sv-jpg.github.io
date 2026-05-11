@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SupplMap — Life Stage & Glossary</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── COLOUR TAXONOMY — 9 categories, fully distinct ── */
+:root {
+  --bg:#09090b; --surface:#111113; --card:#18181b; --card2:#1f1f23;
+  --border:#27272a; --border2:#3f3f46;
+  --text:#fafafa; --text2:#a1a1aa; --text3:#52525b;
+  --accent:#e8d5b0; --accent2:#c9a96e; --accent-dim:#e8d5b010; --accent-glow:#c9a96e20;
+
+  /* Pregnancy — soft rose */
+  --c-pregnancy:#fda4af; --b-pregnancy:#fda4af12; --br-pregnancy:#fda4af38;
+  /* Brain — indigo */
+  --c-brain:#818cf8; --b-brain:#818cf812; --br-brain:#818cf838;
+  /* Energy — amber */
+  --c-energy:#fbbf24; --b-energy:#fbbf2412; --br-energy:#fbbf2438;
+  /* Muscle — emerald */
+  --c-muscle:#34d399; --b-muscle:#34d39912; --br-muscle:#34d39938;
+  /* Inflammation — orange */
+  --c-inflammation:#fb923c; --b-inflammation:#fb923c12; --br-inflammation:#fb923c38;
+  /* Longevity — violet */
+  --c-longevity:#a78bfa; --b-longevity:#a78bfa12; --br-longevity:#a78bfa38;
+  /* Hormone — copper/burnt sienna, fully distinct from pregnancy */
+  --c-hormone:#e07a45; --b-hormone:#e07a4512; --br-hormone:#e07a4538;
+  /* Research — slate */
+  --c-research:#94a3b8; --b-research:#94a3b812; --br-research:#94a3b838;
+  /* Gut — teal */
+  --c-gut:#6ee7b7; --b-gut:#6ee7b712; --br-gut:#6ee7b738;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 80% 50% at 20% 20%,#c9a96e08 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 80%,#c9a96e05 0%,transparent 60%);pointer-events:none;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:#09090bee;backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--accent);display:flex;align-items:center;gap:0.5rem;text-decoration:none;}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--accent2);box-shadow:0 0 8px var(--accent2);animation:glow 2s infinite;}
+@keyframes glow{0%,100%{box-shadow:0 0 4px var(--accent2);}50%{box-shadow:0 0 12px var(--accent2);}}
+
+
+/* PAGE HERO */
+.hero{padding:110px 2.5rem 2.5rem;max-width:1100px;margin:0 auto;position:relative;z-index:1;}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent2);margin-bottom:0.8rem;display:flex;align-items:center;gap:0.6rem;}
+.hero-eyebrow::before{content:'';width:20px;height:1px;background:var(--accent2);display:block;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,4vw,3.2rem);font-weight:300;line-height:1.1;letter-spacing:-0.5px;}
+.hero h1 em{font-style:italic;color:var(--accent);}
+.hero-sub{margin-top:0.8rem;font-size:0.9rem;color:var(--text2);font-weight:300;line-height:1.7;max-width:520px;}
+
+/* TAB SWITCHER */
+.tab-bar{max-width:1100px;margin:0 auto 2rem;padding:0 2.5rem;display:flex;gap:0;border-bottom:1px solid var(--border);position:relative;z-index:1;}
+.tab-btn{font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.7rem 1.4rem;background:none;border:none;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.2s;}
+.tab-btn:hover{color:var(--text2);}
+.tab-btn.active{color:var(--accent2);border-bottom-color:var(--accent2);}
+
+/* SECTION WRAPPER */
+.section{max-width:1100px;margin:0 auto;padding:0 2.5rem 5rem;position:relative;z-index:1;display:none;}
+.section.visible{display:block;}
+
+/* ══════════════════════════════════
+   LIFE STAGE SECTION
+══════════════════════════════════ */
+.stage-rail{display:grid;grid-template-columns:repeat(6,1fr);gap:0;border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:2rem;background:var(--surface);}
+.stage-btn{position:relative;padding:1.4rem 0.5rem 1.2rem;cursor:pointer;text-align:center;border-right:1px solid var(--border);background:var(--surface);transition:background 0.25s;display:flex;flex-direction:column;align-items:center;gap:0.5rem;user-select:none;}
+.stage-btn:last-child{border-right:none;}
+.stage-btn:hover{background:var(--card);}
+.stage-btn.active{background:var(--card2);}
+.stage-icon{width:28px;height:28px;display:flex;align-items:center;justify-content:center;}
+.stage-icon svg{width:22px;height:22px;stroke:var(--text3);fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;transition:stroke 0.2s;}
+.stage-btn:hover .stage-icon svg{stroke:var(--text2);}
+.stage-btn.active .stage-icon svg{stroke:var(--accent2);}
+.stage-name{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);transition:color 0.2s;line-height:1.3;text-align:center;}
+.stage-btn:hover .stage-name{color:var(--text2);}
+.stage-btn.active .stage-name{color:var(--accent);}
+.stage-btn::after{content:'';position:absolute;bottom:0;left:10%;right:10%;height:2px;background:var(--accent2);border-radius:2px 2px 0 0;opacity:0;transition:opacity 0.25s;}
+.stage-btn.active::after{opacity:1;background:var(--stage-colour,var(--accent2));}
+.stage-btn.active .stage-name{color:var(--stage-colour,var(--accent));}
+.stage-btn.active .stage-icon svg{stroke:var(--stage-colour,var(--accent2));}
+
+.ls-panel{display:grid;grid-template-columns:1fr 320px;gap:1.5rem;align-items:start;}
+.supp-panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.supp-panel-header{padding:1.4rem 1.6rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;}
+.supp-panel{--active-colour:var(--accent2);}
+.panel-stage-label{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--active-colour);margin-bottom:0.3rem;}
+.supp-row.priority{border-left:2px solid var(--active-colour);}
+.supp-row.priority .supp-num{color:var(--active-colour);}
+.panel-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;line-height:1.1;}
+.panel-sub{font-size:0.78rem;color:var(--text2);margin-top:0.3rem;font-weight:300;line-height:1.5;}
+.panel-count{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--text3);letter-spacing:0.06em;white-space:nowrap;padding-top:0.2rem;flex-shrink:0;}
+.supp-list{padding:0.4rem 0;}
+.supp-row{display:flex;align-items:center;padding:0.9rem 1.6rem;border-bottom:1px solid var(--border);gap:1rem;cursor:pointer;transition:background 0.15s;}
+.supp-row:last-child{border-bottom:none;}
+.supp-row:hover{background:var(--card);}
+.supp-row.priority{border-left:2px solid var(--accent2);}
+.supp-num{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--text3);width:16px;flex-shrink:0;text-align:center;}
+.supp-row.priority .supp-num{color:var(--accent2);}
+.supp-info{flex:1;min-width:0;}
+.supp-name{font-size:0.88rem;font-weight:500;color:var(--text);margin-bottom:0.2rem;line-height:1.2;}
+.supp-why{font-size:0.75rem;color:var(--text2);font-weight:300;line-height:1.4;}
+.supp-detail{display:none;padding:0.8rem 1.6rem 0.8rem 3.4rem;border-bottom:1px solid var(--border);background:var(--card);}
+.supp-detail.open{display:block;animation:fadeSlide 0.2s ease both;}
+.supp-meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem 1rem;margin-bottom:0.8rem;}
+.meta-key{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:0.15rem;}
+.meta-val{font-size:0.78rem;color:var(--text);line-height:1.4;}
+.supp-warn-box{background:#1a1008;border:1px solid #c9a96e25;border-radius:8px;padding:0.6rem 0.8rem;font-size:0.72rem;color:#c9a96eaa;line-height:1.5;margin-bottom:0.8rem;display:flex;gap:0.5rem;}
+.supp-warn-box::before{content:'!';flex-shrink:0;font-weight:700;}
+.stockist-links{display:flex;flex-wrap:wrap;gap:0.4rem;}
+.stockist-link{font-size:0.72rem;font-weight:500;padding:0.3rem 0.75rem;border-radius:6px;border:1px solid var(--border2);background:var(--surface);color:var(--text2);text-decoration:none;transition:all 0.18s;}
+.stockist-link:hover{color:var(--accent);border-color:var(--accent2);background:var(--accent-dim);}
+.supp-badges{display:flex;gap:0.3rem;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;}
+
+/* Life stage sidebar */
+.ls-sidebar{display:flex;flex-direction:column;gap:1rem;}
+.stage-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.4rem;position:relative;overflow:hidden;transition:border-color 0.3s;}
+.stage-card::before{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;background:var(--accent-glow);border-radius:50%;pointer-events:none;}
+.stage-card-icon{width:40px;height:40px;background:var(--accent-dim);border:1px solid #c9a96e30;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:1rem;}
+.stage-card-icon svg{width:22px;height:22px;stroke:var(--accent2);fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;}
+.stage-card-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;margin-bottom:0.4rem;}
+.stage-card-desc{font-size:0.78rem;color:var(--text2);font-weight:300;line-height:1.6;margin-bottom:1rem;}
+.focus-tags{display:flex;flex-wrap:wrap;gap:0.4rem;}
+.focus-tag{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.06em;text-transform:uppercase;padding:0.3rem 0.7rem;border-radius:100px;background:var(--card2);border:1px solid var(--border2);color:var(--text2);}
+.warn-card{background:#1a1008;border:1px solid #c9a96e30;border-radius:14px;padding:1rem 1.2rem;display:none;}
+.warn-card.visible{display:block;}
+.warn-card-title{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent2);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.4rem;}
+.warn-card-title::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent2);flex-shrink:0;}
+.warn-card p{font-size:0.75rem;color:#c9a96eaa;font-weight:300;line-height:1.6;}
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;}
+.stat-tile{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:0.9rem 1rem;}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;color:var(--accent);line-height:1;margin-bottom:0.2rem;}
+.stat-label{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);}
+.empty-state{padding:2rem 1.6rem;font-size:0.8rem;color:var(--text3);font-family:'DM Mono',monospace;line-height:1.7;}
+.loading-ls{display:flex;align-items:center;gap:0.8rem;padding:2rem;font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.ld{width:6px;height:6px;border-radius:50%;background:var(--accent2);animation:blink 1.2s infinite;}
+.ld:nth-child(2){animation-delay:0.2s;}
+.ld:nth-child(3){animation-delay:0.4s;}
+@keyframes blink{0%,100%{opacity:0.2;}50%{opacity:1;}}
+
+/* ══════════════════════════════════
+   GLOSSARY SECTION
+══════════════════════════════════ */
+.search-wrap{margin-bottom:1.2rem;}
+.search-box{position:relative;}
+.search-input{width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:0.9rem 1rem 0.9rem 3rem;font-family:'Outfit',sans-serif;font-size:0.9rem;color:var(--text);outline:none;transition:border-color 0.2s;}
+.search-input::placeholder{color:var(--text3);}
+.search-input:focus{border-color:var(--accent2);}
+.search-icon{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--text3);font-size:0.9rem;pointer-events:none;}
+.search-count{position:absolute;right:1rem;top:50%;transform:translateY(-50%);font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);}
+.filters-wrap{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:2rem;}
+.filter-btn{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.4rem 0.9rem;border-radius:100px;border:1px solid var(--border2);background:var(--surface);color:var(--text3);cursor:pointer;transition:all 0.2s;}
+.filter-btn:hover{color:var(--text2);}
+.filter-btn.active{font-weight:500;}
+
+/* Category-specific filter buttons */
+.filter-btn[data-cat="pregnancy"].active{background:var(--b-pregnancy);color:var(--c-pregnancy);border-color:var(--br-pregnancy);}
+.filter-btn[data-cat="brain"].active{background:var(--b-brain);color:var(--c-brain);border-color:var(--br-brain);}
+.filter-btn[data-cat="energy"].active{background:var(--b-energy);color:var(--c-energy);border-color:var(--br-energy);}
+.filter-btn[data-cat="muscle"].active{background:var(--b-muscle);color:var(--c-muscle);border-color:var(--br-muscle);}
+.filter-btn[data-cat="inflammation"].active{background:var(--b-inflammation);color:var(--c-inflammation);border-color:var(--br-inflammation);}
+.filter-btn[data-cat="longevity"].active{background:var(--b-longevity);color:var(--c-longevity);border-color:var(--br-longevity);}
+.filter-btn[data-cat="hormone"].active{background:var(--b-hormone);color:var(--c-hormone);border-color:var(--br-hormone);}
+.filter-btn[data-cat="research"].active{background:var(--b-research);color:var(--c-research);border-color:var(--br-research);}
+.filter-btn[data-cat="gut"].active{background:var(--b-gut);color:var(--c-gut);border-color:var(--br-gut);}
+.filter-btn[data-cat="all"].active{background:var(--accent-glow);color:var(--accent2);border-color:var(--accent2);}
+
+.gloss-main{display:grid;grid-template-columns:180px 1fr;gap:2rem;}
+.alpha-nav{position:sticky;top:80px;align-self:start;}
+.alpha-nav-inner{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem;display:grid;grid-template-columns:repeat(4,1fr);gap:0.3rem;}
+.alpha-btn{font-family:'DM Mono',monospace;font-size:0.65rem;font-weight:500;width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:6px;border:none;background:transparent;color:var(--text3);cursor:pointer;transition:all 0.15s;}
+.alpha-btn:hover{background:var(--card);color:var(--text2);}
+.alpha-btn.has-terms{color:var(--accent2);}
+.alpha-btn.has-terms:hover{background:var(--accent-dim);}
+.alpha-btn.disabled{opacity:0.2;cursor:default;}
+.glossary-content{}
+.letter-section{margin-bottom:2.5rem;}
+.letter-heading{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;}
+.letter-char{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300;color:var(--accent2);line-height:1;width:48px;flex-shrink:0;}
+.letter-line{flex:1;height:1px;background:var(--border);}
+.term-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:0.7rem;overflow:hidden;transition:border-color 0.2s;}
+.term-card:hover{border-color:var(--border2);}
+.term-card.expanded{border-color:var(--accent2);}
+.term-header{display:flex;align-items:center;gap:1rem;padding:1rem 1.3rem;cursor:pointer;}
+.term-abbr{font-family:'DM Mono',monospace;font-size:0.75rem;font-weight:500;letter-spacing:0.06em;color:var(--text);flex-shrink:0;}
+.term-short{font-size:0.8rem;color:var(--text2);font-weight:300;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.term-tags{display:flex;gap:0.3rem;flex-shrink:0;}
+.term-arrow{color:var(--text3);font-size:0.7rem;transition:transform 0.2s,color 0.2s;flex-shrink:0;}
+.term-card.expanded .term-arrow{transform:rotate(180deg);color:var(--accent2);}
+.term-body{display:none;padding:0 1.3rem 1.2rem 1.3rem;border-top:1px solid var(--border);}
+.term-card.expanded .term-body{display:block;}
+.term-full-name{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:400;color:var(--accent);margin-bottom:0.6rem;padding-top:0.9rem;font-style:italic;}
+.term-explanation{font-size:0.82rem;color:var(--text2);font-weight:300;line-height:1.75;}
+.term-explanation strong{color:var(--text);font-weight:500;}
+.no-results{text-align:center;padding:4rem 2rem;display:none;}
+.no-results-icon{font-size:2rem;margin-bottom:1rem;opacity:0.3;}
+.no-results p{font-size:0.85rem;color:var(--text3);line-height:1.6;}
+
+/* ── BADGES (shared between both sections) ── */
+.badge{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.06em;text-transform:uppercase;padding:0.18rem 0.55rem;border-radius:100px;}
+/* Life stage badges */
+.badge-priority{background:var(--accent-glow);color:var(--accent2);border:1px solid #c9a96e40;}
+.badge-green{background:var(--b-muscle);color:var(--c-muscle);border:1px solid var(--br-muscle);}
+.badge-rose{background:var(--b-pregnancy);color:var(--c-pregnancy);border:1px solid var(--br-pregnancy);}
+.badge-blue{background:var(--b-brain);color:var(--c-brain);border:1px solid var(--br-brain);}
+.badge-gold{background:var(--b-energy);color:var(--c-energy);border:1px solid var(--br-energy);}
+/* Glossary category tags — use colour taxonomy */
+.tag-pregnancy{background:var(--b-pregnancy);color:var(--c-pregnancy);border:1px solid var(--br-pregnancy);}
+.tag-brain{background:var(--b-brain);color:var(--c-brain);border:1px solid var(--br-brain);}
+.tag-energy{background:var(--b-energy);color:var(--c-energy);border:1px solid var(--br-energy);}
+.tag-muscle{background:var(--b-muscle);color:var(--c-muscle);border:1px solid var(--br-muscle);}
+.tag-inflammation{background:var(--b-inflammation);color:var(--c-inflammation);border:1px solid var(--br-inflammation);}
+.tag-longevity{background:var(--b-longevity);color:var(--c-longevity);border:1px solid var(--br-longevity);}
+.tag-hormone{background:var(--b-hormone);color:var(--c-hormone);border:1px solid var(--br-hormone);}
+.tag-research{background:var(--b-research);color:var(--c-research);border:1px solid var(--br-research);}
+.tag-gut{background:var(--b-gut);color:var(--c-gut);border:1px solid var(--br-gut);}
+.term-tag{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.05em;text-transform:uppercase;padding:0.18rem 0.55rem;border-radius:100px;}
+
+/* COLOUR LEGEND */
+.colour-legend{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1.5rem;padding:1rem 1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;}
+.legend-item{display:flex;align-items:center;gap:0.3rem;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;text-transform:uppercase;}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* ANIMATIONS */
+@keyframes fadeSlide{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.anim{animation:fadeSlide 0.3s ease both;}
+
+/* DISCLAIMER */
+.disclaimer{max-width:1100px;margin:0 auto;padding:1.5rem 2.5rem 3rem;border-top:1px solid var(--border);position:relative;z-index:1;}
+.disclaimer p{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--text3);line-height:1.8;}
+
+/* RESPONSIVE */
+/* ── TABLET ── */
+@media(max-width:860px){
+  .ls-panel{grid-template-columns:1fr;}
+  .gloss-main{grid-template-columns:1fr;}
+  .alpha-nav{display:none;}
+  .ls-sidebar{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+  .stage-card{grid-column:1/-1;}
+  nav{padding:0.9rem 1.2rem;}
+  .hero,.tab-bar,.section,.disclaimer{padding-left:1.2rem;padding-right:1.2rem;}
+  .hero{padding-top:90px;padding-bottom:1.5rem;}
+  .hero h1{font-size:2rem;}
+}
+
+/* ── MOBILE ── */
+@media(max-width:600px){
+  /* Nav */
+  nav{padding:0.75rem 1rem;}
+  .logo{font-size:1.1rem;}
+  .logo-dot{width:6px;height:6px;}
+
+  /* Hero */
+  .hero{padding:80px 1rem 1.2rem;}
+  .hero-eyebrow{font-size:0.58rem;}
+  .hero h1{font-size:1.65rem;line-height:1.15;}
+  .hero-sub{font-size:0.82rem;margin-top:0.6rem;}
+
+  /* Tabs */
+  .tab-bar{padding:0 1rem;margin-bottom:1.2rem;}
+  .tab-btn{font-size:0.65rem;padding:0.6rem 1rem;}
+
+  /* Section padding */
+  .section{padding:0 1rem 3rem;}
+
+  /* Stage rail — 2 rows of 3 */
+  .stage-rail{
+    grid-template-columns:repeat(3,1fr);
+    border-radius:12px;
+    margin-bottom:1.2rem;
+  }
+  .stage-btn{
+    padding:0.9rem 0.3rem 0.8rem;
+    gap:0.35rem;
+    border-right:1px solid var(--border);
+  }
+  .stage-btn:nth-child(3){border-right:none;}
+  .stage-btn:nth-child(4){border-top:1px solid var(--border);}
+  .stage-btn:nth-child(6){border-right:none;}
+  .stage-icon{width:22px;height:22px;}
+  .stage-icon svg{width:18px;height:18px;}
+  .stage-name{font-size:0.55rem;letter-spacing:0.05em;}
+
+  /* Supplement panel */
+  .supp-panel-header{padding:1rem 1rem 0.9rem;flex-direction:column;gap:0.4rem;}
+  .panel-title{font-size:1.2rem;}
+  .panel-sub{font-size:0.72rem;}
+  .panel-count{font-size:0.6rem;}
+  .supp-row{padding:0.75rem 1rem;gap:0.7rem;}
+  .supp-name{font-size:0.82rem;}
+  .supp-why{font-size:0.7rem;}
+  .supp-num{width:14px;font-size:0.58rem;}
+  .supp-detail{padding:0.7rem 1rem 0.7rem 2.5rem;}
+  .supp-meta-grid{grid-template-columns:1fr;gap:0.4rem;}
+  .meta-key{font-size:0.55rem;}
+  .meta-val{font-size:0.74rem;}
+  .stockist-link{font-size:0.68rem;padding:0.25rem 0.6rem;}
+
+  /* Life stage sidebar — stack vertically on mobile */
+  .ls-sidebar{display:flex;flex-direction:column;gap:0.8rem;margin-top:1rem;}
+  .stage-card{padding:1rem;}
+  .stage-card-title{font-size:1rem;}
+  .stage-card-desc{font-size:0.74rem;}
+  .stage-card-icon{width:34px;height:34px;margin-bottom:0.7rem;}
+  .focus-tag{font-size:0.55rem;padding:0.25rem 0.55rem;}
+  .stats-row{grid-template-columns:1fr 1fr;}
+  .stat-num{font-size:1.3rem;}
+  .stat-label{font-size:0.55rem;}
+  .warn-card{padding:0.8rem 1rem;}
+  .warn-card p{font-size:0.7rem;}
+
+  /* Glossary */
+  .search-input{font-size:0.82rem;padding:0.75rem 0.8rem 0.75rem 2.5rem;}
+  .search-icon{font-size:0.8rem;}
+  .search-count{font-size:0.58rem;}
+  .filters-wrap{gap:0.35rem;margin-bottom:1.2rem;}
+  .filter-btn{font-size:0.58rem;padding:0.35rem 0.7rem;}
+  .colour-legend{padding:0.7rem 0.8rem;gap:0.3rem;}
+  .legend-item{font-size:0.55rem;}
+  .legend-dot{width:7px;height:7px;}
+  .letter-char{font-size:1.8rem;width:36px;}
+  .term-header{padding:0.8rem 1rem;gap:0.7rem;}
+  .term-abbr{font-size:0.7rem;}
+  .term-short{font-size:0.72rem;}
+  .term-tag{font-size:0.5rem;padding:0.15rem 0.45rem;}
+  .term-body{padding:0 1rem 1rem 1rem;}
+  .term-full-name{font-size:0.9rem;}
+  .term-explanation{font-size:0.78rem;line-height:1.65;}
+
+  /* Disclaimer */
+  .disclaimer{padding:1.2rem 1rem 2.5rem;}
+  .disclaimer p{font-size:0.62rem;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo"><div class="logo-dot"></div>SupplMap</a>
+
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Evidence-based supplement guidance</div>
+  <h1>Your guide to<br><em>smarter supplementing.</em></h1>
+  <p class="hero-sub">Browse by your life stage to find exactly what your body needs — then explore the glossary to understand the science behind every recommendation.</p>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('lifestage',this)">Life Stage</button>
+  <button class="tab-btn" onclick="switchTab('glossary',this)">Glossary</button>
+</div>
+
+<!-- ══════════════════ LIFE STAGE ══════════════════ -->
+<div class="section visible" id="section-lifestage">
+
+  <div id="ls-loading" class="loading-ls">
+    <div class="ld"></div><div class="ld"></div><div class="ld"></div>
+    <span>Loading supplement data</span>
+  </div>
+
+  <div id="ls-main" style="display:none">
+    <div class="stage-rail">
+      <div class="stage-btn active" data-stage="pregnancy" data-colour="pregnancy" onclick="setStage('pregnancy',this)">
+        <div class="stage-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M9 21v-2a5 5 0 0 1 3-4.58"/><path d="M15 14.5c1.5.5 3 2 3 4v2.5"/><ellipse cx="15" cy="19" rx="3" ry="4"/></svg></div>
+        <span class="stage-name">Pregnancy</span>
+      </div>
+      <div class="stage-btn" data-stage="athlete" data-colour="muscle" onclick="setStage('athlete',this)">
+        <div class="stage-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><path d="M12 7v5"/><path d="M9 12l-3 2"/><path d="M15 12l3 2"/><path d="M10 17l-1 4"/><path d="M14 17l1 4"/></svg></div>
+        <span class="stage-name">Athlete</span>
+      </div>
+      <div class="stage-btn" data-stage="student" data-colour="brain" onclick="setStage('student',this)">
+        <div class="stage-icon"><svg viewBox="0 0 24 24"><path d="M12 3L2 8l10 5 10-5-10-5z"/><path d="M2 8v8"/><path d="M6 10.5v5a6 6 0 0 0 12 0v-5"/></svg></div>
+        <span class="stage-name">Student</span>
+      </div>
+      <div class="stage-btn" data-stage="professional" data-colour="energy" onclick="setStage('professional',this)">
+        <div class="stage-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><path d="M2 12h20"/></svg></div>
+        <span class="stage-name">Professional</span>
+      </div>
+      <div class="stage-btn" data-stage="over40" data-colour="hormone" onclick="setStage('over40',this)">
+        <div class="stage-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+        <span class="stage-name">Over 40</span>
+      </div>
+      <div class="stage-btn" data-stage="senior" data-colour="longevity" onclick="setStage('senior',this)">
+        <div class="stage-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+        <span class="stage-name">Senior</span>
+      </div>
+    </div>
+
+    <div class="ls-panel">
+      <div class="supp-panel">
+        <div class="supp-panel-header">
+          <div>
+            <div class="panel-stage-label" id="panel-stage-label"></div>
+            <div class="panel-title" id="panel-title"></div>
+            <div class="panel-sub" id="panel-sub"></div>
+          </div>
+          <div class="panel-count" id="panel-count"></div>
+        </div>
+        <div class="supp-list" id="supp-list"></div>
+      </div>
+      <div class="ls-sidebar">
+        <div class="stage-card">
+          <div class="stage-card-icon" id="sidebar-icon"></div>
+          <div class="stage-card-title" id="sidebar-title"></div>
+          <div class="stage-card-desc" id="sidebar-desc"></div>
+          <div class="focus-tags" id="sidebar-tags"></div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-tile"><div class="stat-num" id="stat-total">0</div><div class="stat-label">Supplements</div></div>
+          <div class="stat-tile"><div class="stat-num" id="stat-priority">0</div><div class="stat-label">Priority picks</div></div>
+        </div>
+        <div class="warn-card" id="warn-card">
+          <div class="warn-card-title">Medical note</div>
+          <p id="warn-text"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ GLOSSARY ══════════════════ -->
+<div class="section" id="section-glossary">
+
+  <div class="search-wrap">
+    <div class="search-box">
+      <span class="search-icon">⌕</span>
+      <input class="search-input" type="text" placeholder="Search — try DHA, cortisol, DOMS..." oninput="handleSearch(this.value)" id="search-input"/>
+      <span class="search-count" id="search-count">42 terms</span>
+    </div>
+  </div>
+
+  <!-- Colour legend -->
+  <div class="colour-legend" id="colour-legend"></div>
+
+  <div class="filters-wrap" id="filters">
+    <button class="filter-btn active" data-cat="all" onclick="filterCat('all',this)">All</button>
+    <button class="filter-btn" data-cat="pregnancy" onclick="filterCat('pregnancy',this)">Pregnancy</button>
+    <button class="filter-btn" data-cat="brain" onclick="filterCat('brain',this)">Brain</button>
+    <button class="filter-btn" data-cat="energy" onclick="filterCat('energy',this)">Energy</button>
+    <button class="filter-btn" data-cat="muscle" onclick="filterCat('muscle',this)">Muscle</button>
+    <button class="filter-btn" data-cat="inflammation" onclick="filterCat('inflammation',this)">Inflammation</button>
+    <button class="filter-btn" data-cat="longevity" onclick="filterCat('longevity',this)">Longevity</button>
+    <button class="filter-btn" data-cat="hormone" onclick="filterCat('hormone',this)">Hormone</button>
+    <button class="filter-btn" data-cat="gut" onclick="filterCat('gut',this)">Gut</button>
+    <button class="filter-btn" data-cat="research" onclick="filterCat('research',this)">Research</button>
+  </div>
+
+  <div class="gloss-main">
+    <div class="alpha-nav"><div class="alpha-nav-inner" id="alpha-nav"></div></div>
+    <div>
+      <div class="glossary-content" id="glossary-content"></div>
+      <div class="no-results" id="no-results">
+        <div class="no-results-icon">○</div>
+        <p>No terms found.<br>Try a different keyword.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="disclaimer">
+  <p>⚠ SupplMap is for educational purposes only and does not constitute medical advice. Always consult a qualified healthcare professional before starting any supplement protocol, especially during pregnancy. Supplement links may contain affiliate codes that support this site at no extra cost to you.</p>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════
+// TAB SWITCHER
+// ══════════════════════════════════════════════════
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  document.querySelectorAll('.section').forEach(function(s){s.classList.remove('visible');});
+  document.getElementById('section-'+tab).classList.add('visible');
+}
+
+// ══════════════════════════════════════════════════
+// COLOUR TAXONOMY
+// ══════════════════════════════════════════════════
+var COLOURS = {
+  pregnancy:   {hex:'#fda4af', label:'Pregnancy'},
+  brain:       {hex:'#818cf8', label:'Brain'},
+  energy:      {hex:'#fbbf24', label:'Energy'},
+  muscle:      {hex:'#34d399', label:'Muscle'},
+  inflammation:{hex:'#fb923c', label:'Inflammation'},
+  longevity:   {hex:'#a78bfa', label:'Longevity'},
+  hormone:     {hex:'#e07a45', label:'Hormone'},
+  research:    {hex:'#94a3b8', label:'Research'},
+  gut:         {hex:'#6ee7b7', label:'Gut'}
+};
+
+function buildLegend() {
+  var el = document.getElementById('colour-legend');
+  Object.keys(COLOURS).forEach(function(k){
+    var c = COLOURS[k];
+    var item = document.createElement('div');
+    item.className = 'legend-item';
+    item.innerHTML = '<div class="legend-dot" style="background:'+c.hex+'"></div><span style="color:'+c.hex+'">'+c.label+'</span>';
+    el.appendChild(item);
+  });
+}
+
+// ══════════════════════════════════════════════════
+// LIFE STAGE — CONFIG
+// ══════════════════════════════════════════════════
+var SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbeVP_XmmJ-K7dnSgmR3fyHGNOE5r-Jh7xqsz3SsSlHv5aLzivvge0715GaFke_FFaatAUb0NAgz3m/pub?gid=0&single=true&output=csv';
+
+var STAGE_CONFIG = {
+  pregnancy:{label:'Life stage — Pregnancy',title:'Pregnancy essentials',sub:'Ordered by clinical priority. Always consult your midwife before starting any protocol.',sideTitle:'Pregnancy',sideDesc:'The most critical window for targeted nutrition. Foetal development depends entirely on maternal supply — particularly in the first trimester.',sideTags:['Foetal development','Neural tube','Iron & anaemia','Bone density'],colour:'pregnancy',warn:true,warnText:'Always consult your midwife or OB-GYN before starting supplements in pregnancy.',icon:'<svg viewBox="0 0 24 24" width="22" height="22" stroke="#c9a96e" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3"/><path d="M9 21v-2a5 5 0 0 1 3-4.58"/><path d="M15 14.5c1.5.5 3 2 3 4v2.5"/><ellipse cx="15" cy="19" rx="3" ry="4"/></svg>'},
+  athlete:{label:'Life stage — Athlete',title:'Athlete protocol',sub:'Performance, hypertrophy, recovery, and injury prevention for serious training.',sideTitle:'Athlete',sideDesc:'Training breaks the body down — these compounds accelerate the rebuild. Creatine remains the single most evidence-backed performance supplement ever studied.',sideTags:['Strength & power','Hypertrophy','DOMS reduction','Tendon health'],colour:'muscle',warn:false,icon:'<svg viewBox="0 0 24 24" width="22" height="22" stroke="#c9a96e" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v5"/><path d="M9 12l-3 2"/><path d="M15 12l3 2"/><path d="M10 17l-1 4"/><path d="M14 17l1 4"/></svg>'},
+  student:{label:'Life stage — Student',title:'Student essentials',sub:'Focus, sleep, and immune resilience — the three pillars for peak academic performance.',sideTitle:'Student',sideDesc:'Academic performance peaks with targeted cognitive and recovery support. Sleep quality and sustained focus are the two biggest levers.',sideTags:['Cognitive focus','Sleep quality','Stress resilience','Immune health'],colour:'brain',warn:false,icon:'<svg viewBox="0 0 24 24" width="22" height="22" stroke="#c9a96e" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3L2 8l10 5 10-5-10-5z"/><path d="M2 8v8"/><path d="M6 10.5v5a6 6 0 0 0 12 0v-5"/></svg>'},
+  professional:{label:'Life stage — Professional',title:'Professional performance',sub:'Sustained energy, stress resilience, and cognitive edge — for anyone in a demanding professional role.',sideTitle:'Professional',sideDesc:'High cognitive demand, chronic stress, and disrupted sleep create a specific nutritional deficit pattern regardless of industry or role. Cortisol management is central.',sideTags:['Cortisol balance','Sustained energy','Mitochondrial health','Sleep onset'],colour:'energy',warn:false,icon:'<svg viewBox="0 0 24 24" width="22" height="22" stroke="#c9a96e" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><path d="M2 12h20"/></svg>'},
+  over40:{label:'Life stage — Over 40',title:'Over 40 protocol',sub:'Mitochondrial decline, hormone shifts, and connective tissue support.',sideTitle:'Over 40',sideDesc:'CoQ10 production drops 50% by age 50. Collagen synthesis slows. Targeted intervention matters more than ever.',sideTags:['Mitochondrial health','Hormone balance','Joint & bone','Cardiovascular'],colour:'hormone',warn:false,icon:'<svg viewBox="0 0 24 24" width="22" height="22" stroke="#c9a96e" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>'},
+  senior:{label:'Life stage — Senior',title:'Healthy ageing',sub:'Bone density, cognitive protection, muscle preservation, and immune resilience.',sideTitle:'Senior',sideDesc:'Sarcopenia, bone fracture risk, and cognitive decline are the three primary concerns. Each is significantly modifiable.',sideTags:['Sarcopenia','Bone fracture risk','Cognition','Immune function'],colour:'longevity',warn:false,icon:'<svg viewBox="0 0 24 24" width="22" height="22" stroke="#c9a96e" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>'}
+};
+
+var ALL_DATA={};
+
+function parseCSV(text){
+  var lines=text.trim().split('\n');
+  if(lines.length<2)return[];
+  var headers=splitLine(lines[0]).map(function(h){return h.trim().replace(/"/g,'');});
+  var rows=[];
+  for(var i=1;i<lines.length;i++){
+    var cols=splitLine(lines[i]);
+    var obj={};
+    headers.forEach(function(h,idx){obj[h]=(cols[idx]||'').trim().replace(/^"|"$/g,'');});
+    rows.push(obj);
+  }
+  return rows;
+}
+function splitLine(line){
+  var cols=[],cur='',inQ=false;
+  for(var i=0;i<line.length;i++){
+    var c=line[i];
+    if(c==='"')inQ=!inQ;
+    else if(c===','&&!inQ){cols.push(cur);cur='';}
+    else cur+=c;
+  }
+  cols.push(cur);
+  return cols;
+}
+
+function loadSheet(){
+  var proxy='https://corsproxy.io/?'+encodeURIComponent(SHEET_URL);
+  fetch(proxy)
+    .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text();})
+    .then(function(csv){
+      var rows=parseCSV(csv);
+      ALL_DATA={};
+      rows.forEach(function(r){
+        var stage=(r.stage||'').toLowerCase().trim();
+        if(!stage)return;
+        if(!ALL_DATA[stage])ALL_DATA[stage]=[];
+        ALL_DATA[stage].push({name:r.name||'',why:r.why||'',dose:r.dose||'',timing:r.timing||'',form:r.form||'',warn:r.warn||'',priority:(r.priority||'').toLowerCase()==='true',badge:r.badge||'',badge_type:r.badge_type||'green',s1n:r.stockist1_name||'',s1u:r.stockist1_url||'',s2n:r.stockist2_name||'',s2u:r.stockist2_url||'',s3n:r.stockist3_name||'',s3u:r.stockist3_url||''});
+      });
+      document.getElementById('ls-loading').style.display='none';
+      document.getElementById('ls-main').style.display='block';
+      setStage('pregnancy',document.querySelector('.stage-btn.active'));
+    })
+    .catch(function(err){
+      document.getElementById('ls-loading').innerHTML='<span style="color:#fda4af;font-size:0.75rem;">Could not load data. Check your Google Sheet is published as CSV.</span>';
+    });
+}
+
+function setStage(stage,btn){
+  document.querySelectorAll('.stage-btn').forEach(function(b){
+    b.classList.remove('active');
+    b.style.removeProperty('--stage-colour');
+  });
+  if(btn){
+    btn.classList.add('active');
+    var stageCol = btn.getAttribute('data-colour') || 'brain';
+    btn.style.setProperty('--stage-colour', 'var(--c-'+stageCol+')');
+    btn.style.setProperty('--stage-colour-bg', 'var(--b-'+stageCol+')');
+  }
+  var cfg=STAGE_CONFIG[stage]||{};
+  var supps=ALL_DATA[stage]||[];
+  var pri=supps.filter(function(s){return s.priority;}).length;
+  // Update panel active colour
+  var panel = document.querySelector('.supp-panel');
+  if(panel) panel.style.setProperty('--active-colour','var(--c-'+col+')');
+  document.getElementById('panel-stage-label').textContent=cfg.label||stage;
+  document.getElementById('panel-title').textContent=cfg.title||stage;
+  document.getElementById('panel-sub').textContent=cfg.sub||'';
+  document.getElementById('panel-count').textContent=supps.length+' supplement'+(supps.length!==1?'s':'');
+  document.getElementById('sidebar-icon').innerHTML=cfg.icon||'';
+  document.getElementById('sidebar-title').textContent=cfg.sideTitle||stage;
+  document.getElementById('sidebar-desc').textContent=cfg.sideDesc||'';
+  document.getElementById('stat-total').textContent=supps.length;
+  document.getElementById('stat-priority').textContent=pri;
+  // Apply stage colour to sidebar card
+  var col = cfg.colour || 'brain';
+  var card = document.querySelector('.stage-card');
+  if (card) {
+    card.style.borderColor = 'var(--br-'+col+')';
+    card.style.background = 'var(--surface)';
+    var glow = card.querySelector('::before');
+  }
+  var icon = document.getElementById('sidebar-icon');
+  if (icon) {
+    icon.style.background = 'var(--b-'+col+')';
+    icon.style.borderColor = 'var(--br-'+col+')';
+    icon.innerHTML = (cfg.icon||'').replace(/stroke="#c9a96e"/g, 'stroke="var(--c-'+col+')"');
+  }
+  var tags=document.getElementById('sidebar-tags');
+  tags.innerHTML='';
+  (cfg.sideTags||[]).forEach(function(t){
+    var s=document.createElement('span');
+    s.className='focus-tag';
+    s.style.background='var(--b-'+col+')';
+    s.style.borderColor='var(--br-'+col+')';
+    s.style.color='var(--c-'+col+')';
+    s.textContent=t;
+    tags.appendChild(s);
+  });
+  var wc=document.getElementById('warn-card');
+  if(cfg.warn){wc.classList.add('visible');document.getElementById('warn-text').textContent=cfg.warnText||'';}
+  else wc.classList.remove('visible');
+  var list=document.getElementById('supp-list');
+  list.innerHTML='';
+  if(supps.length===0){list.innerHTML='<div class="empty-state">No supplements found for <strong>'+stage+'</strong> yet.<br>Add rows with stage = '+stage+' to your Google Sheet.</div>';return;}
+  supps.forEach(function(s,i){
+    var dId='det-'+stage+'-'+i;
+    var row=document.createElement('div');
+    row.className='supp-row anim'+(s.priority?' priority':'');
+    row.style.animationDelay=(i*0.04)+'s';
+    row.setAttribute('onclick','toggleDet("'+dId+'")');
+    var badge=s.badge?'<span class="badge badge-'+(s.badge_type||'green')+'">'+s.badge+'</span>':'';
+    row.innerHTML='<span class="supp-num">'+(i+1)+'</span><div class="supp-info"><div class="supp-name">'+s.name+'</div>'+(s.why?'<div class="supp-why">'+s.why+'</div>':'')+'</div><div class="supp-badges">'+badge+'</div>';
+    list.appendChild(row);
+    var det=document.createElement('div');
+    det.className='supp-detail';det.id=dId;
+    var meta='';
+    if(s.dose)meta+='<div class="supp-meta-item"><span class="meta-key">Dose</span><span class="meta-val">'+s.dose+'</span></div>';
+    if(s.timing)meta+='<div class="supp-meta-item"><span class="meta-key">Timing</span><span class="meta-val">'+s.timing+'</span></div>';
+    if(s.form)meta+='<div class="supp-meta-item"><span class="meta-key">Form</span><span class="meta-val">'+s.form+'</span></div>';
+    var links='';
+    [[s.s1n,s.s1u],[s.s2n,s.s2u],[s.s3n,s.s3u]].forEach(function(p){if(p[0]&&p[1])links+='<a class="stockist-link" href="'+p[1]+'" target="_blank" rel="noopener">'+p[0]+' ↗</a>';});
+    det.innerHTML=(meta?'<div class="supp-meta-grid">'+meta+'</div>':'')+(s.warn?'<div class="supp-warn-box">'+s.warn+'</div>':'')+(links?'<div class="stockist-links">'+links+'</div>':'');
+    list.appendChild(det);
+  });
+}
+function toggleDet(id){var d=document.getElementById(id);if(!d)return;var o=d.classList.contains('open');document.querySelectorAll('.supp-detail.open').forEach(function(x){x.classList.remove('open');});if(!o)d.classList.add('open');}
+
+// ══════════════════════════════════════════════════
+// GLOSSARY
+// ══════════════════════════════════════════════════
+var TERMS=[{abbr:'5-LOX',full:'5-Lipoxygenase',short:'An enzyme that produces inflammatory signals in your body',tags:['inflammation'],explanation:'<strong>5-LOX</strong> is an enzyme — a biological tool — that converts a fatty acid called arachidonic acid into inflammatory messenger molecules called leukotrienes. Leukotrienes play an important protective role in the immune response to infection and injury. However, when 5-LOX stays permanently activated — as happens in conditions like asthma, arthritis, and inflammatory bowel disease — the resulting chronic inflammation contributes to tissue damage over time. Common painkillers like ibuprofen only block a related enzyme called COX, but do not address the 5-LOX pathway, which is one reason some inflammatory conditions respond poorly to standard NSAIDs. Natural compounds including <strong>curcumin</strong> (the active compound in turmeric) appear to inhibit both the COX and 5-LOX pathways simultaneously in laboratory and animal studies, though robust human clinical trial evidence specifically for 5-LOX inhibition by curcumin remains limited. Always consult a doctor before using supplements to manage inflammatory conditions.'},{abbr:'5-MTHF',full:'5-Methyltetrahydrofolate',short:'The active, ready-to-use form of folate your body can use directly',tags:['pregnancy','brain'],explanation:'<strong>5-MTHF</strong> is the active, biologically available form of folate — a B vitamin essential for DNA synthesis, cell division, and neurological function. Most folate supplements contain <strong>folic acid</strong>, a synthetic form that the body must convert through several enzymatic steps before it can be used. 5-MTHF is the end product of this conversion — the form your cells actually use. A common genetic variant in the <strong>MTHFR gene</strong> — carried by roughly 40–60% of the population — reduces the efficiency of this conversion process. For people with significant MTHFR variants, supplementing directly with 5-MTHF bypasses the bottleneck. During pregnancy, adequate folate is critical for neural tube closure, which occurs in the first 28 days — often before a woman knows she is pregnant. The NHS still recommends standard folic acid as the primary recommendation for NTD prevention due to its extensive clinical evidence base. 5-MTHF is a well-supported alternative particularly for those with known MTHFR variants. Discuss with your GP or midwife which form is right for you.'},{abbr:'ALA',full:'Alpha-Linolenic Acid',short:'A plant-based omega-3 with its own cardiovascular and anti-inflammatory benefits',tags:['brain'],explanation:'<strong>ALA</strong> (Alpha-Linolenic Acid) is an essential omega-3 fatty acid found in plant foods including flaxseed, chia seeds, walnuts, and hemp. It is called "essential" because your body cannot make it — you must obtain it from food. ALA has its own direct health benefits. Meta-analyses of observational studies show that higher dietary ALA intake is associated with a <strong>10% lower risk of total cardiovascular disease</strong> and a 20% reduced risk of fatal coronary heart disease. Clinical trials have shown ALA can reduce LDL cholesterol, triglycerides, and blood pressure, and it has demonstrated anti-inflammatory properties independently of its conversion to other omega-3s. ALA also serves as a precursor to EPA and DHA — though the conversion rate in humans is limited (typically less than 1% for DHA). This means ALA alone is not sufficient to meet the brain\'s DHA needs, particularly during pregnancy. The two strategies are complementary: eating ALA-rich foods supports cardiovascular health through its own mechanisms, while EPA/DHA supplementation addresses brain health and foetal development.'},{abbr:'AMPK',full:'AMP-Activated Protein Kinase',short:'A cellular energy sensor that triggers beneficial metabolic effects',tags:['energy','longevity'],explanation:'<strong>AMPK</strong> is a protein found in virtually every cell that acts as a sensor for cellular energy status. When energy levels fall — during exercise, fasting, or caloric restriction — AMPK triggers a series of beneficial responses: it increases fat burning, improves insulin sensitivity, reduces inflammation, promotes the formation of new mitochondria, and activates autophagy. The widely-prescribed diabetes medication <strong>metformin</strong> works primarily through AMPK activation. <strong>Berberine</strong>, a natural plant compound, activates AMPK through similar mechanisms — which is the scientific basis for comparisons between the two. It is worth noting that while the mechanistic parallels are real, the clinical evidence base for metformin in humans is far more extensive than for berberine, and berberine should not be treated as a direct equivalent to prescription medication without medical guidance.'},{abbr:'ATP',full:'Adenosine Triphosphate',short:'The energy molecule that powers every function in your body',tags:['energy','muscle'],explanation:'<strong>ATP</strong> is the universal energy currency of living cells. Every biological process — muscle contraction, nerve signalling, protein synthesis, immune function, DNA repair — requires ATP. Your body turns over roughly its own body weight in ATP every day. Several micronutrients are critical cofactors in ATP production: <strong>magnesium</strong> is required at virtually every step, <strong>B vitamins</strong> are essential components of the enzymes driving ATP synthesis, and <strong>CoQ10</strong> is a key electron carrier in the final stage. <strong>Creatine</strong> supports a separate, rapid ATP regeneration pathway in muscle cells during high-intensity effort. Deficiencies in any of these nutrients can meaningfully impair cellular energy production, contributing to fatigue, reduced physical and cognitive performance, and slower recovery.'},{abbr:'Autophagy',full:'Autophagy',short:'Your cells\' built-in process for clearing out damaged components',tags:['longevity'],explanation:'<strong>Autophagy</strong> — from the Greek meaning "self-eating" — is the cellular process by which damaged proteins, dysfunctional organelles, and cellular debris are identified, broken down, and recycled. It is an essential quality-control mechanism that every cell relies on. A 2024 clinical trial at the University of Sydney confirmed that prolonged fasting combined with exercise significantly activates autophagy in human cells. A 2024 Cedars-Sinai clinical trial also demonstrated that a fasting-mimicking diet increased measurable autophagy alongside improvements in insulin sensitivity and fasting glucose. Autophagy is robustly activated by <strong>caloric restriction and exercise</strong>. Some supplements are proposed to stimulate autophagy (berberine, spermidine), but direct human evidence for supplement-induced autophagy activation remains more limited than the evidence for fasting and exercise.'},{abbr:'BDNF',full:'Brain-Derived Neurotrophic Factor',short:'A protein that supports brain cell growth, connection, and survival',tags:['brain'],explanation:'<strong>BDNF</strong> is a protein your brain and body produce that supports the growth, survival, and function of neurons. It plays a particularly important role in the hippocampus — the brain region central to learning and memory. Low BDNF levels are consistently associated with depression, anxiety, and cognitive decline. The evidence for raising BDNF is strongest for <strong>aerobic exercise</strong> — multiple meta-analyses confirm that endurance exercise significantly increases BDNF levels. <strong>Quality sleep</strong> and intermittent fasting also support BDNF. Supplements including <strong>omega-3 DHA</strong> and <strong>Lion\'s Mane mushroom</strong> show promising evidence for supporting neurotrophic signalling, though the clinical evidence for their specific effects on BDNF levels in humans is more preliminary than the exercise evidence.'},{abbr:'Bioavailability',full:'Bioavailability',short:'The percentage of a supplement that actually gets absorbed and used',tags:['research'],explanation:'<strong>Bioavailability</strong> is the proportion of an ingested substance that reaches the bloodstream and the target tissue where it can exert its effects. A supplement with low bioavailability may be largely broken down or excreted before it reaches where it needs to go. For example, <strong>standard curcumin</strong> has less than 3% oral bioavailability — whereas enhanced forms (phytosome formulations or combinations with piperine from black pepper) increase absorption many-fold. Similarly, <strong>magnesium oxide</strong> has significantly lower bioavailability than chelated forms like <strong>magnesium glycinate</strong>. This is why two supplements containing the same ingredient at the same dose can have dramatically different effects. Always check the specific form of a mineral or active compound, not just the total dose listed on the label.'},{abbr:'CFU',full:'Colony Forming Units',short:'The standard measure of live bacteria in probiotic supplements',tags:['gut'],explanation:'<strong>CFU</strong> stands for Colony Forming Units — the unit used to count the number of viable bacteria in a probiotic supplement. One CFU represents a single bacterial cell capable of multiplying. A label stating "10 billion CFU" means the product contains 10 billion live bacteria per dose. Higher CFU counts are not always better. What matters most is: (1) <strong>strain specificity</strong> — different bacterial strains have evidence for different health outcomes; (2) <strong>survival to the gut</strong> — bacteria must survive stomach acid to reach the colon; (3) <strong>clinical dose</strong> — the dose used in clinical trials for the specific indication. Strain-specific clinical evidence is a more meaningful guide than CFU count alone.'},{abbr:'Chelated Minerals',full:'Chelated Minerals',short:'Minerals chemically bonded to amino acids for better absorption',tags:['research'],explanation:'<strong>Chelated minerals</strong> are minerals chemically bonded to an organic molecule — most commonly an amino acid — forming a stable complex that the gut absorbs more efficiently. In their unbound ionic forms, minerals like magnesium and zinc are poorly recognised by the intestinal lining. When chelated — for example as <strong>magnesium glycinate</strong> or <strong>zinc bisglycinate</strong> — they are treated as peptides by the gut and absorbed via a more efficient pathway. This generally improves both the amount absorbed and tolerability. <strong>Bisglycinate</strong> (double glycine chelate) has the most consistent research supporting enhanced bioavailability. The practical implication: the form of a mineral supplement matters as much as the dose.'},{abbr:'CoQ10',full:'Coenzyme Q10',short:'A molecule essential for cellular energy production, which declines with age',tags:['energy','longevity'],explanation:'<strong>CoQ10</strong> is a fat-soluble compound found in virtually every cell, with highest concentrations in the heart, liver, and kidneys. Its primary role is as an essential electron carrier in the mitochondrial electron transport chain — the final stage of cellular ATP production. CoQ10 also functions as a potent antioxidant. Production declines with age — by approximately 50% between the ages of 20 and 80. Two forms are available: <strong>ubiquinone</strong> (needs conversion) and <strong>ubiquinol</strong> (the active reduced form). Clinical evidence suggests ubiquinol has superior bioavailability, particularly in older individuals. <strong>Statin medications</strong> inhibit the same biochemical pathway used to synthesise CoQ10, resulting in measurable depletion — thought to contribute to the muscle aches some people experience on statins.'},{abbr:'COX-2',full:'Cyclooxygenase-2',short:'An enzyme involved in producing inflammatory signals — the target of ibuprofen',tags:['inflammation'],explanation:'<strong>COX-2</strong> is an enzyme that converts arachidonic acid into prostaglandins — signalling molecules that promote inflammation, fever, and pain. Standard NSAIDs like <strong>ibuprofen</strong> block COX-2 effectively. However, they also block <strong>COX-1</strong> — which maintains the protective mucus lining of the stomach — which is why long-term NSAID use is associated with gastric ulcers. Natural compounds including <strong>curcumin</strong> and tart cherry anthocyanins also inhibit COX-2 in laboratory and some clinical studies. Because they do not significantly inhibit COX-1, they may offer anti-inflammatory benefit with better gastrointestinal tolerability, though they are generally less potent than pharmaceutical NSAIDs.'},{abbr:'DHEA',full:'Dehydroepiandrosterone',short:'A hormone that serves as a precursor to testosterone and oestrogen',tags:['hormone','longevity'],explanation:'<strong>DHEA</strong> is a steroid hormone produced primarily by the adrenal glands — two small glands that sit above the kidneys. It functions as a precursor from which the body synthesises both testosterone and oestrogen. DHEA production peaks in the mid-20s and declines by approximately 80% by age 70. Clinical trials have shown modest benefits for bone density and sexual function in certain populations. Because DHEA can be converted into both testosterone and oestrogen, supplementation can affect hormone-sensitive conditions including hormone-sensitive cancers and PCOS. For these reasons, DHEA supplementation should only be considered under medical supervision with appropriate hormone testing.'},{abbr:'DHA',full:'Docosahexaenoic Acid',short:'The primary structural omega-3 fat found in the brain and retina',tags:['brain','pregnancy'],explanation:'<strong>DHA</strong> is a long-chain omega-3 fatty acid that is the primary structural fat in the human brain — comprising around 60% of the brain\'s total polyunsaturated fat content — and approximately 40% of the polyunsaturated fats in the retina. The body can theoretically synthesise DHA from the shorter-chain omega-3 ALA, but the conversion rate is very low (typically less than 1%). During pregnancy, DHA is particularly critical: the foetal brain accumulates DHA at an accelerated rate, especially in the third trimester. <strong>Algal oil</strong> is a safe, effective DHA source in pregnancy, coming from the same microalgae that fish consume — circumventing mercury and PCB contamination concerns associated with fish oil.'},{abbr:'DOMS',full:'Delayed Onset Muscle Soreness',short:'The muscle ache that peaks 24–72 hours after intense exercise',tags:['muscle'],explanation:'<strong>DOMS</strong> is the muscle soreness that typically develops 24–72 hours after unaccustomed or intense physical exercise. It is most pronounced following <strong>eccentric exercise</strong> (muscles lengthening under load). The soreness arises from microscopic disruption to muscle fibres and the subsequent inflammatory repair response. DOMS is a normal consequence of challenging exercise — not a necessary marker of an effective workout. Nutritional interventions with clinical evidence for reducing DOMS include <strong>tart cherry extract</strong>, <strong>omega-3 fatty acids</strong>, and <strong>collagen peptides with vitamin C</strong>. The degree of DOMS also diminishes with repeated exposure to the same exercise — called the repeated bout effect.'},{abbr:'EIMD',full:'Exercise-Induced Muscle Damage',short:'The physical muscle damage caused by intense or unfamiliar exercise',tags:['muscle','research'],explanation:'<strong>EIMD</strong> is the structural and biochemical disruption to muscle tissue following intense exercise. DOMS is the subjective sensory experience of EIMD. EIMD is measured objectively using blood biomarkers — most commonly <strong>creatine kinase (CK)</strong>, which leaks from damaged muscle cells into the bloodstream. Other markers include <strong>myoglobin</strong> and inflammatory cytokines such as <strong>IL-6</strong>. Importantly, EIMD-induced inflammation is a necessary signal for muscle repair and adaptation — complete suppression of this response may actually impair long-term adaptation. The goal is optimised recovery, not complete suppression of the inflammatory signal.'},{abbr:'EPA',full:'Eicosapentaenoic Acid',short:'An omega-3 with particularly strong anti-inflammatory and cardiovascular evidence',tags:['inflammation','brain'],explanation:'<strong>EPA</strong> is a long-chain omega-3 fatty acid found in oily fish, seafood, and algae. While <strong>DHA</strong> is primarily structural, EPA functions primarily as an <strong>anti-inflammatory mediator</strong>. The <strong>REDUCE-IT trial</strong> (8,179 patients) found that 4g/day of EPA reduced major cardiovascular events by 25% in statin-treated patients with elevated triglycerides. For mood and depression, EPA appears more effective than DHA, with several meta-analyses showing superiority for depressive symptoms. Most commercial omega-3 supplements contain both EPA and DHA — which formulation is optimal depends on the specific health goal.'},{abbr:'GABA',full:'Gamma-Aminobutyric Acid',short:'The brain\'s primary inhibitory neurotransmitter — promotes calm and sleep',tags:['brain'],explanation:'<strong>GABA</strong> is the principal inhibitory neurotransmitter in the central nervous system. Its primary function is to reduce neuronal excitability, promoting states of calm, relaxation, and sleep. Reduced GABAergic activity is associated with anxiety disorders, insomnia, and certain mood disorders. Many prescription medications work by enhancing GABA signalling — including benzodiazepines (e.g., diazepam) and non-benzodiazepine sleep aids. <strong>Magnesium</strong> is a natural modulator of GABA-A receptors, producing its well-documented calming and sleep-supporting effects. <strong>L-theanine</strong> increases GABA levels and alpha brain wave activity. A 2022 study in Frontiers in Nutrition demonstrated that a magnesium-L-theanine complex increased GABA receptor expression and improved sleep-related brain wave activity.'},{abbr:'GBS',full:'Group B Streptococcus',short:'A common bacteria that can affect newborns during birth',tags:['pregnancy'],explanation:'<strong>Group B Streptococcus</strong> (GBS) is a type of bacteria that lives harmlessly in the gut and vaginal tract of approximately 20–30% of healthy adults. During childbirth, the baby can be exposed to GBS bacteria, which in a minority of cases leads to serious neonatal infection including sepsis, pneumonia, and meningitis. In the UK, universal antenatal GBS screening is not currently offered on the NHS. When GBS carriage is identified, intrapartum antibiotics are highly effective at preventing transmission. The probiotic strain <strong>Lactobacillus rhamnosus HN001</strong> has shown evidence in clinical trials for reducing GBS colonisation rates during pregnancy, and may also reduce gestational diabetes and postpartum depression rates.'},{abbr:'HMB',full:'Beta-Hydroxy Beta-Methylbutyrate',short:'A compound that helps preserve and build muscle, particularly in older adults',tags:['muscle','longevity'],explanation:'<strong>HMB</strong> is a metabolite produced when the body breaks down leucine, an essential amino acid. HMB has a dual mechanism: it activates pathways that stimulate <strong>muscle protein synthesis</strong> and simultaneously inhibits <strong>muscle protein breakdown</strong>. The clinical evidence is strongest in <strong>older adults</strong>, where multiple RCTs demonstrate that HMB supplementation significantly attenuates age-related muscle and strength loss. Evidence also supports HMB for preserving lean mass during caloric restriction and in clinical populations recovering from illness or surgery. For young, healthy athletes, the evidence is less consistent — its benefit appears greatest when the rate of muscle breakdown is high.'},{abbr:'MPS',full:'Muscle Protein Synthesis',short:'The process by which your body builds new muscle tissue',tags:['muscle'],explanation:'<strong>MPS</strong> is the biological process through which your body assembles new muscle proteins from amino acids. Whether your muscle mass increases or decreases depends on the net balance between MPS (building) and muscle protein breakdown (MPB). MPS is most powerfully stimulated by <strong>resistance exercise</strong> and <strong>dietary leucine</strong> — the primary nutritional trigger via the mTOR signalling pathway. Whey protein contains the highest leucine concentration of any protein source. MPS rates decline with age — a phenomenon called "anabolic resistance" — meaning older adults require more protein and more intense exercise to achieve the same MPS response as younger people.'},{abbr:'MTHFR',full:'Methylenetetrahydrofolate Reductase',short:'A gene that affects how efficiently your body processes folic acid',tags:['pregnancy','brain'],explanation:'<strong>MTHFR</strong> refers to both a gene and the enzyme it encodes. The MTHFR enzyme converts a folate intermediate into <strong>5-MTHF</strong>, the active form the body uses for DNA synthesis and cell division. Common genetic variants — particularly C677T and A1298C — reduce the activity of this enzyme by up to 70–75% in homozygous carriers. People with this variant convert folic acid less efficiently, which can lead to elevated homocysteine levels and reduced availability of active folate. The C677T homozygous variant is present in approximately 10–15% of most European populations. For people with significant MTHFR variants, supplementing with <strong>5-MTHF</strong> directly bypasses the conversion step.'},{abbr:'NAD+',full:'Nicotinamide Adenine Dinucleotide',short:'A molecule central to energy metabolism and cellular repair that declines with age',tags:['energy','longevity'],explanation:'<strong>NAD+</strong> is a coenzyme found in every living cell that plays two fundamental roles: it is an essential electron carrier in cellular respiration — the process by which mitochondria convert nutrients into ATP — and it is the required cofactor for <strong>sirtuins</strong>, which regulate DNA repair, inflammation, and stress resistance. NAD+ concentrations in human tissues decline by roughly 50% between young adulthood and later life. <strong>NMN</strong> and <strong>NR</strong> are both well-demonstrated in human trials to raise blood and tissue NAD+ levels. Whether raising NAD+ translates to meaningful anti-ageing outcomes in humans remains an active area of research.'},{abbr:'NF-κB',full:'Nuclear Factor Kappa B',short:'A protein complex that acts as a master switch for inflammation',tags:['inflammation'],explanation:'<strong>NF-κB</strong> is a transcription factor that controls which inflammatory genes get switched on. When activated, it switches on genes that produce pro-inflammatory cytokines and immune mediators. Chronic NF-κB activation — associated with poor diet, physical inactivity, stress, excess body fat, and ageing — is a root driver of cardiovascular disease, type 2 diabetes, neurodegeneration, and cancer. Compounds including <strong>curcumin</strong>, <strong>resveratrol</strong>, and <strong>EPA and DHA</strong> have demonstrated NF-κB inhibitory activity. It is important to note that NF-κB inhibition is not straightforwardly beneficial in all contexts — it also plays important roles in immunity and tissue repair.'},{abbr:'NGF',full:'Nerve Growth Factor',short:'A protein that promotes the growth and survival of nerve cells',tags:['brain'],explanation:'<strong>NGF</strong> is a member of a family of proteins called neurotrophins that support the development, maintenance, and survival of neurons. NGF was the first neurotrophin to be discovered (by Rita Levi-Montalcini, who won the Nobel Prize in 1986). It is particularly important for cholinergic neurons of the basal forebrain — the neurons most affected in early Alzheimer\'s disease. <strong>Lion\'s Mane mushroom</strong> contains compounds — hericenones and erinacines — shown in laboratory studies to stimulate NGF production. A small number of human clinical trials have shown cognitive benefits from Lion\'s Mane in older adults with mild cognitive impairment, with NGF stimulation as the likely mechanism.'},{abbr:'NMN',full:'Nicotinamide Mononucleotide',short:'A precursor molecule that your body converts into NAD+',tags:['energy','longevity'],explanation:'<strong>NMN</strong> is a naturally occurring nucleotide found in small amounts in foods including edamame, broccoli, avocado, and beef. It is a direct precursor to <strong>NAD+</strong>. Multiple clinical trials confirm that oral NMN supplementation safely and significantly raises blood NAD+ levels. A 2021 trial in older men showed that 250mg/day NMN improved muscle function and walking speed. Trials have also shown improvements in insulin sensitivity, blood pressure, and fatigue in specific populations. However, definitive evidence that NMN prevents disease or extends healthy lifespan in humans has not yet been established. NMN is best understood as a supplement with genuine mechanistic rationale and early human evidence, rather than a proven anti-ageing therapy.'},{abbr:'NR',full:'Nicotinamide Riboside',short:'Another NAD+ precursor with an established human safety record',tags:['energy','longevity'],explanation:'<strong>NR</strong> is a form of vitamin B3 and a precursor to <strong>NAD+</strong>, sharing the same ultimate function as NMN. NR has been commercially available for longer and has a more extensive published human safety record. Multiple clinical trials confirm that oral NR supplementation reliably elevates blood NAD+ levels, is well-tolerated, and does not cause flushing seen with high-dose niacin. A head-to-head comparison trial found that both NR and NMN comparably increased whole-blood NAD+ levels chronically. NR tends to be less expensive; both appear safe. Evidence for health benefits beyond NAD+ elevation is still accumulating.'},{abbr:'PCB',full:'Polychlorinated Biphenyls',short:'Industrial pollutants that accumulate in fish fat and may be harmful',tags:['pregnancy'],explanation:'<strong>PCBs</strong> are synthetic compounds banned in most countries during the 1970s–80s due to recognised toxicity, but they persist in the environment for decades. Through <strong>bioaccumulation</strong>, PCBs concentrate progressively in the fatty tissues of animals as they move up the food chain. Large predatory fish like tuna and swordfish therefore contain significantly higher PCB levels. In humans, PCBs are classified as probable carcinogens and are known endocrine disruptors associated with developmental problems in children exposed in utero. This is why food safety authorities advise pregnant women to limit consumption of certain large oily fish. <strong>Algal DHA oil</strong> contains negligible PCBs, making it the recommended DHA source during pregnancy.'},{abbr:'PCr',full:'Phosphocreatine',short:'The stored energy reserve in muscles for high-intensity explosive effort',tags:['muscle','energy'],explanation:'<strong>Phosphocreatine</strong> is a high-energy compound stored predominantly in skeletal muscle that serves as a rapidly accessible reserve for regenerating ATP during high-intensity efforts. During explosive activities, muscles deplete their immediate ATP stores within approximately 2–3 seconds. Phosphocreatine then donates a phosphate group to ADP, regenerating ATP and extending high-intensity effort capacity for a further 6–8 seconds. Creatine supplementation increases muscle PCr stores by approximately 20–40%, which is the primary mechanism behind creatine\'s well-documented effects on strength, power, and exercise capacity. This effect is consistent across hundreds of RCTs, making creatine monohydrate the most evidence-supported performance supplement in sports nutrition.'},{abbr:'Pre-eclampsia',full:'Pre-eclampsia',short:'A serious blood pressure complication that develops during pregnancy',tags:['pregnancy'],explanation:'<strong>Pre-eclampsia</strong> is a multisystem disorder of pregnancy characterised by new-onset hypertension after 20 weeks of gestation, typically with proteinuria and/or signs of end-organ damage. It is one of the leading causes of maternal and perinatal morbidity and mortality worldwide, affecting approximately 2–8% of pregnancies. The underlying cause involves abnormal placental development leading to systemic endothelial dysfunction. Nutritional factors associated with reduced risk include adequate calcium (the WHO recommends supplementation in populations with low dietary calcium), vitamin D, and magnesium. Aspirin is currently the most evidence-based pharmacological preventive intervention for women at high risk. Pre-eclampsia requires medical management — supplements do not replace standard antenatal care.'},{abbr:'RCT',full:'Randomised Controlled Trial',short:'The gold standard of clinical research for testing whether interventions work',tags:['research'],explanation:'<strong>RCT</strong> stands for Randomised Controlled Trial — the most rigorous method for evaluating whether a supplement or intervention actually causes health effects attributed to it. Participants are <strong>randomly assigned</strong> to either the intervention group or a control group receiving a placebo. In a <strong>double-blind</strong> RCT, neither participants nor researchers know who is in which group, eliminating bias. If the intervention group shows significantly better outcomes than the control group, that provides strong evidence of a causal effect. RCTs are considered superior to observational studies (which show associations but not causation) and mechanistic studies (which may show a plausible pathway but not proof of clinical benefit). The quality of RCTs varies and single trials should ideally be replicated.'},{abbr:'Sarcopenia',full:'Sarcopenia',short:'The progressive age-related loss of muscle mass and strength',tags:['muscle','longevity'],explanation:'<strong>Sarcopenia</strong> is the age-related progressive loss of skeletal muscle mass combined with reduced muscle strength and/or physical performance. Muscle mass begins to decline from approximately age 30–40 at 1–2% per year, accelerating to 3%+ per year after 60. Sarcopenia is strongly associated with falls, fractures, loss of independence, and increased mortality in older adults. Critically, sarcopenia is significantly modifiable. The most effective interventions are <strong>progressive resistance exercise</strong> and <strong>adequate protein intake</strong> (at least 1.2–1.6g per kg of body weight per day in older adults). Supplements with specific evidence include <strong>HMB</strong>, <strong>creatine monohydrate</strong>, and <strong>vitamin D</strong>. Starting resistance training and optimising protein intake are effective at any age.'},{abbr:'Sirtuin',full:'Sirtuin',short:'A family of proteins that regulate cellular health, repair, and ageing',tags:['longevity'],explanation:'<strong>Sirtuins</strong> are a family of seven proteins (SIRT1–SIRT7) that function as NAD+-dependent enzymes, regulating DNA repair, gene expression, metabolic regulation, inflammation, and circadian rhythm. Their activity is stimulated by caloric restriction and exercise — the two most reliably lifespan-extending interventions across species. Because sirtuins require NAD+ as a cofactor, the age-related decline in NAD+ is thought to impair sirtuin activity — and restoring NAD+ through NMN or NR is proposed to re-activate sirtuin-mediated benefits. <strong>Resveratrol</strong> was initially identified as a direct sirtuin activator, but subsequent research suggested the original findings were partially an artefact. The mechanism and clinical significance of resveratrol\'s effects on sirtuins in humans remains debated.'},{abbr:'T3 & T4',full:'Triiodothyronine & Thyroxine',short:'The two hormones your thyroid gland produces to regulate metabolism',tags:['hormone','pregnancy'],explanation:'The <strong>thyroid gland</strong> — a butterfly-shaped gland at the front of your neck — produces two related hormones: <strong>T4</strong> (thyroxine, the inactive precursor) and <strong>T3</strong> (triiodothyronine, the active form). T4 must be converted to T3 in peripheral tissues by enzymes called deiodinases that require <strong>selenium</strong> as a cofactor. T3 regulates metabolic rate, heart rate, body temperature, gut motility, and neurological function. Hypothyroidism (insufficient T3) causes fatigue, weight gain, cold intolerance, and cognitive slowing. During pregnancy, thyroid hormones are critical for foetal brain development — the foetal thyroid does not become functionally independent until approximately weeks 18–20, meaning the baby relies entirely on maternal thyroid hormones and iodine supply during the critical early period.'},{abbr:'TSH',full:'Thyroid Stimulating Hormone',short:'A hormone that signals the thyroid how much T3 and T4 to produce',tags:['hormone'],explanation:'<strong>TSH</strong> is a hormone produced by the <strong>pituitary gland</strong> — a small, pea-sized gland at the base of the brain that acts as the body\'s central hormone control centre. TSH\'s role is to stimulate the thyroid gland to produce T3 and T4. The system operates as a feedback loop: when thyroid hormone levels fall, the pituitary produces more TSH to drive up thyroid output. A blood test showing <strong>elevated TSH</strong> indicates an underperforming thyroid (hypothyroidism). <strong>Suppressed TSH</strong> indicates the thyroid is overproducing (hyperthyroidism). Nutrients required for normal thyroid function include <strong>iodine</strong>, <strong>selenium</strong>, <strong>zinc</strong>, and <strong>iron</strong>. Ashwagandha has been shown in some clinical trials to modestly influence TSH, which is why people on thyroid medication should monitor levels carefully if using it.'}];
+
+TERMS.sort(function(a,b){return a.abbr.localeCompare(b.abbr);});
+
+var currentFilter='all', currentSearch='';
+
+function getFiltered(){return TERMS.filter(function(t){var mf=currentFilter==='all'||t.tags.includes(currentFilter);var s=currentSearch.toLowerCase();var ms=!s||t.abbr.toLowerCase().includes(s)||t.full.toLowerCase().includes(s)||t.short.toLowerCase().includes(s)||t.explanation.toLowerCase().includes(s);return mf&&ms;});}
+
+function buildAlphaNav(){
+  var letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  var used={};
+  TERMS.forEach(function(t){used[t.abbr[0].toUpperCase()]=true;});
+  var nav=document.getElementById('alpha-nav');
+  nav.innerHTML='';
+  letters.forEach(function(l){
+    var btn=document.createElement('button');
+    btn.className='alpha-btn'+(used[l]?' has-terms':' disabled');
+    btn.textContent=l;
+    if(used[l])btn.onclick=function(){var el=document.getElementById('letter-'+l);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});};
+    nav.appendChild(btn);
+  });
+}
+
+function buildGlossary(){
+  var filtered=getFiltered();
+  var content=document.getElementById('glossary-content');
+  var noRes=document.getElementById('no-results');
+  document.getElementById('search-count').textContent=filtered.length+' term'+(filtered.length!==1?'s':'');
+  if(filtered.length===0){content.innerHTML='';noRes.style.display='block';return;}
+  noRes.style.display='none';
+  var groups={};
+  filtered.forEach(function(t){var l=t.abbr[0].toUpperCase();if(!groups[l])groups[l]=[];groups[l].push(t);});
+  content.innerHTML='';
+  Object.keys(groups).sort().forEach(function(letter){
+    var sec=document.createElement('div');sec.className='letter-section';sec.id='letter-'+letter;
+    var h=document.createElement('div');h.className='letter-heading';
+    h.innerHTML='<div class="letter-char">'+letter+'</div><div class="letter-line"></div>';
+    sec.appendChild(h);
+    groups[letter].forEach(function(t){
+      var card=document.createElement('div');card.className='term-card';
+      var tags=t.tags.map(function(tg){return '<span class="term-tag tag-'+tg+'">'+tg+'</span>';}).join('');
+      card.innerHTML='<div class="term-header" onclick="toggleTerm(this.parentElement)"><span class="term-abbr">'+t.abbr+'</span><span class="term-short">'+t.short+'</span><div class="term-tags">'+tags+'</div><span class="term-arrow">▾</span></div><div class="term-body"><div class="term-full-name">'+t.full+'</div><div class="term-explanation">'+t.explanation+'</div></div>';
+      sec.appendChild(card);
+    });
+    content.appendChild(sec);
+  });
+}
+
+function toggleTerm(card){var w=card.classList.contains('expanded');document.querySelectorAll('.term-card.expanded').forEach(function(c){c.classList.remove('expanded');});if(!w)card.classList.add('expanded');}
+function handleSearch(v){currentSearch=v;buildGlossary();}
+function filterCat(cat,btn){currentFilter=cat;document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');buildGlossary();}
+
+// ══════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════
+buildLegend();
+buildAlphaNav();
+buildGlossary();
+loadSheet();
+</script>
+</body>
+</html>
